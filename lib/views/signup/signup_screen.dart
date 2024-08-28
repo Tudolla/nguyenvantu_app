@@ -1,3 +1,7 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:delightful_toast/delight_toast.dart';
+import 'package:delightful_toast/toast/components/toast_card.dart';
+import 'package:delightful_toast/toast/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monstar/views/home/home_screen.dart';
@@ -16,6 +20,38 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   @override
   void initState() {
     super.initState();
+    // _checkInternetConnection();
+  }
+
+  void showDialogMessage(BuildContext context, String message) {
+    DelightToastBar(
+      builder: (context) {
+        return ToastCard(
+          color: const Color.fromARGB(255, 252, 232, 53).withOpacity(.5),
+          leading: Icon(
+            Icons.notifications,
+            size: 30,
+          ),
+          title: Text(
+            message,
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        );
+      },
+      position: DelightSnackbarPosition.top,
+      autoDismiss: true,
+      snackbarDuration: Durations.extralong2,
+    ).show(context);
+  }
+
+  Future<void> _checkInternetConnection() async {
+    var connectionChecking = await (Connectivity().checkConnectivity());
+    if (connectionChecking == ConnectivityResult.none) {
+      showDialogMessage(context, "No Internet Connection");
+    }
   }
 
   final TextEditingController _usernameController = TextEditingController();
@@ -26,28 +62,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     final singupViewModel = ref.read(loginStateProvider.notifier);
     final loginState = ref.watch(loginStateProvider);
 
-    void _showMessageDialog(BuildContext context, String message) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('message:'),
-            content: Text(message),
-            actions: [
-              TextButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
-
-    ref.listen<LoginState>(loginStateProvider, (previour, next) {
-      if (next.isLoading == true) {
+    ref.listen<LoginState>(loginStateProvider, (previour, next) async {
+      if (next.message == "Chào mừng bạn đến với Monstarlab") {
+        await Future.delayed(Duration(seconds: 3));
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => HomeScreenDefault(),
@@ -89,7 +106,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   final password = _passwordController.text;
                   await singupViewModel.login(username, password);
 
-                  _showMessageDialog(context, loginState.message!);
+                  showDialogMessage(context, loginState.message!);
                 },
                 child: Text("Login"),
               ),

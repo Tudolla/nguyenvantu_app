@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 class AuthService {
-  final String baseUrl = 'http://192.168.0.101:8000';
+  final String baseUrl = 'http://10.10.180.182:8000';
 
   Future<void> saveTokens(
     String refresh,

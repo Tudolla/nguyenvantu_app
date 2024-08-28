@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monstar/views/home/drawer.dart';
 import 'package:monstar/views/home/widgets/menu.dart';
+import 'package:monstar/components/core/app_text_style.dart';
 
 import 'package:rive/rive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../profile_member/profile_screen.dart';
 import 'widgets/animated_container_widget.dart';
 
 class HomeScreenDefault extends ConsumerStatefulWidget {
@@ -19,6 +21,8 @@ class HomeScreenDefault extends ConsumerStatefulWidget {
 class _HomeScreenDefaultState extends ConsumerState<HomeScreenDefault> {
   List<SMIBool> riveIconInputs = [];
   List<StateMachineController?> controllers = [];
+  final PageController _pageController = PageController();
+  // int _curentPage = 0;
 
   int selectedID = 0;
   String? _imageAvatar;
@@ -40,33 +44,50 @@ class _HomeScreenDefaultState extends ConsumerState<HomeScreenDefault> {
   Widget build(BuildContext context) {
     // final loginState = ref.watch(loginStateProvider);
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text("Monstarlab VN"),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: _imageAvatar != null
-                ? CircleAvatar(
-                    radius: 20,
-                    backgroundImage: NetworkImage(_imageAvatar!),
-                  )
-                : CircleAvatar(
-                    radius: 20,
-                  ),
-          ),
-        ],
-      ),
+      appBar: selectedID == 0
+          ? AppBar(
+              centerTitle: true,
+              title: Text(
+                "Monstarlab",
+                style: AppTextStyle.headline1,
+              ),
+              actions: [
+                IconButton(
+                  onPressed: () {},
+                  icon: _imageAvatar != null
+                      ? CircleAvatar(
+                          radius: 20,
+                          backgroundImage: NetworkImage(_imageAvatar!),
+                        )
+                      : CircleAvatar(
+                          radius: 20,
+                        ),
+                ),
+              ],
+            )
+          : null,
       drawer: const MyDrawer(),
-      body: Stack(
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          // setState(() {
+          //   _curentPage = index;
+          // });
+        },
         children: [
-          Padding(
-            padding:
-                const EdgeInsets.only(top: 5, left: 10, right: 10, bottom: 10),
-            child: Container(
-              child: _widgetHomeScreen(),
-            ),
+          Center(
+            child: Text("Home"),
           ),
+          Center(
+            child: Text("Pham "),
+          ),
+          Center(
+            child: Text("Kieu"),
+          ),
+          Center(
+            child: Text("Van"),
+          ),
+          ProfileScreen(),
         ],
       ),
       bottomNavigationBar: SafeArea(
@@ -94,6 +115,12 @@ class _HomeScreenDefaultState extends ConsumerState<HomeScreenDefault> {
                   setState(() {
                     selectedID = index;
                   });
+
+                  _pageController.animateToPage(
+                    index,
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
                   Future.delayed(const Duration(milliseconds: 500), () {
                     riveIconInputs[index].change(false);
                   });
@@ -131,20 +158,6 @@ class _HomeScreenDefaultState extends ConsumerState<HomeScreenDefault> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _widgetHomeScreen() {
-    return ListView(
-      children: const [
-        Padding(
-          padding: EdgeInsets.only(left: 10, right: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [],
-          ),
-        ),
-      ],
     );
   }
 }

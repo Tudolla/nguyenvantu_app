@@ -16,7 +16,6 @@ class SignupViewModel extends StateNotifier<LoginState> {
         isLoading: true,
         message: "Chào mừng bạn đến với Monstarlab",
       );
-      return;
     } else if (result.contains("Something went wrong. Try again")) {
       state = state.copyWith(
         isLoading: false,

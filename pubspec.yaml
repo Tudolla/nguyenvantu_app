@@ -25,6 +25,7 @@ dependencies:
   http: ^1.2.2
   shared_preferences: ^2.3.2
   connectivity_plus: ^6.0.5
+  delightful_toast: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -42,3 +43,9 @@ flutter:
     - assets/
     - images/
     - assets/rive/
+    - assets/fonts/
+
+  fonts:
+    - family: CustomFontApp
+      fonts:
+        - asset: assets/fonts/Kalnia_Expanded-Light.ttf

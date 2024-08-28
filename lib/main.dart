@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:monstar/components/core/app_text_style.dart';
 
 import 'views/signup/signup_screen.dart';
 
@@ -18,7 +19,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Monstar',
       theme: ThemeData(
-        useMaterial3: true,
+        textTheme: TextTheme(
+          displayLarge: AppTextStyle.headline1,
+        ),
       ),
       home: const SignUpScreen(),
     );
