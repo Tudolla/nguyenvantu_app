@@ -116,10 +116,8 @@ class _HomeScreenDefaultState extends ConsumerState<HomeScreenDefault> {
                     selectedID = index;
                   });
 
-                  _pageController.animateToPage(
+                  _pageController.jumpToPage(
                     index,
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
                   );
                   Future.delayed(const Duration(milliseconds: 500), () {
                     riveIconInputs[index].change(false);
