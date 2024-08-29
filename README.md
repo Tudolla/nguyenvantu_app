@@ -7,5 +7,5 @@
 |            | Gửi ý kiến đóng góp                      | Processing |
 |            | Xem giới thiệu về công ty                | Processing |
 |            | Nhận thông báo từ Admin                  | Processing |
-|            | ...................                      | Processing |
-|            | ...................                      | Processing |
+|            | Xem những thành tích nổi bật             | Processing |
+|            | Tìm kiếm thành viên trong nhóm           | Processing |
