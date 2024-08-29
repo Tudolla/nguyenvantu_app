@@ -37,4 +37,15 @@ class ProfileViewModel extends StateNotifier<AsyncValue<MemberModel>> {
       state = AsyncValue.error(error, stackTrace);
     }
   }
+
+  Future<void> updateProfile(MemberModel data, int? memberId) async {
+    state = AsyncValue.loading();
+    try {
+      final member =
+          await _memberRepository.updateProfile(token, memberId, data);
+      state = AsyncValue.data(member);
+    } catch (e, stackTrace) {
+      state = AsyncValue.error(e, stackTrace);
+    }
+  }
 }

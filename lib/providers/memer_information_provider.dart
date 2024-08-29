@@ -9,6 +9,7 @@ import '../views/profile_member/profile_view_model.dart';
 final getMemberServiceProvider = Provider<MemberRepository>((ref) {
   return MemberRepositoryImpl(AuthService());
 });
+
 Future<String?> _getToken() async {
   final prefs = await SharedPreferences.getInstance();
   final String? token = prefs.getString('access');
@@ -20,5 +21,8 @@ final memberViewModelProvider = StateNotifierProvider.family<ProfileViewModel,
   // Future<int?>
   final memberService = ref.watch(getMemberServiceProvider);
   final token = _getToken();
-  return ProfileViewModel(memberService, token)..getMemberInfor(memberId);
+  return ProfileViewModel(
+    memberService,
+    token,
+  )..getMemberInfor(memberId);
 });

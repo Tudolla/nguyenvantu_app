@@ -11,6 +11,12 @@ abstract class MemberRepository {
     Future<String?> token,
     int? memberId, // future<int?>
   );
+
+  Future<MemberModel> updateProfile(
+    Future<String?> token,
+    int? memberId,
+    MemberModel data,
+  );
 }
 
 class MemberRepositoryImpl implements MemberRepository {
@@ -40,6 +46,20 @@ class MemberRepositoryImpl implements MemberRepository {
       return response;
     } catch (e) {
       throw Exception("Cannot get member infor: $e");
+    }
+  }
+
+  @override
+  Future<MemberModel> updateProfile(
+    Future<String?> token,
+    int? memberId,
+    MemberModel data,
+  ) async {
+    try {
+      final response = await _authService.updateProfile(memberId, token, data);
+      return response;
+    } catch (e) {
+      throw Exception("Cannot update profile: $e");
     }
   }
 }

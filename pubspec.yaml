@@ -26,6 +26,7 @@ dependencies:
   shared_preferences: ^2.3.2
   connectivity_plus: ^6.0.5
   delightful_toast: ^1.1.0
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:

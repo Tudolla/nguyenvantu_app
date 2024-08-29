@@ -84,6 +84,34 @@ class AuthService {
       throw Exception("Failed to fetch member information");
     }
   }
+
+  Future<MemberModel> updateProfile(
+    int? id,
+    Future<String?> token,
+    MemberModel data,
+  ) async {
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/api/v1/profile/$id/update/'),
+        body: jsonEncode(data.toJson()),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+      if (response.statusCode == 200) {
+        return MemberModel.fromJson(jsonDecode(response.body));
+      } else if (response.statusCode == 403) {
+        throw Exception("Not authorized");
+      } else if (response.statusCode == 404) {
+        throw Exception("Member not found");
+      } else {
+        throw Exception("Error else!");
+      }
+    } catch (e) {
+      throw Exception("Faild to update profile: $e");
+    }
+  }
 }
 
 class LoginResult {
