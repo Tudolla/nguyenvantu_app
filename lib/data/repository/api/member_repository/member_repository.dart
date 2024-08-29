@@ -9,7 +9,7 @@ abstract class MemberRepository {
 
   Future<MemberModel> getMemberInfor(
     Future<String?> token,
-    int memberId, // future<int?>
+    int? memberId, // future<int?>
   );
 }
 
@@ -33,7 +33,7 @@ class MemberRepositoryImpl implements MemberRepository {
   @override
   Future<MemberModel> getMemberInfor(
     Future<String?> token,
-    int memberId, // future<int?>
+    int? memberId, // future<int?>
   ) async {
     try {
       final response = await _authService.getMemberInfor(token, memberId);

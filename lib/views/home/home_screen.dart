@@ -56,11 +56,11 @@ class _HomeScreenDefaultState extends ConsumerState<HomeScreenDefault> {
                   onPressed: () {},
                   icon: _imageAvatar != null
                       ? CircleAvatar(
-                          radius: 20,
+                          radius: 15,
                           backgroundImage: NetworkImage(_imageAvatar!),
                         )
                       : CircleAvatar(
-                          radius: 20,
+                          radius: 15,
                         ),
                 ),
               ],

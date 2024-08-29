@@ -10,12 +10,10 @@ class ProfileViewModel extends StateNotifier<AsyncValue<MemberModel>> {
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
   final TextEditingController emailController = TextEditingController();
-
   final TextEditingController addressController = TextEditingController();
-
   final TextEditingController positionController = TextEditingController();
+  String? image;
 
   ProfileViewModel(
     this._memberRepository,
@@ -23,8 +21,7 @@ class ProfileViewModel extends StateNotifier<AsyncValue<MemberModel>> {
   ) : super(AsyncValue.loading());
   // cho nay Logic qua hay, vi ve sau se su dung .family nen moi cho 1 tham so trong nay
 
-  Future<void> getMemberInfor(int memberId) async {
-    // Future<int?>
+  Future<void> getMemberInfor(int? memberId) async {
     try {
       state = AsyncValue.loading();
       final member = await _memberRepository.getMemberInfor(token, memberId);
@@ -35,6 +32,7 @@ class ProfileViewModel extends StateNotifier<AsyncValue<MemberModel>> {
       emailController.text = member.email ?? "";
       addressController.text = member.address ?? "";
       positionController.text = member.position ?? "";
+      image = member.image ?? "";
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
     }

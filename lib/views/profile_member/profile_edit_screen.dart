@@ -4,6 +4,7 @@ import 'package:monstar/components/core/app_text_style.dart';
 import 'package:monstar/views/profile_member/text_input_items.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../components/core/api_base_url.dart';
 import '../../providers/memer_information_provider.dart';
 
 class ProfileEditScreen extends ConsumerStatefulWidget {
@@ -17,30 +18,35 @@ class ProfileEditScreen extends ConsumerStatefulWidget {
 class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
   final TextEditingController _emailController = TextEditingController();
-
   final TextEditingController _addressController = TextEditingController();
-
   final TextEditingController _positionController = TextEditingController();
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
-  Future<int?> _getId() async {
+  int? realID;
+
+  Future<void> _getId() async {
     final prefs = await SharedPreferences.getInstance();
-    final int? id = prefs.getInt('id');
-    return id;
+    setState(() {
+      realID = prefs.getInt('id');
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getId();
   }
 
   @override
   Widget build(BuildContext context) {
     var sizeWidth = MediaQuery.of(context).size.width;
-    final memberState = ref.watch(memberViewModelProvider(9));
-    final memberViewModel = ref.read(memberViewModelProvider(9).notifier);
+    final memberState = ref.watch(memberViewModelProvider(realID));
+    final memberViewModel = ref.read(memberViewModelProvider(realID).notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -65,10 +71,17 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    CircleAvatar(
-                      radius: sizeWidth * 1 / 5,
-                      backgroundImage: NetworkImage(""),
-                    ),
+                    memberViewModel.image != null
+                        ? CircleAvatar(
+                            radius: sizeWidth * 1 / 5,
+                            backgroundImage: NetworkImage(
+                              ApiBaseUrl.baseUrl + memberViewModel.image!,
+                            ),
+                          )
+                        : CircleAvatar(
+                            radius: sizeWidth * 1 / 4,
+                            backgroundImage: null,
+                          ),
                     CustomTextInput(
                       title: "name",
                       icon: Icons.person,
@@ -76,22 +89,22 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                     ),
                     CustomTextInput(
                       title: "password",
-                      icon: Icons.person,
+                      icon: Icons.password,
                       controllerInput: _passwordController,
                     ),
                     CustomTextInput(
                       title: "email",
-                      icon: Icons.person,
+                      icon: Icons.email,
                       controllerInput: memberViewModel.emailController,
                     ),
                     CustomTextInput(
                       title: "address",
-                      icon: Icons.person,
+                      icon: Icons.local_activity,
                       controllerInput: memberViewModel.addressController,
                     ),
                     CustomTextInput(
                       title: "position",
-                      icon: Icons.person,
+                      icon: Icons.person_2_outlined,
                       controllerInput: memberViewModel.positionController,
                     ),
                     const SizedBox(

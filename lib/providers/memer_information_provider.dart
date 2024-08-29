@@ -16,7 +16,7 @@ Future<String?> _getToken() async {
 }
 
 final memberViewModelProvider = StateNotifierProvider.family<ProfileViewModel,
-    AsyncValue<MemberModel>, int>((ref, memberId) {
+    AsyncValue<MemberModel>, int?>((ref, memberId) {
   // Future<int?>
   final memberService = ref.watch(getMemberServiceProvider);
   final token = _getToken();

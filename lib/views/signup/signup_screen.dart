@@ -4,6 +4,7 @@ import 'package:delightful_toast/toast/components/toast_card.dart';
 import 'package:delightful_toast/toast/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lottie/lottie.dart';
 import 'package:monstar/views/home/home_screen.dart';
 import 'package:monstar/views/signup/signup_view_model.dart';
 
@@ -20,14 +21,13 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   @override
   void initState() {
     super.initState();
-    // _checkInternetConnection();
   }
 
   void showDialogMessage(BuildContext context, String message) {
     DelightToastBar(
       builder: (context) {
         return ToastCard(
-          color: const Color.fromARGB(255, 252, 232, 53).withOpacity(.5),
+          color: const Color.fromARGB(255, 235, 212, 7),
           leading: Icon(
             Icons.notifications,
             size: 30,
@@ -61,10 +61,21 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   Widget build(BuildContext context) {
     final singupViewModel = ref.read(loginStateProvider.notifier);
     final loginState = ref.watch(loginStateProvider);
+    var size = MediaQuery.of(context).size;
+
+    bool isLoading = false;
 
     ref.listen<LoginState>(loginStateProvider, (previour, next) async {
       if (next.message == "Chào mừng bạn đến với Monstarlab") {
-        await Future.delayed(Duration(seconds: 3));
+        setState(() {
+          isLoading = true;
+        });
+        await Future.delayed(
+          Duration(seconds: 2),
+        );
+        setState(() {
+          isLoading = false;
+        });
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => HomeScreenDefault(),
@@ -73,42 +84,99 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       }
     });
     return Scaffold(
-      body: Center(
+      body: Padding(
+        padding: EdgeInsets.only(top: size.height / 8),
         child: Container(
-          padding: const EdgeInsets.only(left: 20, right: 20),
+          padding: EdgeInsets.only(left: size.width / 3, right: 20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.width / 4,
+                width: MediaQuery.of(context).size.width / 4,
+                child: LottieBuilder.asset("assets/tree.json"),
+              ),
+              Text(
+                "Monstarlab Company",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(
+                height: 19,
+              ),
               TextFormField(
                 controller: _usernameController,
                 decoration: InputDecoration(
-                  hintText: "username",
+                  prefixIcon: Icon(Icons.person),
+                  labelText: "username",
                   hintStyle: TextStyle(
-                    fontSize: 25,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 20,
                   ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(
+                      color: Colors.grey,
+                      width: 2.0,
+                    ),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
                 ),
               ),
+              const SizedBox(
+                height: 10,
+              ),
               TextFormField(
+                obscureText: true,
                 controller: _passwordController,
                 decoration: InputDecoration(
-                  hintText: "password",
+                  prefixIcon: Icon(Icons.password),
+                  labelText: "password",
                   hintStyle: TextStyle(
-                    fontSize: 25,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 20,
                   ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(
+                      color: Colors.grey,
+                      width: 2.0,
+                    ),
+                  ),
+                  filled: true,
+                  fillColor: Colors.white,
                 ),
               ),
               const SizedBox(
                 height: 20,
               ),
-              ElevatedButton(
-                onPressed: () async {
-                  final username = _usernameController.text;
-                  final password = _passwordController.text;
-                  await singupViewModel.login(username, password);
+              Align(
+                alignment: Alignment.centerRight,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(size.width / 2, 50),
+                    backgroundColor: Colors.yellow.withOpacity(.8),
+                    shadowColor: Colors.green.withOpacity(.2),
+                  ),
+                  onPressed: () async {
+                    final username = _usernameController.text;
+                    final password = _passwordController.text;
+                    await singupViewModel.login(username, password);
 
-                  showDialogMessage(context, loginState.message!);
-                },
-                child: Text("Login"),
+                    showDialogMessage(context, loginState.message!);
+                  },
+                  child: Text(
+                    "Login",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

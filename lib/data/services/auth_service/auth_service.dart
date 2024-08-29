@@ -46,7 +46,7 @@ class AuthService {
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = jsonDecode(
         response.body,
-      ); // t nghi loi cua secureStorage tu day ma ra, co them fromJson(jsonDecode);
+      ); // co the loi cua secureStorage tu day ma ra, co them fromJson(jsonDecode);
       await saveTokens(
         responseData['refresh'],
         responseData['access'],
@@ -63,7 +63,7 @@ class AuthService {
 
   Future<MemberModel> getMemberInfor(
     Future<String?> token,
-    int memberId, // future<int?>
+    int? memberId, // future<int?>
   ) async {
     final response = await http.get(
       Uri.parse('$baseUrl/api/v1/profile/$memberId/'),
@@ -73,7 +73,9 @@ class AuthService {
       },
     );
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      return MemberModel.fromJson(
+        json.decode(response.body),
+      );
     } else if (response.statusCode == 403) {
       throw Exception("Not authorized");
     } else if (response.statusCode == 404) {
