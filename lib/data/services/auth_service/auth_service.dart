@@ -4,6 +4,8 @@ import 'package:monstar/data/models/api/request/member_model/member_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
+import '../../models/api/response/member_response_model.dart';
+
 class AuthService {
   final String baseUrl = 'http://10.10.180.182:8000';
 
@@ -85,22 +87,23 @@ class AuthService {
     }
   }
 
-  Future<MemberModel> updateProfile(
+  Future<MemberResponseModel> updateProfile(
     int? id,
-    Future<String?> token,
-    MemberModel data,
+    // Future<String?> token,
+    MemberResponseModel data,
+    // File? imageFile,
   ) async {
     try {
       final response = await http.put(
         Uri.parse('$baseUrl/api/v1/profile/$id/update/'),
         body: jsonEncode(data.toJson()),
         headers: {
-          'Authorization': 'Bearer $token',
+          // 'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
       );
       if (response.statusCode == 200) {
-        return MemberModel.fromJson(jsonDecode(response.body));
+        return MemberResponseModel.fromJson(jsonDecode(response.body));
       } else if (response.statusCode == 403) {
         throw Exception("Not authorized");
       } else if (response.statusCode == 404) {

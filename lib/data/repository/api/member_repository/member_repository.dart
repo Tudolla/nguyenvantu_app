@@ -1,6 +1,8 @@
 import 'package:monstar/data/models/api/request/member_model/member_model.dart';
 import 'package:monstar/data/services/auth_service/auth_service.dart';
 
+import '../../../models/api/response/member_response_model.dart';
+
 abstract class MemberRepository {
   Future<String> login(
     String username,
@@ -12,10 +14,10 @@ abstract class MemberRepository {
     int? memberId, // future<int?>
   );
 
-  Future<MemberModel> updateProfile(
-    Future<String?> token,
+  Future<MemberResponseModel> updateProfile(
+    // Future<String?> token,
     int? memberId,
-    MemberModel data,
+    MemberResponseModel data,
   );
 }
 
@@ -50,13 +52,13 @@ class MemberRepositoryImpl implements MemberRepository {
   }
 
   @override
-  Future<MemberModel> updateProfile(
-    Future<String?> token,
+  Future<MemberResponseModel> updateProfile(
+    // Future<String?> token,
     int? memberId,
-    MemberModel data,
+    MemberResponseModel data,
   ) async {
     try {
-      final response = await _authService.updateProfile(memberId, token, data);
+      final response = await _authService.updateProfile(memberId, data);
       return response;
     } catch (e) {
       throw Exception("Cannot update profile: $e");

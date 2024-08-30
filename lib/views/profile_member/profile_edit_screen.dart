@@ -6,9 +6,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:monstar/components/core/app_text_style.dart';
 import 'package:monstar/data/models/api/request/member_model/member_model.dart';
 import 'package:monstar/views/profile_member/text_input_items.dart';
+import 'package:monstar/views/profile_member/update_profile_view_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/core/api_base_url.dart';
+import '../../data/models/api/response/member_response_model.dart';
 import '../../providers/member_update_profile_provider.dart';
 import '../../providers/memer_information_provider.dart';
 
@@ -22,7 +24,6 @@ class ProfileEditScreen extends ConsumerStatefulWidget {
 
 class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
 
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -56,11 +57,11 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     });
   }
 
-  Future<int?> _getID() async {
-    final prefs = await SharedPreferences.getInstance();
+  // Future<int?> _getID() async {
+  //   final prefs = await SharedPreferences.getInstance();
 
-    return prefs.getInt('id');
-  }
+  //   return prefs.getInt('id');
+  // }
 
   @override
   void initState() {
@@ -73,12 +74,11 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     var sizeWidth = MediaQuery.of(context).size.width;
     final memberState = ref.watch(memberViewModelProvider(realID));
     final memberViewModel = ref.read(memberViewModelProvider(realID).notifier);
-    MemberModel tempMember = MemberModel(
-      id: realID,
+    MemberResponseModel tempMember = MemberResponseModel(
+      id: 9,
       name: _nameController.text,
       email: _emailController.text,
       address: _addressController.text,
-      // image: _image?.path,
       position: _positionController.text,
     );
 
