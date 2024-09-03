@@ -1,7 +1,91 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:monstar/views/contribution/contribution_screen.dart';
 
-class MyDrawer extends StatelessWidget {
+class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
+
+  @override
+  State<MyDrawer> createState() => _MyDrawerState();
+}
+
+class _MyDrawerState extends State<MyDrawer> {
+  void _openDialogChoice(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierLabel: "",
+      transitionDuration: const Duration(milliseconds: 500),
+      pageBuilder: (context, animation1, animation2) {
+        return Container();
+      },
+      transitionBuilder: (context, a1, a2, widget) {
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.5, end: 1.0).animate(a1),
+          child: FadeTransition(
+            opacity: Tween<double>(begin: 0.5, end: 1.0).animate(a1),
+            child: AlertDialog(
+              backgroundColor: const Color.fromARGB(255, 50, 67, 75),
+              title: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    "hello:",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  const Divider(
+                    color: Colors.white,
+                    height: 1,
+                  ),
+                ],
+              ),
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Get.off(
+                        () => ContributionScreen(),
+                        transition: Transition.circularReveal,
+                        duration: const Duration(seconds: 2),
+                      );
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.5),
+                      ),
+                      child: Text(
+                        "contribute",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Text(
+                      "selection",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              shape: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide.none,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +130,7 @@ class MyDrawer extends StatelessWidget {
                 height: 30,
               ),
               ListTile(
-                onTap: () {},
+                onTap: () => _openDialogChoice(context),
                 title: const Text("Feed back"),
                 leading: const Icon(Icons.feedback_outlined),
               ),

@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monstar/data/repository/api/member_repository/member_repository.dart';
 
 import '../../data/models/api/request/member_model/member_model.dart';
-import '../../data/models/api/response/member_response_model.dart';
 
 class ProfileViewModel extends StateNotifier<AsyncValue<MemberModel>> {
   final MemberRepository _memberRepository;

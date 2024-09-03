@@ -4,10 +4,11 @@ import 'package:monstar/data/models/api/request/member_model/member_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
+import '../../../components/core/api_base_url.dart';
 import '../../models/api/response/member_response_model.dart';
 
 class AuthService {
-  final String baseUrl = 'http://10.10.180.182:8000';
+  // final String baseUrl = 'http://192.168.0.101:8000';
 
   Future<void> saveTokens(
     String refresh,
@@ -21,7 +22,7 @@ class AuthService {
     await prefs.setString('refreshToken', refresh);
     await prefs.setString('accessToken', access);
     await prefs.setInt('id', id);
-    await prefs.setString('imageAvatar', baseUrl + imageAvatar);
+    await prefs.setString('imageAvatar', ApiBaseUrl.baseUrl + imageAvatar);
     await prefs.setString('name', name);
     await prefs.setString('email', email);
   }
@@ -33,7 +34,7 @@ class AuthService {
       return LoginResult.isError("No Internet Connection");
     }
     final response = await http.post(
-      Uri.parse('$baseUrl/api/v1/login/'),
+      Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/login/'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -63,12 +64,13 @@ class AuthService {
     }
   }
 
+  // function to get information of user
   Future<MemberModel> getMemberInfor(
     Future<String?> token,
     int? memberId, // future<int?>
   ) async {
     final response = await http.get(
-      Uri.parse('$baseUrl/api/v1/profile/$memberId/'),
+      Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/profile/$memberId/'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -87,6 +89,7 @@ class AuthService {
     }
   }
 
+  // function to update profile
   Future<MemberResponseModel> updateProfile(
     int? id,
     // Future<String?> token,
@@ -95,7 +98,7 @@ class AuthService {
   ) async {
     try {
       final response = await http.put(
-        Uri.parse('$baseUrl/api/v1/profile/$id/update/'),
+        Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/profile/$id/update/'),
         body: jsonEncode(data.toJson()),
         headers: {
           // 'Authorization': 'Bearer $token',

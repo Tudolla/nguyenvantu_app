@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:monstar/components/core/app_text_style.dart';
-import 'package:monstar/data/models/api/request/member_model/member_model.dart';
 import 'package:monstar/views/profile_member/text_input_items.dart';
-import 'package:monstar/views/profile_member/update_profile_view_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/core/api_base_url.dart';
@@ -75,7 +73,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     final memberState = ref.watch(memberViewModelProvider(realID));
     final memberViewModel = ref.read(memberViewModelProvider(realID).notifier);
     MemberResponseModel tempMember = MemberResponseModel(
-      id: 9,
+      id: realID,
       name: _nameController.text,
       email: _emailController.text,
       address: _addressController.text,
