@@ -1,17 +1,44 @@
 import 'package:flutter/material.dart';
-
+import 'package:monstar/components/snackbar/show_snackbar.dart';
+import 'package:monstar/views/contribution/viewmodel/text_post_viewmodel.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../components/button/app_button.dart';
+import '../../providers/textpost_provider.dart';
 
-class ContributionScreen extends StatefulWidget {
+class ContributionScreen extends ConsumerStatefulWidget {
   const ContributionScreen({super.key});
 
   @override
-  State<ContributionScreen> createState() => _ContributionScreenState();
+  ConsumerState<ContributionScreen> createState() => _ContributionScreenState();
 }
 
-class _ContributionScreenState extends State<ContributionScreen> {
+class _ContributionScreenState extends ConsumerState<ContributionScreen> {
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  void _checkPostStatus(BuildContext context, PostState stateTextPost) {
+    if (stateTextPost.isSuccess) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Add post successful")),
+      );
+    } else if (stateTextPost.errorMessage != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: ${stateTextPost.errorMessage}")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final postViewModel = ref.watch(postNotifierProvider.notifier);
+    final stateTextPost = ref.watch(postNotifierProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text("your contribution"),
@@ -27,11 +54,13 @@ class _ContributionScreenState extends State<ContributionScreen> {
             child: Column(
               children: [
                 TextFormField(
+                  controller: _titleController,
                   decoration: InputDecoration(
                     hintText: "Title",
                   ),
                 ),
                 TextFormField(
+                  controller: _descriptionController,
                   decoration: InputDecoration(
                     hintText: "description",
                   ),
@@ -39,67 +68,28 @@ class _ContributionScreenState extends State<ContributionScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                AppButton(
-                  backgroundColor: Colors.blueGrey,
-                  text: "Submit",
-                  function: () {},
-                  textColor: Colors.white,
-                  sizeHeight: 50.0,
-                  sizeWidth: 200.0,
-                ),
+                stateTextPost.isLoading
+                    ? CircularProgressIndicator()
+                    : AppButton(
+                        backgroundColor: Colors.blueGrey,
+                        text: "Submit",
+                        function: () {
+                          postViewModel.submitPost(
+                            _titleController.text,
+                            _descriptionController.text,
+                          );
+                          _checkPostStatus(context, stateTextPost);
+                        },
+                        textColor: Colors.white,
+                        sizeHeight: 50.0,
+                        sizeWidth: 200.0,
+                      ),
+
+                // if (stateTextPost.isSuccess) Text("Success"),
+                // if (stateTextPost.errorMessage != null) Text("Error"),
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-
-//////////////////////////////////////////
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'post_notifier.dart';
-
-class PostPage extends ConsumerWidget {
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final postState = ref.watch(postNotifierProvider);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Create Post'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _titleController,
-              decoration: InputDecoration(labelText: 'Title'),
-            ),
-            TextField(
-              controller: _descriptionController,
-              decoration: InputDecoration(labelText: 'Description'),
-            ),
-            SizedBox(height: 20),
-            postState.isLoading
-                ? CircularProgressIndicator()
-                : ElevatedButton(
-                    onPressed: () {
-                      final title = _titleController.text;
-                      final description = _descriptionController.text;
-                      ref.read(postNotifierProvider.notifier).submitPost(title, description);
-                    },
-                    child: Text('Submit'),
-                  ),
-            if (postState.isSuccess) Text('Post submitted successfully!'),
-            if (postState.errorMessage != null) Text('Error: ${postState.errorMessage}'),
-          ],
         ),
       ),
     );

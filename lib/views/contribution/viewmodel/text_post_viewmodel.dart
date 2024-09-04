@@ -25,10 +25,12 @@ class PostNotifier extends StateNotifier<PostState> {
     final success = await _postRepository.createTextPost(title, description);
 
     if (success) {
-      state = PostState(isSuccess: true);
+      state = PostState(isLoading: false, isSuccess: true);
     } else {
       state = PostState(
-          isSuccess: false, errorMessage: "Failed to create new Post");
+        isSuccess: false,
+        errorMessage: "Failed to create new Post",
+      );
     }
   }
 }

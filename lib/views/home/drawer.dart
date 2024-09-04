@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:monstar/views/contribution/contribution_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../signup/signup_screen.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
@@ -87,6 +90,21 @@ class _MyDrawerState extends State<MyDrawer> {
     );
   }
 
+  Future<void> _logout() async {
+    // Lấy instance của SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+
+    // Xóa toàn bộ dữ liệu trong SharedPreferences
+    await prefs.clear();
+
+    // Sau khi logout, có thể chuyển người dùng về màn hình đăng nhập
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => SignUpScreen(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -153,7 +171,13 @@ class _MyDrawerState extends State<MyDrawer> {
               ),
             ],
           ),
-          const ListTile(
+          ListTile(
+            onTap: () async {
+              await _logout();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Logged out successfully!")),
+              );
+            },
             title: Text("Sign out!"),
             leading: Icon(Icons.login_rounded),
           ),
