@@ -33,7 +33,6 @@ class MemberRepositoryImpl implements MemberRepository {
       final result = await _authService.login(username, password);
       return result;
     } catch (e) {
-      // question: this will be log where
       throw Exception("Login failed! $e");
     }
   }

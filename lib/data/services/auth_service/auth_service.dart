@@ -4,12 +4,10 @@ import 'package:monstar/data/models/api/request/member_model/member_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
-import '../../../components/core/api_base_url.dart';
+import '../../../utils/api_base_url.dart';
 import '../../models/api/response/member_response_model.dart';
 
 class AuthService {
-  // final String baseUrl = 'http://192.168.0.101:8000';
-
   Future<void> saveTokens(
     String refresh,
     String access,
@@ -65,6 +63,7 @@ class AuthService {
   }
 
   // function to get information of user
+  // lay luon token o day, ko can tham so cho token nua
   Future<MemberModel> getMemberInfor(
     Future<String?> token,
     int? memberId, // future<int?>

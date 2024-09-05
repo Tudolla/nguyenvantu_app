@@ -7,7 +7,7 @@ import 'package:monstar/components/core/app_text_style.dart';
 import 'package:monstar/views/profile_member/text_input_items.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../components/core/api_base_url.dart';
+import '../../utils/api_base_url.dart';
 import '../../data/models/api/response/member_response_model.dart';
 import '../../providers/member_update_profile_provider.dart';
 import '../../providers/memer_information_provider.dart';
@@ -80,11 +80,11 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
       position: _positionController.text,
     );
 
-    final memberUpdateViewModel = ref.read(
-      updateProfileViewModelProvider(
-        tempMember,
-      ).notifier,
-    );
+    // final memberUpdateViewModel = ref.read(
+    //   updateProfileViewModelProvider(
+    //     tempMember,
+    //   ).notifier,
+    // );
 
     return Scaffold(
       appBar: AppBar(
@@ -181,10 +181,10 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        memberUpdateViewModel.updateProfile(
-                          tempMember,
-                          realID,
-                        );
+                        // memberUpdateViewModel.updateProfile(
+                        //   tempMember,
+                        //   realID,
+                        // );
                       },
                       child: Text("Updated Profile"),
                     ),

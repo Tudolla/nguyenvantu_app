@@ -7,6 +7,7 @@ import 'package:monstar/components/core/app_text_style.dart';
 import 'package:rive/rive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../contribution/list_textpost_screen.dart';
 import '../profile_member/profile_screen.dart';
 import 'widgets/animated_container_widget.dart';
 
@@ -84,9 +85,7 @@ class _HomeScreenDefaultState extends ConsumerState<HomeScreenDefault> {
           Center(
             child: Text("Kieu"),
           ),
-          Center(
-            child: Text("Van"),
-          ),
+          TextPostListScreen(),
           ProfileScreen(),
         ],
       ),

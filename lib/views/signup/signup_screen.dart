@@ -23,6 +23,13 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+  }
+
   void showDialogMessage(BuildContext context, String message) {
     DelightToastBar(
       builder: (context) {
@@ -76,7 +83,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         setState(() {
           isLoading = false;
         });
-        Navigator.of(context).push(
+        Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => HomeScreenDefault(),
           ),

@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monstar/data/repository/api/member_repository/member_repository.dart';
-import 'package:monstar/views/profile_member/profile_view_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/models/api/response/member_response_model.dart';
@@ -16,25 +15,19 @@ Future<String?> _getToken() async {
   return token;
 }
 
-// Future<int?> _getId() async {
-//   final prefs = await SharedPreferences.getInstance();
-//   final int? id = prefs.getInt('id');
-//   return id;
-// }
-
 int? idUpdate;
 
-final updateProfileViewModelProvider = StateNotifierProvider.family<
-    UpateProfileViewModel,
-    AsyncValue<MemberResponseModel>,
-    MemberResponseModel>((ref, memberModel) {
-  // Future<int?>
-  final memberService = ref.watch(updateProfileProvider);
-  // final token = _getToken();
-  return UpateProfileViewModel(
-    memberService,
-  )..updateProfile(
-      memberModel,
-      9,
-    );
-});
+// final updateProfileViewModelProvider = StateNotifierProvider.family<
+//     UpateProfileViewModel,
+//     AsyncValue<MemberResponseModel>,
+//     MemberResponseModel>((ref, memberModel) {
+//   // Future<int?>
+//   final memberService = ref.watch(updateProfileProvider);
+//   // final token = _getToken();
+//   return UpateProfileViewModel(
+//     memberService,
+//   )..updateProfile(
+//       memberModel,
+//       9,
+//     );
+// });

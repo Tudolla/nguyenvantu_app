@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:monstar/components/snackbar/show_snackbar.dart';
-import 'package:monstar/views/contribution/viewmodel/text_post_viewmodel.dart';
+import 'package:monstar/views/contribution/viewmodel/add_text_post_viewmodel.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../components/button/app_button.dart';
-import '../../providers/textpost_provider.dart';
+import '../../providers/add_textpost_provider.dart';
 
 class ContributionScreen extends ConsumerStatefulWidget {
   const ContributionScreen({super.key});

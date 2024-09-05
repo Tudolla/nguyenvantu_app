@@ -1,8 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monstar/data/repository/api/contribution_repository/contribution_repository.dart';
 
-import '../../../providers/textpost_provider.dart';
-
 class PostState {
   final bool isLoading;
   final bool isSuccess;
@@ -34,9 +32,3 @@ class PostNotifier extends StateNotifier<PostState> {
     }
   }
 }
-
-final postNotifierProvider =
-    StateNotifierProvider<PostNotifier, PostState>((ref) {
-  final postRepository = ref.watch(textPostRepositoryProvider);
-  return PostNotifier(postRepository);
-});
