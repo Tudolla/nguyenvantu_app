@@ -2,9 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monstar/data/repository/api/member_repository/member_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../data/models/api/response/member_response_model.dart';
 import '../data/services/auth_service/auth_service.dart';
-import '../views/profile_member/update_profile_view_model.dart';
 
 final updateProfileProvider = Provider<MemberRepository>((ref) {
   return MemberRepositoryImpl(AuthService());

@@ -127,8 +127,7 @@ class _MyDrawerState extends State<MyDrawer> {
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                            image: AssetImage("images/avatar.png"),
-                            // fit: BoxFit.,
+                            image: AssetImage("assets/images/avatar.png"),
                           ),
                         ),
                       ),

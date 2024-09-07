@@ -62,16 +62,16 @@ class AuthService {
     }
   }
 
-  // function to get information of user
-  // lay luon token o day, ko can tham so cho token nua
   Future<MemberModel> getMemberInfor(
-    Future<String?> token,
-    int? memberId, // future<int?>
+    int? memberId,
   ) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String? accessToken = pref.getString('accessToken');
+
     final response = await http.get(
       Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/profile/$memberId/'),
       headers: {
-        'Authorization': 'Bearer $token',
+        'Authorization': 'Bearer $accessToken',
         'Content-Type': 'application/json',
       },
     );
@@ -88,10 +88,8 @@ class AuthService {
     }
   }
 
-  // function to update profile
   Future<MemberResponseModel> updateProfile(
     int? id,
-    // Future<String?> token,
     MemberResponseModel data,
     // File? imageFile,
   ) async {

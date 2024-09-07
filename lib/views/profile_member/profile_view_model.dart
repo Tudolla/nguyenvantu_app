@@ -6,7 +6,6 @@ import '../../data/models/api/request/member_model/member_model.dart';
 
 class ProfileViewModel extends StateNotifier<AsyncValue<MemberModel>> {
   final MemberRepository _memberRepository;
-  final Future<String?> token;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -17,14 +16,13 @@ class ProfileViewModel extends StateNotifier<AsyncValue<MemberModel>> {
 
   ProfileViewModel(
     this._memberRepository,
-    this.token,
   ) : super(AsyncValue.loading());
   // cho nay Logic qua hay, vi ve sau se su dung .family nen moi cho 1 tham so trong nay
 
   Future<void> getMemberInfor(int? memberId) async {
     try {
       state = AsyncValue.loading();
-      final member = await _memberRepository.getMemberInfor(token, memberId);
+      final member = await _memberRepository.getMemberInfor(memberId);
       state = AsyncValue.data(member);
 
       // set gia tri cho TextEditingField o Screen EditProfile

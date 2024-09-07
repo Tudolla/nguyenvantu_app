@@ -7,7 +7,6 @@ import '../../data/models/api/response/member_response_model.dart';
 class UpateProfileViewModel
     extends StateNotifier<AsyncValue<MemberResponseModel>> {
   final MemberRepository _memberRepository;
-  // final Future<String?> token;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -24,7 +23,6 @@ class UpateProfileViewModel
     state = AsyncValue.loading();
     try {
       final member = await _memberRepository.updateProfile(
-        // token,
         memberId,
         data,
       );

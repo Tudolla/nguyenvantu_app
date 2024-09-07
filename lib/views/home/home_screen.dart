@@ -24,7 +24,6 @@ class _HomeScreenDefaultState extends ConsumerState<HomeScreenDefault> {
   List<SMIBool> riveIconInputs = [];
   List<StateMachineController?> controllers = [];
   final PageController _pageController = PageController();
-  // int _curentPage = 0;
 
   int selectedID = 0;
   String? _imageAvatar;
@@ -44,7 +43,6 @@ class _HomeScreenDefaultState extends ConsumerState<HomeScreenDefault> {
 
   @override
   Widget build(BuildContext context) {
-    // final loginState = ref.watch(loginStateProvider);
     return Scaffold(
       appBar: selectedID == 0
           ? AppBar(

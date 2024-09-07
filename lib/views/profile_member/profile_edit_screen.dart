@@ -9,7 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/api_base_url.dart';
 import '../../data/models/api/response/member_response_model.dart';
-import '../../providers/member_update_profile_provider.dart';
 import '../../providers/memer_information_provider.dart';
 
 class ProfileEditScreen extends ConsumerStatefulWidget {
@@ -54,12 +53,6 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
       realID = prefs.getInt('id');
     });
   }
-
-  // Future<int?> _getID() async {
-  //   final prefs = await SharedPreferences.getInstance();
-
-  //   return prefs.getInt('id');
-  // }
 
   @override
   void initState() {
@@ -180,12 +173,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                       height: 20,
                     ),
                     ElevatedButton(
-                      onPressed: () {
-                        // memberUpdateViewModel.updateProfile(
-                        //   tempMember,
-                        //   realID,
-                        // );
-                      },
+                      onPressed: () {},
                       child: Text("Updated Profile"),
                     ),
                   ],

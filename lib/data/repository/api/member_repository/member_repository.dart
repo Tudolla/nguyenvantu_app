@@ -10,12 +10,10 @@ abstract class MemberRepository {
   );
 
   Future<MemberModel> getMemberInfor(
-    Future<String?> token,
-    int? memberId, // future<int?>
+    int? memberId,
   );
 
   Future<MemberResponseModel> updateProfile(
-    // Future<String?> token,
     int? memberId,
     MemberResponseModel data,
   );
@@ -39,11 +37,10 @@ class MemberRepositoryImpl implements MemberRepository {
 
   @override
   Future<MemberModel> getMemberInfor(
-    Future<String?> token,
-    int? memberId, // future<int?>
+    int? memberId,
   ) async {
     try {
-      final response = await _authService.getMemberInfor(token, memberId);
+      final response = await _authService.getMemberInfor(memberId);
       return response;
     } catch (e) {
       throw Exception("Cannot get member infor: $e");
@@ -52,7 +49,6 @@ class MemberRepositoryImpl implements MemberRepository {
 
   @override
   Future<MemberResponseModel> updateProfile(
-    // Future<String?> token,
     int? memberId,
     MemberResponseModel data,
   ) async {
