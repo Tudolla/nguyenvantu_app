@@ -79,7 +79,7 @@ class AuthService {
       return MemberModel.fromJson(
         json.decode(response.body),
       );
-    } else if (response.statusCode == 403) {
+    } else if (response.statusCode == 401) {
       throw Exception("Not authorized");
     } else if (response.statusCode == 404) {
       throw Exception("Member not found");
@@ -104,12 +104,12 @@ class AuthService {
       );
       if (response.statusCode == 200) {
         return MemberResponseModel.fromJson(jsonDecode(response.body));
-      } else if (response.statusCode == 403) {
+      } else if (response.statusCode == 401) {
         throw Exception("Not authorized");
       } else if (response.statusCode == 404) {
         throw Exception("Member not found");
       } else {
-        throw Exception("Error else!");
+        throw Exception("Something error was happened!");
       }
     } catch (e) {
       throw Exception("Faild to update profile: $e");

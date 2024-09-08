@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monstar/data/repository/api/member_repository/member_repository.dart';
 
-import '../../data/models/api/response/member_response_model.dart';
+import '../../../data/models/api/response/member_response_model.dart';
 
 class UpateProfileViewModel
     extends StateNotifier<AsyncValue<MemberResponseModel>> {

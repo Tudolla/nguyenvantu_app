@@ -90,6 +90,13 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         );
       }
     });
+    if (loginState.isLoading)
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.only(top: size.height / 8),

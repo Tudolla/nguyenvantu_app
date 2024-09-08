@@ -41,6 +41,7 @@ class _ContributionScreenState extends ConsumerState<ContributionScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("your contribution"),
+        centerTitle: true,
       ),
       body: Container(
         child: Padding(

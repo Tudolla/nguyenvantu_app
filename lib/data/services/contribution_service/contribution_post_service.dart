@@ -5,8 +5,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../utils/api_base_url.dart';
+import '../../models/api/request/contribution_model/pollpost_model.dart';
 
 class TextPostService {
+  // Create a text post that other member only watch
   Future<bool> createTextPost(String title, String description) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? accessToken = pref.getString('accessToken');
@@ -27,6 +29,40 @@ class TextPostService {
       },
     );
 
+    if (response.statusCode == 201) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // Create a pollpost that other member can interact with it
+
+  Future<bool> createPollPost(String title, List<Choice> list) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String? accessToken = pref.getString('accessToken');
+    int? userId = pref.getInt('id');
+
+    final pollPost = PollPostWithChoice(
+      title: title,
+      user: userId,
+      choices: list,
+    );
+
+    final data = pollPost.toJson();
+
+    if (accessToken == null) {
+      return false;
+    }
+
+    final response = await http.post(
+      Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/create-pollpost/'),
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json',
+      },
+      body: data,
+    );
     if (response.statusCode == 201) {
       return true;
     } else {
