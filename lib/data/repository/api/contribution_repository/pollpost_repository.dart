@@ -5,6 +5,7 @@ import '../../../services/contribution_service/contribution_post_service.dart';
 abstract class PollpostRepository {
   Future<bool> createPollPostRepository(String title, List<String> list);
   Future<List<PollPostWithChoice>> getPollPostRepository();
+  Future<void> votePollPostRepository(int choiceId);
 }
 
 class PollpostRepositoryIml implements PollpostRepository {
@@ -19,5 +20,10 @@ class PollpostRepositoryIml implements PollpostRepository {
   @override
   Future<List<PollPostWithChoice>> getPollPostRepository() async {
     return await _textPostService.fetchPollPost();
+  }
+
+  @override
+  Future<void> votePollPostRepository(int choiceId) async {
+    return await _textPostService.votePollPost(choiceId);
   }
 }

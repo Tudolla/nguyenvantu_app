@@ -6,6 +6,7 @@ part 'pollpost_model.freezed.dart';
 @freezed
 class PollPostWithChoice with _$PollPostWithChoice {
   const factory PollPostWithChoice({
+    @JsonKey(name: 'id') int? id,
     @JsonKey(name: 'title') String? title,
     int? user,
     @JsonKey(name: 'choices') @Default([]) List<Choice> choices,
@@ -18,7 +19,9 @@ class PollPostWithChoice with _$PollPostWithChoice {
 @freezed
 class Choice with _$Choice {
   const factory Choice({
-    @JsonKey(name: 'choice_text') String? choiceText, // Nội dung lựa chọn
+    @JsonKey(name: 'id') int? id,
+    @JsonKey(name: 'choice_text') String? choiceText,
+    @JsonKey(name: 'count') int? count, // Nội dung lựa chọn
   }) = _Choice;
 
   // Chuyển từ JSON

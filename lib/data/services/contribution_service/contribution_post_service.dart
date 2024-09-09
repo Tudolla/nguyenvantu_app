@@ -128,4 +128,23 @@ class TextPostService {
       throw Exception("Faild to load PollPost!");
     }
   }
+
+  Future<void> votePollPost(int choiceId) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String? accessToken = pref.getString('accessToken');
+
+    if (accessToken == null) {
+      throw Exception("Access token is missing");
+    }
+    final response = await http.post(
+      Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/vote-pollpost/$choiceId/'),
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json',
+      },
+    );
+    if (response.statusCode != 200) {
+      throw Exception("Fail to vote - hehe");
+    }
+  }
 }
