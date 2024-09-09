@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:monstar/views/contribution/contribution_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../contribution/pollpost_creen.dart';
+import '../contribution/add_pollpost_creen.dart';
 import '../signup/signup_screen.dart';
 
 class MyDrawer extends StatefulWidget {
@@ -72,7 +72,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   GestureDetector(
                     onTap: () {
                       Get.off(
-                        () => PollPostScreen(),
+                        () => AddPollpostCreen(),
                         transition: Transition.circularReveal,
                         duration: const Duration(seconds: 2),
                       );

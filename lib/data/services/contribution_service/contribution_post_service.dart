@@ -38,18 +38,18 @@ class TextPostService {
 
   // Create a pollpost that other member can interact with it
 
-  Future<bool> createPollPost(String title, List<Choice> list) async {
+  Future<bool> createPollPost(String title, List<String> list) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? accessToken = pref.getString('accessToken');
     int? userId = pref.getInt('id');
 
-    final pollPost = PollPostWithChoice(
-      title: title,
-      user: userId,
-      choices: list,
-    );
+    final pollPost = jsonEncode({
+      'title': title,
+      'user': userId,
+      'choices': list.map((e) => {'choice_text': e}).toList(),
+    });
 
-    final data = pollPost.toJson();
+    // final data = jsonEncode(pollPost.toJson());
 
     if (accessToken == null) {
       return false;
@@ -61,7 +61,7 @@ class TextPostService {
         'Authorization': 'Bearer $accessToken',
         'Content-Type': 'application/json',
       },
-      body: data,
+      body: pollPost,
     );
     if (response.statusCode == 201) {
       return true;
@@ -86,7 +86,7 @@ class TextPostService {
     ).timeout(
       const Duration(seconds: 10),
       onTimeout: () {
-        throw Exception("Request to server timed our");
+        throw Exception("Request to server timed out");
       },
     );
 
@@ -97,6 +97,35 @@ class TextPostService {
     } else {
       print("Error: ${response.statusCode} - ${response.body}");
       throw Exception("Faild to load list textpost!");
+    }
+  }
+
+  Future<List<PollPostWithChoice>> fetchPollPost() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String? accessToken = pref.getString('accessToken');
+
+    if (accessToken == null) {
+      throw Exception("Access token is missing");
+    }
+
+    final response = await http.get(
+      Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/get-pollpost/'),
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json',
+      },
+    ).timeout(
+      const Duration(seconds: 10),
+      onTimeout: () {
+        throw Exception("Request to server timed our");
+      },
+    );
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.map((json) => PollPostWithChoice.fromJson(json)).toList();
+    } else {
+      print("Error: ${response.statusCode} - ${response.body}");
+      throw Exception("Faild to load PollPost!");
     }
   }
 }

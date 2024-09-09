@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class PollPostScreen extends ConsumerStatefulWidget {
-  const PollPostScreen({super.key});
+import '../../data/models/api/request/contribution_model/pollpost_model.dart';
+import '../../providers/add_pollpost_provider.dart';
+
+class AddPollpostCreen extends ConsumerStatefulWidget {
+  const AddPollpostCreen({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _PollPostScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _AddPollpostCreenState();
 }
 
-class _PollPostScreenState extends ConsumerState<PollPostScreen> {
+class _AddPollpostCreenState extends ConsumerState<AddPollpostCreen> {
   final TextEditingController _titleController = TextEditingController();
   final List<TextEditingController> _choiceController = [];
 
@@ -25,14 +29,20 @@ class _PollPostScreenState extends ConsumerState<PollPostScreen> {
     });
   }
 
-  void _submit() {
-    final title = _titleController.text;
-    final choices =
-        _choiceController.map((controller) => controller.text).toList();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final pollpostViewmodel = ref.watch(pollPostProvider.notifier);
+    final statePollPost = ref.watch(pollPostProvider);
+
+    void _submit() {
+      final title = _titleController.text;
+      final choices =
+          _choiceController.map((controller) => controller.text).toList();
+      List<Choice> listChoice =
+          choices.map((e) => Choice(choiceText: e)).toList();
+      pollpostViewmodel.submitPollPost(title, choices);
+    }
+
     var size = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
@@ -119,6 +129,53 @@ class _PollPostScreenState extends ConsumerState<PollPostScreen> {
                   ),
                 ],
               ),
+            ),
+            statePollPost.when(
+              data: (isSuccess) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (isSuccess) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text('Thành công'),
+                        content: Text('Tạo poll thành công!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Đóng dialog
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text('Thất bại'),
+                        content: Text('Tạo poll thất bại!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(); // Đóng dialog
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                });
+
+                return SizedBox.shrink();
+              },
+              error: (e, stackTrace) {
+                return Center(
+                  child: Text('Some error was happend'),
+                );
+              },
+              loading: () => CircularProgressIndicator(),
             ),
             Container(
               alignment: Alignment.center,
