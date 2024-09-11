@@ -7,6 +7,7 @@ import 'package:monstar/components/core/app_text_style.dart';
 import 'package:rive/rive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../book_store/book_list_screen.dart';
 import '../calendar_working/calendar_woking_screen.dart';
 
 import '../contribution/list_textpost_screen.dart';
@@ -77,9 +78,7 @@ class _HomeScreenDefaultState extends ConsumerState<HomeScreenDefault> {
           // });
         },
         children: [
-          Center(
-            child: Text("Home"),
-          ),
+          BookListScreen(),
           PollPostScreen(),
           CalendarWokingScreen(),
           TextPostListScreen(),

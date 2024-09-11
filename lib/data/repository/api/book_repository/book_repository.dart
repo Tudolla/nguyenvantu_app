@@ -3,6 +3,7 @@ import 'package:monstar/data/services/book_service/book_service.dart';
 
 abstract class BookRepository {
   Future<List<BookModel>> getListBook();
+  Future<BookModel> getDetailBook(int id);
 }
 
 class BookRepositoryIml implements BookRepository {
@@ -11,5 +12,10 @@ class BookRepositoryIml implements BookRepository {
   @override
   Future<List<BookModel>> getListBook() async {
     return await _bookService.fetchBookList();
+  }
+
+  @override
+  Future<BookModel> getDetailBook(int id) async {
+    return await _bookService.fetchBookDetail(id);
   }
 }
