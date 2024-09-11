@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 class CustomTextInput extends StatelessWidget {
   final String title;
   final IconData icon;
-  final TextEditingController controllerInput;
+  final TextEditingController? controllerInput;
+  Function(String?)? onSaved;
 
-  const CustomTextInput({
+  CustomTextInput({
     Key? key,
     required this.title,
     required this.icon,
     required this.controllerInput,
+    this.onSaved,
   }) : super(key: key);
 
   @override
@@ -40,8 +42,9 @@ class CustomTextInput extends StatelessWidget {
                 child: Icon(icon, color: Colors.grey),
               ),
               Expanded(
-                child: TextField(
+                child: TextFormField(
                   controller: controllerInput,
+                  onSaved: (value) => onSaved!(value),
                   decoration: InputDecoration(
                     border: InputBorder.none,
                   ),

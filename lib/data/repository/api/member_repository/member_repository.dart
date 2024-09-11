@@ -1,7 +1,7 @@
+import 'dart:io';
+
 import 'package:monstar/data/models/api/request/member_model/member_model.dart';
 import 'package:monstar/data/services/auth_service/auth_service.dart';
-
-import '../../../models/api/response/member_response_model.dart';
 
 abstract class MemberRepository {
   Future<String> login(
@@ -9,13 +9,14 @@ abstract class MemberRepository {
     String password,
   );
 
-  Future<MemberModel> getMemberInfor(
-    int? memberId,
-  );
+  Future<MemberModel> getMemberInfor();
 
-  Future<MemberResponseModel> updateProfile(
-    int? memberId,
-    MemberResponseModel data,
+  Future<MemberModel> updateProfile(
+    String? name,
+    String? email,
+    String? address,
+    String? position,
+    File? image,
   );
 }
 
@@ -36,11 +37,9 @@ class MemberRepositoryImpl implements MemberRepository {
   }
 
   @override
-  Future<MemberModel> getMemberInfor(
-    int? memberId,
-  ) async {
+  Future<MemberModel> getMemberInfor() async {
     try {
-      final response = await _authService.getMemberInfor(memberId);
+      final response = await _authService.getMemberInfor();
       return response;
     } catch (e) {
       throw Exception("Cannot get member infor: $e");
@@ -48,12 +47,21 @@ class MemberRepositoryImpl implements MemberRepository {
   }
 
   @override
-  Future<MemberResponseModel> updateProfile(
-    int? memberId,
-    MemberResponseModel data,
+  Future<MemberModel> updateProfile(
+    String? name,
+    String? email,
+    String? address,
+    String? position,
+    File? image,
   ) async {
     try {
-      final response = await _authService.updateProfile(memberId, data);
+      final response = _authService.updateProfile(
+        name: name,
+        email: email,
+        address: address,
+        position: position,
+        image: image,
+      );
       return response;
     } catch (e) {
       throw Exception("Cannot update profile: $e");

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:monstar/data/models/api/request/member_model/member_model.dart';
@@ -5,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import '../../../utils/api_base_url.dart';
-import '../../models/api/response/member_response_model.dart';
 
 class AuthService {
   Future<void> saveTokens(
@@ -62,11 +63,10 @@ class AuthService {
     }
   }
 
-  Future<MemberModel> getMemberInfor(
-    int? memberId,
-  ) async {
+  Future<MemberModel> getMemberInfor() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? accessToken = pref.getString('accessToken');
+    int? memberId = pref.getInt('id');
 
     final response = await http.get(
       Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/profile/$memberId/'),
@@ -88,31 +88,73 @@ class AuthService {
     }
   }
 
-  Future<MemberResponseModel> updateProfile(
-    int? id,
-    MemberResponseModel data,
-    // File? imageFile,
-  ) async {
-    try {
-      final response = await http.put(
-        Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/profile/$id/update/'),
-        body: jsonEncode(data.toJson()),
-        headers: {
-          // 'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
+  Future<MemberModel> updateProfile({
+    String? name,
+    String? email,
+    String? address,
+    String? position,
+    File? image,
+  }) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    String? accessToken = pref.getString('accessToken');
+    String? id = pref.getString('id');
+
+    final uri = Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/profile/$id/update/');
+
+    Map<String, String> header = {
+      'Authorization': ' Bearer $accessToken',
+      'Content-Type':
+          image != null ? 'multipart/form-data' : 'application/json',
+    };
+
+    // tạo Json cho các trường chuẩn bị gửi lên Server
+    Map<String, dynamic> body = {
+      if (name != null) 'name': name,
+      if (email != null) 'email': email,
+      if (address != null) 'address': address,
+      if (position != null) 'position': position,
+    };
+
+    http.Response response;
+
+    if (image != null) {
+      // Nếu gửi ảnh, thì gửi dạng multipart
+      var request = http.MultipartRequest('PUT', uri);
+      request.headers.addAll(header);
+
+      // Thêm dữ liệu vào multipart form
+      body.forEach(
+        (key, value) {
+          request.fields[key] = value;
         },
       );
-      if (response.statusCode == 200) {
-        return MemberResponseModel.fromJson(jsonDecode(response.body));
-      } else if (response.statusCode == 401) {
-        throw Exception("Not authorized");
-      } else if (response.statusCode == 404) {
-        throw Exception("Member not found");
-      } else {
-        throw Exception("Something error was happened!");
-      }
-    } catch (e) {
-      throw Exception("Faild to update profile: $e");
+
+      // Thêm tệp ảnh vào form
+      request.files.add(
+        await http.MultipartFile.fromPath('image', image.path),
+      );
+
+      // Thực thi request và lấy về response
+      var streamedResponse = await request.send();
+
+      response = await http.Response.fromStream(streamedResponse);
+    } else {
+      // nếu không có ảnh, gửi dưới dạng JSON thôi
+      response = await http.put(
+        uri,
+        headers: header,
+        body: jsonEncode(body),
+      );
+    }
+
+    if (response.statusCode == 200) {
+      return MemberModel.fromJson(json.decode(response.body));
+    } else if (response.statusCode == 401) {
+      throw Exception("Not authorized");
+    } else if (response.statusCode == 404) {
+      throw Exception("Member not found");
+    } else {
+      throw Exception("Failed to update profile nha hihi!");
     }
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monstar/data/repository/api/member_repository/member_repository.dart';
@@ -5,7 +7,7 @@ import 'package:monstar/data/repository/api/member_repository/member_repository.
 import '../../../data/models/api/request/member_model/member_model.dart';
 
 class ProfileViewModel extends StateNotifier<AsyncValue<MemberModel>> {
-  final MemberRepository _memberRepository;
+  final MemberRepository memberRepository;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -15,14 +17,13 @@ class ProfileViewModel extends StateNotifier<AsyncValue<MemberModel>> {
   String? image;
 
   ProfileViewModel(
-    this._memberRepository,
+    this.memberRepository,
   ) : super(AsyncValue.loading());
-  // cho nay Logic qua hay, vi ve sau se su dung .family nen moi cho 1 tham so trong nay
 
-  Future<void> getMemberInfor(int? memberId) async {
+  Future<void> getMemberInfor() async {
     try {
       state = AsyncValue.loading();
-      final member = await _memberRepository.getMemberInfor(memberId);
+      final member = await memberRepository.getMemberInfor();
       state = AsyncValue.data(member);
 
       // set gia tri cho TextEditingField o Screen EditProfile
@@ -33,6 +34,31 @@ class ProfileViewModel extends StateNotifier<AsyncValue<MemberModel>> {
       image = member.image ?? "";
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
+    }
+  }
+
+  Future<void> updateProfile(
+    String? name,
+    String? email,
+    String? address,
+    String? position,
+    File? image,
+  ) async {
+    // cái này quá hay, tại sao ở trong Constructor có AsyncLoading rồi, mà ở đây đặt lại loading() làm gì
+    // vì với mỗi API, khi chạy khởi tạo lại, thì sẽ cần loading lại - quá hay
+    state = AsyncValue.loading();
+    try {
+      final memberUpdated = await memberRepository.updateProfile(
+        name,
+        email,
+        address,
+        position,
+        image,
+      );
+
+      state = AsyncValue.data(memberUpdated);
+    } catch (e, stackTrace) {
+      state = AsyncValue.error(e, stackTrace);
     }
   }
 }

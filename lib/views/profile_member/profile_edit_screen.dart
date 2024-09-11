@@ -5,10 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:monstar/components/core/app_text_style.dart';
 import 'package:monstar/views/profile_member/text_input_items.dart';
+import 'package:monstar/views/profile_member/viewmodel/update_profile_viewmodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../data/models/api/request/member_model/member_model.dart';
+import '../../providers/member_update_profile_provider.dart';
 import '../../utils/api_base_url.dart';
-import '../../data/models/api/response/member_response_model.dart';
 import '../../providers/memer_information_provider.dart';
 
 class ProfileEditScreen extends ConsumerStatefulWidget {
@@ -20,8 +22,8 @@ class ProfileEditScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
-
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
@@ -40,44 +42,36 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     }
   }
 
+  void _updatedProfile() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      ref.read(updateProfileViewModelProvider.notifier).updateProfile(
+            _nameController.text,
+            _emailController.text,
+            _addressController.text,
+            _positionController.text,
+            _image,
+          );
+    }
+  }
+
   @override
   void dispose() {
     super.dispose();
   }
 
-  int? realID;
-
-  Future<void> _getId() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      realID = prefs.getInt('id');
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    _getId();
+    ref.read(memberViewModelProvider.notifier).getMemberInfor();
   }
 
   @override
   Widget build(BuildContext context) {
     var sizeWidth = MediaQuery.of(context).size.width;
-    final memberState = ref.watch(memberViewModelProvider(realID));
-    final memberViewModel = ref.read(memberViewModelProvider(realID).notifier);
-    MemberResponseModel tempMember = MemberResponseModel(
-      id: realID,
-      name: _nameController.text,
-      email: _emailController.text,
-      address: _addressController.text,
-      position: _positionController.text,
-    );
-
-    // final memberUpdateViewModel = ref.read(
-    //   updateProfileViewModelProvider(
-    //     tempMember,
-    //   ).notifier,
-    // );
+    // tại sao ở đây có mỗi notifier
+    final memberViewModel = ref.watch(memberViewModelProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -87,7 +81,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
         ),
         centerTitle: true,
       ),
-      body: memberState.when(
+      body: memberViewModel.when(
         data: (member) {
           return Padding(
             padding: const EdgeInsets.only(
@@ -102,7 +96,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    memberViewModel.image != null
+                    member.image != null
                         ? GestureDetector(
                             onTap: _pickImageAvatar,
                             child: Stack(
@@ -115,8 +109,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                                     : CircleAvatar(
                                         radius: sizeWidth * 1 / 5,
                                         backgroundImage: NetworkImage(
-                                          ApiBaseUrl.baseUrl +
-                                              memberViewModel.image!,
+                                          ApiBaseUrl.baseUrl + member.image!,
                                         ),
                                       ),
                                 Positioned(
@@ -147,7 +140,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                     CustomTextInput(
                       title: "name",
                       icon: Icons.person,
-                      controllerInput: memberViewModel.nameController,
+                      controllerInput: _nameController,
                     ),
                     CustomTextInput(
                       title: "password",
@@ -157,23 +150,23 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                     CustomTextInput(
                       title: "email",
                       icon: Icons.email,
-                      controllerInput: memberViewModel.emailController,
+                      controllerInput: _emailController,
                     ),
                     CustomTextInput(
                       title: "address",
                       icon: Icons.local_activity,
-                      controllerInput: memberViewModel.addressController,
+                      controllerInput: _addressController,
                     ),
                     CustomTextInput(
                       title: "position",
                       icon: Icons.person_2_outlined,
-                      controllerInput: memberViewModel.positionController,
+                      controllerInput: _positionController,
                     ),
                     const SizedBox(
                       height: 20,
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: _updatedProfile,
                       child: Text("Updated Profile"),
                     ),
                   ],
