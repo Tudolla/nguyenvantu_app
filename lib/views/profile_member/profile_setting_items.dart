@@ -4,10 +4,12 @@ class ProfileSettingItem extends StatelessWidget {
   final Icon icon;
   final String typeSetting;
   final Icon iconRight;
-  const ProfileSettingItem({
+  VoidCallback? voidCallback;
+  ProfileSettingItem({
     super.key,
     required this.icon,
     required this.typeSetting,
+    this.voidCallback,
     this.iconRight = const Icon(Icons.arrow_right_alt),
   });
 
@@ -17,6 +19,7 @@ class ProfileSettingItem extends StatelessWidget {
       leading: icon,
       title: Text(typeSetting),
       trailing: iconRight,
+      onTap: voidCallback,
     );
   }
 }

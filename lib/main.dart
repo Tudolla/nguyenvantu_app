@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:monstar/components/core/app_text_style.dart';
 
+import 'components/theme/theme_provider.dart';
 import 'views/signup/signup_screen.dart';
 
 void main() async {
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeProvider = ref.watch(themeNotifierProvider);
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Monstar',
-      theme: ThemeData(
-        textTheme: TextTheme(
-          displayLarge: AppTextStyle.headline1,
-        ),
-      ),
+      theme: themeProvider,
       home: const SignUpScreen(),
     );
   }
