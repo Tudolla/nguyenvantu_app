@@ -27,11 +27,11 @@ class ProfileViewModel extends StateNotifier<AsyncValue<MemberModel>> {
       state = AsyncValue.data(member);
 
       // set gia tri cho TextEditingField o Screen EditProfile
-      nameController.text = member.name ?? "";
-      emailController.text = member.email ?? "";
-      addressController.text = member.address ?? "";
-      positionController.text = member.position ?? "";
-      image = member.image ?? "";
+      // nameController.text = member.name ?? "";
+      // emailController.text = member.email ?? "";
+      // addressController.text = member.address ?? "";
+      // positionController.text = member.position ?? "";
+      // image = member.image ?? "";
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
     }

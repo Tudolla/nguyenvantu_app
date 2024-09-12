@@ -121,7 +121,7 @@ class TextPostService {
       },
     );
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
+      final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
       return data.map((json) => PollPostWithChoice.fromJson(json)).toList();
     } else {
       print("Error: ${response.statusCode} - ${response.body}");

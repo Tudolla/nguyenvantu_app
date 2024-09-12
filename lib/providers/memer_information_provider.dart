@@ -5,14 +5,15 @@ import '../data/repository/api/member_repository/member_repository.dart';
 import '../data/services/auth_service/auth_service.dart';
 import '../views/profile_member/viewmodel/profile_viewmodel.dart';
 
-final getMemberServiceProvider = Provider<MemberRepository>((ref) {
-  return MemberRepositoryImpl(AuthService());
+final getMemberRepositoryProvider = Provider<MemberRepository>((ref) {
+  final service = AuthService();
+  return MemberRepositoryImpl(service);
 });
 
 final memberViewModelProvider =
     StateNotifierProvider<ProfileViewModel, AsyncValue<MemberModel>>((ref) {
-  final memberService = ref.watch(getMemberServiceProvider);
+  final memberRepository = ref.watch(getMemberRepositoryProvider);
   return ProfileViewModel(
-    memberService,
+    memberRepository,
   );
 });

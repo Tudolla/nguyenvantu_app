@@ -4,14 +4,12 @@ class CustomTextInput extends StatelessWidget {
   final String title;
   final IconData icon;
   final TextEditingController? controllerInput;
-  Function(String?)? onSaved;
 
   CustomTextInput({
     Key? key,
     required this.title,
     required this.icon,
     required this.controllerInput,
-    this.onSaved,
   }) : super(key: key);
 
   @override
@@ -44,7 +42,6 @@ class CustomTextInput extends StatelessWidget {
               Expanded(
                 child: TextFormField(
                   controller: controllerInput,
-                  onSaved: (value) => onSaved!(value),
                   decoration: InputDecoration(
                     border: InputBorder.none,
                   ),

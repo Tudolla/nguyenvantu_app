@@ -5,10 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:monstar/components/core/app_text_style.dart';
 import 'package:monstar/views/profile_member/text_input_items.dart';
-import 'package:monstar/views/profile_member/viewmodel/update_profile_viewmodel.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../data/models/api/request/member_model/member_model.dart';
 import '../../providers/member_update_profile_provider.dart';
 import '../../utils/api_base_url.dart';
 import '../../providers/memer_information_provider.dart';
@@ -23,13 +20,13 @@ class ProfileEditScreen extends ConsumerStatefulWidget {
 
 class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _positionController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController positionController = TextEditingController();
 
-  File? _image;
+  File? pickedImage;
 
   Future<void> _pickImageAvatar() async {
     final picker = ImagePicker();
@@ -37,34 +34,42 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
 
     if (pickedFile != null) {
       setState(() {
-        _image = File(pickedFile.path);
+        pickedImage = File(pickedFile.path);
       });
-    }
-  }
-
-  void _updatedProfile() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-
-      ref.read(updateProfileViewModelProvider.notifier).updateProfile(
-            _nameController.text,
-            _emailController.text,
-            _addressController.text,
-            _positionController.text,
-            _image,
-          );
     }
   }
 
   @override
   void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    addressController.dispose();
+    positionController.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    ref.read(memberViewModelProvider.notifier).getMemberInfor();
+    Future.microtask(() {
+      final member = ref.read(memberViewModelProvider).maybeWhen(
+            data: (member) => member,
+            orElse: () => null,
+          );
+
+      if (member != null) {
+        // Chỉ khởi tạo giá trị một lần khi member có dữ liệu
+        nameController.text = member.name ?? "";
+        emailController.text = member.email ?? "";
+        addressController.text = member.address ?? "";
+        positionController.text = member.position ?? "";
+      }
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(memberViewModelProvider.notifier).getMemberInfor();
+      });
+    });
+    // đảm bảo không cập nhật state trong quá trình build()
   }
 
   @override
@@ -83,12 +88,22 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
       ),
       body: memberViewModel.when(
         data: (member) {
+          // ở đây, ref.read() sử dụng .notifier : nó không trả về state, mà trả về chính đối tượng
+          // trong viewmodel
+          // túm lại, là .notifier sẽ không kích hoạt 1 hàm gì trong viewmodel, mà nó trả vè chính
+          // đối tượng trong viewmodel
+          // final controllerViewModel =
+          //     ref.read(memberViewModelProvider.notifier);
+          // controllerViewModel.nameController.text = member.name ?? "";
+          // controllerViewModel.emailController.text = member.email ?? "";
+          // controllerViewModel.addressController.text = member.address ?? "";
+          // controllerViewModel.positionController.text = member.position ?? "";
+          // controllerViewModel.image = member.image ?? "";
+
           return Padding(
             padding: const EdgeInsets.only(
               left: 30,
               right: 30,
-              top: 10,
-              bottom: 20,
             ),
             child: Center(
               child: SingleChildScrollView(
@@ -101,10 +116,11 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                             onTap: _pickImageAvatar,
                             child: Stack(
                               children: [
-                                _image != null
+                                pickedImage != null
                                     ? CircleAvatar(
                                         radius: sizeWidth * 1 / 5,
-                                        backgroundImage: FileImage(_image!),
+                                        backgroundImage:
+                                            FileImage(pickedImage!),
                                       )
                                     : CircleAvatar(
                                         radius: sizeWidth * 1 / 5,
@@ -140,33 +156,57 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                     CustomTextInput(
                       title: "name",
                       icon: Icons.person,
-                      controllerInput: _nameController,
+                      controllerInput: nameController,
                     ),
                     CustomTextInput(
                       title: "password",
                       icon: Icons.password,
-                      controllerInput: _passwordController,
+                      controllerInput: passwordController,
                     ),
                     CustomTextInput(
                       title: "email",
                       icon: Icons.email,
-                      controllerInput: _emailController,
+                      controllerInput: emailController,
                     ),
                     CustomTextInput(
                       title: "address",
                       icon: Icons.local_activity,
-                      controllerInput: _addressController,
+                      controllerInput: addressController,
                     ),
                     CustomTextInput(
                       title: "position",
                       icon: Icons.person_2_outlined,
-                      controllerInput: _positionController,
+                      controllerInput: positionController,
                     ),
                     const SizedBox(
                       height: 20,
                     ),
                     ElevatedButton(
-                      onPressed: _updatedProfile,
+                      onPressed: () async {
+                        await ref
+                            .read(memberViewModelProvider.notifier)
+                            .updateProfile(
+                              nameController.text,
+                              emailController.text,
+                              addressController.text,
+                              positionController.text,
+                              pickedImage,
+                            );
+                        memberViewModel.when(
+                          data: (_) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Xong"),
+                              ),
+                            );
+                          },
+                          error: (e, strackTrace) {
+                            return ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBar(content: Text("error")));
+                          },
+                          loading: () => CircularProgressIndicator(),
+                        );
+                      },
                       child: Text("Updated Profile"),
                     ),
                   ],

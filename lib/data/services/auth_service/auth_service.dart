@@ -97,55 +97,30 @@ class AuthService {
   }) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? accessToken = pref.getString('accessToken');
-    String? id = pref.getString('id');
+    int? id = pref.getInt('id');
 
     final uri = Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/profile/$id/update/');
 
     Map<String, String> header = {
       'Authorization': ' Bearer $accessToken',
-      'Content-Type':
-          image != null ? 'multipart/form-data' : 'application/json',
+      'Content-Type': 'multipart/form-data',
     };
 
-    // tạo Json cho các trường chuẩn bị gửi lên Server
-    Map<String, dynamic> body = {
-      if (name != null) 'name': name,
-      if (email != null) 'email': email,
-      if (address != null) 'address': address,
-      if (position != null) 'position': position,
-    };
+    var request = http.MultipartRequest("PUT", uri);
+    request.headers.addAll(header);
 
-    http.Response response;
+    request.fields['name'] = name ?? "";
+    request.fields['email'] = email ?? "";
+    request.fields['address'] = address ?? "";
+    request.fields['position'] = position ?? "";
 
     if (image != null) {
-      // Nếu gửi ảnh, thì gửi dạng multipart
-      var request = http.MultipartRequest('PUT', uri);
-      request.headers.addAll(header);
-
-      // Thêm dữ liệu vào multipart form
-      body.forEach(
-        (key, value) {
-          request.fields[key] = value;
-        },
-      );
-
-      // Thêm tệp ảnh vào form
-      request.files.add(
-        await http.MultipartFile.fromPath('image', image.path),
-      );
-
-      // Thực thi request và lấy về response
-      var streamedResponse = await request.send();
-
-      response = await http.Response.fromStream(streamedResponse);
-    } else {
-      // nếu không có ảnh, gửi dưới dạng JSON thôi
-      response = await http.put(
-        uri,
-        headers: header,
-        body: jsonEncode(body),
-      );
+      request.files.add(await http.MultipartFile.fromPath('image', image.path));
     }
+
+    // gui request va nhan response ne
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
 
     if (response.statusCode == 200) {
       return MemberModel.fromJson(json.decode(response.body));
@@ -154,8 +129,57 @@ class AuthService {
     } else if (response.statusCode == 404) {
       throw Exception("Member not found");
     } else {
-      throw Exception("Failed to update profile nha hihi!");
+      throw Exception("Failed to update profile : ${response.body}");
     }
+    // tạo Json cho các trường chuẩn bị gửi lên Server
+    // Map<String, dynamic> body = {
+    //   if (name != null) 'name': name,
+    //   if (email != null) 'email': email,
+    //   if (address != null) 'address': address,
+    //   if (position != null) 'position': position,
+    // };
+
+    // http.Response response;
+
+    // if (image != null) {
+    //   // Nếu gửi ảnh, thì gửi dạng multipart
+    //   var request = http.MultipartRequest('PUT', uri);
+    //   request.headers.addAll(header);
+
+    //   // Thêm dữ liệu vào multipart form
+    //   body.forEach(
+    //     (key, value) {
+    //       request.fields[key] = value;
+    //     },
+    //   );
+
+    //   // Thêm tệp ảnh vào form
+    //   request.files.add(
+    //     await http.MultipartFile.fromPath('image', image.path),
+    //   );
+
+    //   // Thực thi request và lấy về response
+    //   var streamedResponse = await request.send();
+
+    //   response = await http.Response.fromStream(streamedResponse);
+    // } else {
+    //   // nếu không có ảnh, gửi dưới dạng JSON thôi
+    //   response = await http.put(
+    //     uri,
+    //     headers: header,
+    //     body: jsonEncode(body),
+    //   );
+    // }
+
+    // if (response.statusCode == 200) {
+    //   return MemberModel.fromJson(json.decode(response.body));
+    // } else if (response.statusCode == 401) {
+    //   throw Exception("Not authorized");
+    // } else if (response.statusCode == 404) {
+    //   throw Exception("Member not found");
+    // } else {
+    //   throw Exception("Failed to update profile nha hihi!");
+    // }
   }
 }
 
