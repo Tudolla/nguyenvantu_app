@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../components/core/app_text_style.dart';
 import '../../providers/get_textpost_provider.dart';
 
 class TextPostListScreen extends ConsumerStatefulWidget {
@@ -23,7 +24,12 @@ class _TextPostListScreenState extends ConsumerState<TextPostListScreen> {
     final textPostState = ref.watch(textPostViewModelProvider);
     return Scaffold(
       appBar: AppBar(
-        title: Text("List TextPost"),
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: Text(
+          "List TextPost",
+          style: AppTextStyle.appBarStyle,
+        ),
       ),
       body: textPostState.when(
         data: (posts) => ListView.builder(

@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:monstar/components/button/app_button.dart';
 import 'package:monstar/components/core/app_text_style.dart';
 import 'package:monstar/views/profile_member/setting_app_screen.dart';
 import 'package:monstar/views/profile_member/text_input_items.dart';
 
-import '../../providers/member_update_profile_provider.dart';
 import '../../utils/api_base_url.dart';
 import '../../providers/memer_information_provider.dart';
 
@@ -86,9 +86,17 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
       appBar: AppBar(
         title: Text(
           "Edit Profile",
-          style: AppTextStyle.headline1,
+          style: AppTextStyle.appBarStyle,
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.security_rounded,
+            ),
+          ),
+        ],
       ),
       body: isHidden == true
           ? ElevatedButton(
@@ -183,8 +191,9 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                           const SizedBox(
                             height: 20,
                           ),
-                          ElevatedButton(
-                            onPressed: () async {
+                          AppButton(
+                            text: "Updated Profile",
+                            function: () async {
                               await ref
                                   .read(memberViewModelProvider.notifier)
                                   .updateProfile(
@@ -213,7 +222,8 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                                 loading: () => CircularProgressIndicator(),
                               );
                             },
-                            child: Text("Updated Profile"),
+                            textColor: Colors.white,
+                            backgroundColor: Colors.blueGrey,
                           ),
                         ],
                       ),

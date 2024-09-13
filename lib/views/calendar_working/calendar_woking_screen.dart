@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:ui';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../../components/core/app_text_style.dart';
 import '../../providers/time_tracking_provider.dart';
 
 class CalendarWokingScreen extends ConsumerStatefulWidget {
@@ -32,7 +34,15 @@ class _CalendarWokingScreenState extends ConsumerState<CalendarWokingScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("calendar working day"),
+        automaticallyImplyLeading: false,
+        title: Text(
+          "calendar working day",
+          style: TextStyle(
+            fontFamily: AppTextStyle.drawerFontStyle,
+            fontSize: 25,
+            color: const Color.fromARGB(255, 109, 105, 105),
+          ),
+        ),
         centerTitle: true,
       ),
       body: timeTrackingState.when(
@@ -57,65 +67,96 @@ class _CalendarWokingScreenState extends ConsumerState<CalendarWokingScreen> {
               left: 20,
               right: 20,
             ),
-            child: TableCalendar(
-              focusedDay: DateTime.now(),
-              firstDay: DateTime.utc(2024, 01, 01),
-              lastDay: DateTime.utc(2025, 01, 01),
-              headerStyle: HeaderStyle(
-                formatButtonVisible: false,
-                titleCentered: true,
-                leftChevronMargin: EdgeInsets.only(left: 0.0),
-                rightChevronMargin: EdgeInsets.only(right: 0.0),
-                leftChevronPadding: EdgeInsets.all(0),
-                rightChevronPadding: EdgeInsets.all(0),
-                leftChevronIcon: Icon(
-                  Icons.chevron_left,
-                  size: 28,
+            child: Stack(
+              children: [
+                Positioned(
+                  right: -10,
+                  bottom: 150,
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        child: Image.asset(
+                          "assets/images/calendar.jpg",
+                          // fit: BoxFit.cover,
+                          width: 150,
+                          height: 150,
+                        ),
+                      ),
+                      Positioned.fill(
+                        child: BackdropFilter(
+                          filter:
+                              ImageFilter.blur(sigmaX: 1, sigmaY: 1), // Độ mờ
+                          child: Container(
+                            color: Colors.black
+                                .withOpacity(0), // Giữ trong suốt cho hiệu ứng
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                rightChevronIcon: Icon(
-                  Icons.chevron_right,
-                  size: 28,
+                TableCalendar(
+                  focusedDay: DateTime.now(),
+                  firstDay: DateTime.utc(2024, 01, 01),
+                  lastDay: DateTime.utc(2025, 01, 01),
+                  headerStyle: HeaderStyle(
+                    formatButtonVisible: false,
+                    titleCentered: true,
+                    leftChevronMargin: EdgeInsets.only(left: 0.0),
+                    rightChevronMargin: EdgeInsets.only(right: 0.0),
+                    leftChevronPadding: EdgeInsets.all(0),
+                    rightChevronPadding: EdgeInsets.all(0),
+                    leftChevronIcon: Icon(
+                      Icons.chevron_left,
+                      size: 28,
+                    ),
+                    rightChevronIcon: Icon(
+                      Icons.chevron_right,
+                      size: 28,
+                    ),
+                  ),
+                  calendarFormat: _calendarFormat,
+                  calendarStyle: CalendarStyle(
+                    outsideDaysVisible: false,
+                  ),
+                  startingDayOfWeek: StartingDayOfWeek.monday,
+                  calendarBuilders: CalendarBuilders(
+                    defaultBuilder: (context, day, focusedDay) {
+                      DateTime cleanDay =
+                          DateTime(day.year, day.month, day.day);
+                      double? workHours = workingDay[cleanDay];
+                      if (workHours == 1.0) {
+                        return Container(
+                          margin: const EdgeInsets.all(5.0),
+                          alignment: Alignment.center,
+                          decoration: const BoxDecoration(
+                            color: Colors.green,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Text(
+                            day.day.toString(),
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        );
+                      } else if (workHours == 0.5) {
+                        return Container(
+                          margin: const EdgeInsets.all(5.0),
+                          alignment: Alignment.center,
+                          decoration: const BoxDecoration(
+                            color: Color.fromARGB(255, 164, 241, 175),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Text(
+                            day.day.toString(),
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        );
+                      }
+                      return null;
+                    },
+                  ),
                 ),
-              ),
-              calendarFormat: _calendarFormat,
-              calendarStyle: CalendarStyle(
-                outsideDaysVisible: false,
-              ),
-              startingDayOfWeek: StartingDayOfWeek.monday,
-              calendarBuilders: CalendarBuilders(
-                defaultBuilder: (context, day, focusedDay) {
-                  DateTime cleanDay = DateTime(day.year, day.month, day.day);
-                  double? workHours = workingDay[cleanDay];
-                  if (workHours == 1.0) {
-                    return Container(
-                      margin: const EdgeInsets.all(5.0),
-                      alignment: Alignment.center,
-                      decoration: const BoxDecoration(
-                        color: Colors.green,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Text(
-                        day.day.toString(),
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    );
-                  } else if (workHours == 0.5) {
-                    return Container(
-                      margin: const EdgeInsets.all(5.0),
-                      alignment: Alignment.center,
-                      decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 164, 241, 175),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Text(
-                        day.day.toString(),
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    );
-                  }
-                  return null;
-                },
-              ),
+              ],
             ),
           );
         },

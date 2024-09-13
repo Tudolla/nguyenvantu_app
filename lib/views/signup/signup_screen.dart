@@ -98,102 +98,162 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       );
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Padding(
-        padding: EdgeInsets.only(top: size.height / 8),
-        child: Container(
-          padding: EdgeInsets.only(left: size.width / 3, right: 20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.width / 4,
-                width: MediaQuery.of(context).size.width / 4,
-                child: LottieBuilder.asset("assets/tree.json"),
-              ),
-              Text(
-                "Monstarlab Company",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(
-                height: 19,
-              ),
-              TextFormField(
-                controller: _usernameController,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.person),
-                  labelText: "username",
-                  hintStyle: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontSize: 20,
+        padding: EdgeInsets.only(top: size.height / 10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: EdgeInsets.only(left: size.width / 3, right: 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.width / 4,
+                    width: MediaQuery.of(context).size.width / 4,
+                    child: LottieBuilder.asset("assets/tree.json"),
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: Colors.grey,
-                      width: 2.0,
-                    ),
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextFormField(
-                obscureText: true,
-                controller: _passwordController,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.password),
-                  labelText: "password",
-                  hintStyle: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontSize: 20,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(
-                      color: Colors.grey,
-                      width: 2.0,
-                    ),
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(size.width / 2, 50),
-                    backgroundColor: Colors.yellow.withOpacity(.8),
-                    shadowColor: Colors.green.withOpacity(.2),
-                  ),
-                  onPressed: () async {
-                    final username = _usernameController.text;
-                    final password = _passwordController.text;
-                    await singupViewModel.login(username, password);
-
-                    showDialogMessage(context, loginState.message!);
-                  },
-                  child: Text(
-                    "Login",
+                  Text(
+                    "Monstarlab Company",
                     style: TextStyle(
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      fontSize: 25,
                     ),
                   ),
+                  const SizedBox(
+                    height: 19,
+                  ),
+                  TextFormField(
+                    controller: _usernameController,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.person),
+                      labelText: "username",
+                      hintStyle: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 20,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide(
+                          color: Colors.black87,
+                          width: 1,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide(
+                          color: Colors.black87,
+                          width: 1,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide(
+                          color: Colors.black87,
+                          width: 1,
+                        ),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    obscureText: true,
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.password),
+                      labelText: "password",
+                      hintStyle: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 20,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide(
+                          color: Colors.black87,
+                          width: 1,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide(
+                          color: Colors.black87,
+                          width: 1,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide(
+                          color: Colors.black87,
+                          width: 1,
+                        ),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text(
+                    "Having trouble in sign in?",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.blueGrey,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(size.width / 2, 50),
+                        backgroundColor: Colors.yellow.withOpacity(.8),
+                        shadowColor: Colors.green.withOpacity(.2),
+                      ),
+                      onPressed: () async {
+                        final username = _usernameController.text;
+                        final password = _passwordController.text;
+                        await singupViewModel.login(username, password);
+
+                        showDialogMessage(context, loginState.message!);
+                      },
+                      child: Text(
+                        "Login",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontSize: 25,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 10,
+                right: 10,
+                bottom: 10,
+              ),
+              child: Text(
+                "When you log in to the application, you also aggree to our terms.",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.blueGrey,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

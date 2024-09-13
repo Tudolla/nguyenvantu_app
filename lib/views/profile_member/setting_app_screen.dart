@@ -1,11 +1,16 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:monstar/components/core/app_text_style.dart';
 import 'package:monstar/components/theme/theme.dart';
 import 'package:monstar/components/theme/theme_provider.dart';
 
+import '../../components/button/arrow_back_button.dart';
+import '../../data/services/secure_storage_local_service/secure_storate_service.dart';
+
 final isHiddenProvider = StateProvider<bool>((ref) => false);
 final pinCodeProvider = StateProvider<String?>((ref) => null);
+final secureStorageProvider = Provider((ref) => SecureStorageService());
 
 class SettingAppScreen extends ConsumerStatefulWidget {
   const SettingAppScreen({
@@ -22,14 +27,19 @@ class _SettingAppScreenState extends ConsumerState<SettingAppScreen> {
   @override
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeNotifierProvider);
+    final TextEditingController _pinController = TextEditingController();
     final isHidden = ref.watch(isHiddenProvider);
     final pinCode = ref.watch(pinCodeProvider);
+    final storageService = ref.watch(secureStorageProvider);
     bool isLightMode = themeMode == lightMode;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Setting"),
+        title: Text(
+          "Setting",
+          style: AppTextStyle.appBarStyle,
+        ),
         centerTitle: true,
-        actions: [],
+        leading: ArrowBackButton(),
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
@@ -98,13 +108,20 @@ class _SettingAppScreenState extends ConsumerState<SettingAppScreen> {
             ),
             if (isHidden)
               TextField(
+                controller: _pinController,
                 decoration: InputDecoration(
                   labelText: 'Cai dat PIN 6 so',
                 ),
                 keyboardType: TextInputType.number,
                 maxLength: 6,
-                onChanged: (value) {
+                onChanged: (value) async {
                   if (value.length == 6) {
+                    await storageService.savePin(_pinController.text);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Pin is saved"),
+                      ),
+                    );
                     ref.read(pinCodeProvider.notifier).state = value;
                   }
                 },

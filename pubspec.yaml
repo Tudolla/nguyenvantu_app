@@ -32,6 +32,8 @@ dependencies:
   table_calendar: ^3.1.2
   provider: ^6.1.2
   animated_toggle_switch: ^0.8.3
+  awesome_dialog: ^3.2.1
+  flutter_secure_storage: ^4.2.1
   # firebase_messaging: ^14.7.10
 
 dev_dependencies:
@@ -56,3 +58,15 @@ flutter:
     - family: CustomFontApp
       fonts:
         - asset: assets/fonts/Kalnia_Expanded-Light.ttf
+
+    - family: BoldFontApp
+      fonts:
+        - asset: assets/fonts/Philosopher-Bold.ttf
+
+    - family: RegularFontApp
+      fonts:
+        - asset: assets/fonts/Philosopher-Regular.ttf
+
+    - family: DrawerFontApp
+      fonts:
+        - asset: assets/fonts/NerkoOne-Regular.ttf

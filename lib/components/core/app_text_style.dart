@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 
 class AppTextStyle {
-  static TextStyle headline1 = TextStyle(
-    fontFamily: 'CustomFontApp',
-    fontSize: 20,
+  // this is used for style all the text in AppBar()
+  static TextStyle appBarStyle = TextStyle(
+    fontFamily: 'DrawerFontApp',
+    fontSize: 25,
+    color: Colors.grey,
     fontWeight: FontWeight.normal,
   );
+
+  static String boldFontStyle = 'BoldFontApp';
+  static String regularFontStyle = 'RegularFontApp';
+  static String drawerFontStyle = 'DrawerFontApp';
 }

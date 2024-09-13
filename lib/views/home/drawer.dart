@@ -1,8 +1,10 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:monstar/views/contribution/contribution_screen.dart';
+import 'package:monstar/views/contribution/add_textpost_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../components/core/app_text_style.dart';
 import '../contribution/add_pollpost_creen.dart';
 import '../signup/signup_screen.dart';
 
@@ -15,86 +17,31 @@ class MyDrawer extends StatefulWidget {
 
 class _MyDrawerState extends State<MyDrawer> {
   void _openDialogChoice(BuildContext context) {
-    showGeneralDialog(
+    AwesomeDialog(
       context: context,
-      barrierDismissible: false,
-      barrierLabel: "",
-      transitionDuration: const Duration(milliseconds: 500),
-      pageBuilder: (context, animation1, animation2) {
-        return Container();
-      },
-      transitionBuilder: (context, a1, a2, widget) {
-        return ScaleTransition(
-          scale: Tween<double>(begin: 0.5, end: 1.0).animate(a1),
-          child: FadeTransition(
-            opacity: Tween<double>(begin: 0.5, end: 1.0).animate(a1),
-            child: AlertDialog(
-              backgroundColor: const Color.fromARGB(255, 50, 67, 75),
-              title: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    "hello:",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                  const Divider(
-                    color: Colors.white,
-                    height: 1,
-                  ),
-                ],
-              ),
-              content: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Get.off(
-                        () => ContributionScreen(),
-                        transition: Transition.circularReveal,
-                        duration: const Duration(seconds: 2),
-                      );
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.5),
-                      ),
-                      child: Text(
-                        "contribute",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Get.off(
-                        () => AddPollpostCreen(),
-                        transition: Transition.circularReveal,
-                        duration: const Duration(seconds: 2),
-                      );
-                    },
-                    child: Text(
-                      "selection",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              shape: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide: BorderSide.none,
-              ),
-            ),
-          ),
+      dialogType: DialogType.question,
+      animType: AnimType.topSlide,
+      showCloseIcon: true,
+      title: "happy to hear from you",
+      desc: "make a choice",
+      btnCancelText: "standard",
+      btnCancelColor: Colors.lightBlue,
+      btnOkText: "vote",
+      btnCancelOnPress: () {
+        Get.off(
+          () => ContributionScreen(),
+          transition: Transition.circularReveal,
+          duration: const Duration(seconds: 2),
         );
       },
-    );
+      btnOkOnPress: () {
+        Get.off(
+          () => AddPollpostCreen(),
+          transition: Transition.circularReveal,
+          duration: const Duration(seconds: 2),
+        );
+      },
+    ).show();
   }
 
   Future<void> _logout() async {
@@ -113,8 +60,9 @@ class _MyDrawerState extends State<MyDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size.width;
     return Drawer(
-      width: 250,
+      width: size * 2 / 3 + 20,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -140,7 +88,7 @@ class _MyDrawerState extends State<MyDrawer> {
                       const Text(
                         "Monstarlab Vietnam",
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -154,25 +102,75 @@ class _MyDrawerState extends State<MyDrawer> {
               ),
               ListTile(
                 onTap: () => _openDialogChoice(context),
-                title: const Text("Feed back"),
-                leading: const Icon(Icons.feedback_outlined),
+                title: Text(
+                  "Feed back",
+                  style: TextStyle(
+                    fontFamily: AppTextStyle.drawerFontStyle,
+                    color: Colors.blueGrey,
+                    fontSize: 20,
+                  ),
+                ),
+                leading: const Icon(
+                  Icons.feedback_outlined,
+                  color: Colors.blueGrey,
+                ),
               ),
-              const ListTile(
-                title: Text("Achievements"),
-                leading: Icon(Icons.price_change_outlined),
+              ListTile(
+                title: Text(
+                  "Achievements",
+                  style: TextStyle(
+                    fontFamily: AppTextStyle.drawerFontStyle,
+                    color: Colors.blueGrey,
+                    fontSize: 20,
+                  ),
+                ),
+                leading: Icon(
+                  Icons.price_change_outlined,
+                  color: Colors.blueGrey,
+                ),
               ),
-              const ListTile(
-                title: Text("Work day"),
-                leading: Icon(Icons.calendar_month_outlined),
+              ListTile(
+                title: Text(
+                  "Work day",
+                  style: TextStyle(
+                    fontFamily: AppTextStyle.drawerFontStyle,
+                    color: Colors.blueGrey,
+                    fontSize: 20,
+                  ),
+                ),
+                leading: Icon(
+                  Icons.calendar_month_outlined,
+                  color: Colors.blueGrey,
+                ),
               ),
-              const ListTile(
-                title: Text("About company"),
-                leading: Icon(Icons.square_outlined),
+              ListTile(
+                title: Text(
+                  "About company",
+                  style: TextStyle(
+                    fontFamily: AppTextStyle.drawerFontStyle,
+                    color: Colors.blueGrey,
+                    fontSize: 20,
+                  ),
+                ),
+                leading: Icon(
+                  Icons.square_outlined,
+                  color: Colors.blueGrey,
+                ),
               ),
               ListTile(
                 onTap: () {},
-                leading: const Icon(Icons.switch_access_shortcut),
-                title: const Text("Mode switch"),
+                leading: const Icon(
+                  Icons.switch_access_shortcut,
+                  color: Colors.blueGrey,
+                ),
+                title: Text(
+                  "Mode switch",
+                  style: TextStyle(
+                    fontFamily: AppTextStyle.drawerFontStyle,
+                    color: Colors.blueGrey,
+                    fontSize: 20,
+                  ),
+                ),
               ),
             ],
           ),
@@ -183,7 +181,14 @@ class _MyDrawerState extends State<MyDrawer> {
                 SnackBar(content: Text("Logged out successfully!")),
               );
             },
-            title: Text("Sign out!"),
+            title: Text(
+              "Sign out !",
+              style: TextStyle(
+                fontFamily: AppTextStyle.drawerFontStyle,
+                color: Colors.blueGrey,
+                fontSize: 20,
+              ),
+            ),
             leading: Icon(Icons.login_rounded),
           ),
         ],

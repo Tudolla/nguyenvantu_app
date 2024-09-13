@@ -5,7 +5,7 @@ import '../core/app_text_style.dart';
 ThemeData lightMode = ThemeData(
   brightness: Brightness.light,
   textTheme: TextTheme(
-    displayLarge: AppTextStyle.headline1,
+    displayLarge: AppTextStyle.appBarStyle,
   ),
   colorScheme: ColorScheme.light(
     background: Colors.grey.shade400,
@@ -17,7 +17,7 @@ ThemeData lightMode = ThemeData(
 ThemeData darkMode = ThemeData(
   brightness: Brightness.dark,
   textTheme: TextTheme(
-    displayLarge: AppTextStyle.headline1,
+    displayLarge: AppTextStyle.appBarStyle,
   ),
   colorScheme: ColorScheme.dark(
     background: Colors.grey.shade900,

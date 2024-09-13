@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monstar/views/home/drawer.dart';
+import 'package:monstar/views/home/widgets/gradient_textstyle_widget.dart';
 import 'package:monstar/views/home/widgets/menu.dart';
 import 'package:monstar/components/core/app_text_style.dart';
 
@@ -10,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../book_store/book_list_screen.dart';
 import '../calendar_working/calendar_woking_screen.dart';
 
-import '../contribution/list_textpost_screen.dart';
+import '../contribution/textpost_screen.dart';
 import '../contribution/pollpost_screen.dart';
 import '../profile_member/profile_screen.dart';
 import 'widgets/animated_container_widget.dart';
@@ -52,7 +53,11 @@ class _HomeScreenDefaultState extends ConsumerState<HomeScreenDefault> {
               centerTitle: true,
               title: Text(
                 "Monstarlab",
-                style: AppTextStyle.headline1,
+                style: TextStyle(
+                  fontFamily: AppTextStyle.drawerFontStyle,
+                  fontSize: 25,
+                  color: Colors.grey,
+                ),
               ),
               actions: [
                 IconButton(

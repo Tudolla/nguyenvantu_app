@@ -10,7 +10,7 @@ final pollpostRepositoryProvider = Provider<PollpostRepository>((ref) {
 });
 
 final pollPostProvider =
-    StateNotifierProvider<PollPostNotifier, AsyncValue<bool>>((ref) {
+    StateNotifierProvider<PollPostNotifier, AsyncValue<bool?>>((ref) {
   final repository = ref.watch(pollpostRepositoryProvider);
   return PollPostNotifier(repository);
 });

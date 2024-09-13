@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:monstar/components/button/app_button.dart';
 import 'package:monstar/components/core/app_text_style.dart';
 import 'package:monstar/views/profile_member/profile_edit_screen.dart';
 import 'package:monstar/views/profile_member/profile_setting_items.dart';
@@ -41,7 +42,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       appBar: AppBar(
         title: Text(
           "Profile",
-          style: AppTextStyle.headline1,
+          style: AppTextStyle.appBarStyle,
         ),
         centerTitle: true,
         actions: [
@@ -128,25 +129,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        fixedSize: Size(sizeWidth / 1.5, 50),
-                        backgroundColor: Colors.yellow.withOpacity(.6),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ProfileEditScreen(),
-                          ),
-                        );
+                    AppButton(
+                      text: "View Profile",
+                      function: () {
+                        Get.to(ProfileEditScreen());
                       },
-                      child: Text(
-                        "View Profile",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      textColor: Colors.white,
+                      backgroundColor: Colors.blueGrey,
                     ),
                   ],
                 ),

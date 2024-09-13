@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:monstar/components/core/app_text_style.dart';
 
 import '../../providers/get_pollpost_provider.dart';
 import '../../providers/vote_pollpost_provider.dart';
@@ -25,7 +25,11 @@ class _PollPostScreenState extends ConsumerState<PollPostScreen> {
     final stateVote = ref.watch(votePollpostViewModelProvider);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Let make a choice"),
+        automaticallyImplyLeading: false,
+        title: Text(
+          "Let make a choice",
+          style: AppTextStyle.appBarStyle,
+        ),
         centerTitle: true,
       ),
       body: statePollPost.when(
