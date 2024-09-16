@@ -1,16 +1,15 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:monstar/components/core/app_text_style.dart';
 import 'package:monstar/components/theme/theme.dart';
 import 'package:monstar/components/theme/theme_provider.dart';
 
 import '../../components/button/arrow_back_button.dart';
-import '../../data/services/secure_storage_local_service/secure_storate_service.dart';
+import 'widget/pin_input_item.dart';
 
-final isHiddenProvider = StateProvider<bool>((ref) => false);
 final pinCodeProvider = StateProvider<String?>((ref) => null);
-final secureStorageProvider = Provider((ref) => SecureStorageService());
 
 class SettingAppScreen extends ConsumerStatefulWidget {
   const SettingAppScreen({
@@ -24,13 +23,18 @@ class SettingAppScreen extends ConsumerStatefulWidget {
 
 class _SettingAppScreenState extends ConsumerState<SettingAppScreen> {
   var firstSwitchValue = false;
+  var firstStateHidden = false;
+  final FlutterSecureStorage secureStorage = FlutterSecureStorage();
+
+  Future<void> _clearAllData() async {
+    await secureStorage.deleteAll();
+    print("All data is delted");
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeNotifierProvider);
-    final TextEditingController _pinController = TextEditingController();
-    final isHidden = ref.watch(isHiddenProvider);
-    final pinCode = ref.watch(pinCodeProvider);
-    final storageService = ref.watch(secureStorageProvider);
+
     bool isLightMode = themeMode == lightMode;
     return Scaffold(
       appBar: AppBar(
@@ -39,7 +43,10 @@ class _SettingAppScreenState extends ConsumerState<SettingAppScreen> {
           style: AppTextStyle.appBarStyle,
         ),
         centerTitle: true,
-        leading: ArrowBackButton(),
+        leading: ArrowBackButton(
+          popScreen: true,
+          showSnackbar: false,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
@@ -47,12 +54,15 @@ class _SettingAppScreenState extends ConsumerState<SettingAppScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "Theme App:",
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 25,
+                    color: Colors.blueGrey,
+                    fontFamily: AppTextStyle.drawerFontStyle,
                   ),
                 ),
                 AnimatedToggleSwitch.size(
@@ -99,33 +109,16 @@ class _SettingAppScreenState extends ConsumerState<SettingAppScreen> {
             const SizedBox(
               height: 20,
             ),
-            SwitchListTile(
-              title: Text("Ẩn thông tin cá nhân"),
-              value: isHidden,
-              onChanged: (value) {
-                ref.read(isHiddenProvider.notifier).state = value;
-              },
+            PinInputItem(),
+            const SizedBox(
+              height: 30,
             ),
-            if (isHidden)
-              TextField(
-                controller: _pinController,
-                decoration: InputDecoration(
-                  labelText: 'Cai dat PIN 6 so',
-                ),
-                keyboardType: TextInputType.number,
-                maxLength: 6,
-                onChanged: (value) async {
-                  if (value.length == 6) {
-                    await storageService.savePin(_pinController.text);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("Pin is saved"),
-                      ),
-                    );
-                    ref.read(pinCodeProvider.notifier).state = value;
-                  }
-                },
-              ),
+            ElevatedButton(
+              onPressed: () async {
+                await _clearAllData();
+              },
+              child: Text("Delte"),
+            ),
           ],
         ),
       ),

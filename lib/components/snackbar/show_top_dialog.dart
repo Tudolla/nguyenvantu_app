@@ -77,7 +77,11 @@ class _FloatingTopDialogState extends State<FloatingTopDialog>
                     children: [
                       Text(
                         widget.message,
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                       Container(

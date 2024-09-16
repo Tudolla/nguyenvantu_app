@@ -10,13 +10,13 @@ final themeNotifierProvider =
 class ThemeNotifier extends StateNotifier<ThemeData> {
   ThemeNotifier() : super(lightMode);
 
-  void toggleTheme() {
-    if (state == lightMode) {
-      state = darkMode;
-    } else {
-      state = lightMode;
-    }
-  }
+  // void toggleTheme() {
+  //   if (state == lightMode) {
+  //     state = darkMode;
+  //   } else {
+  //     state = lightMode;
+  //   }
+  // }
 
   void setTheme(ThemeData mode) {
     state = mode;

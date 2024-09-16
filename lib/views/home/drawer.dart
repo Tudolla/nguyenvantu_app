@@ -47,15 +47,14 @@ class _MyDrawerState extends State<MyDrawer> {
   Future<void> _logout() async {
     // Lấy instance của SharedPreferences
     final prefs = await SharedPreferences.getInstance();
-
-    // Xóa toàn bộ dữ liệu trong SharedPreferences
-    await prefs.clear();
-
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => SignUpScreen(),
       ),
     );
+
+    // Xóa toàn bộ dữ liệu trong SharedPreferences
+    await prefs.clear();
   }
 
   @override

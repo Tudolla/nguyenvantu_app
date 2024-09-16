@@ -5,7 +5,13 @@ import 'package:monstar/views/home/home_screen.dart';
 import '../snackbar/dialog_helper.dart';
 
 class ArrowBackButton extends StatelessWidget {
-  const ArrowBackButton({super.key});
+  bool? showSnackbar;
+  bool? popScreen;
+  ArrowBackButton({
+    super.key,
+    this.showSnackbar,
+    this.popScreen,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +30,17 @@ class ArrowBackButton extends StatelessWidget {
       ),
       child: IconButton(
         onPressed: () {
-          Get.off(
-            HomeScreenDefault(),
-          );
-          DialogHelper.showTopSlidingDialog(
-            context,
-            "Thanks for your contribution",
-          );
+          popScreen == true
+              ? Get.back()
+              : Get.off(
+                  HomeScreenDefault(),
+                );
+          showSnackbar == false
+              ? null
+              : DialogHelper.showTopSlidingDialog(
+                  context,
+                  "Thanks for your contribution",
+                );
         },
         icon: Icon(
           Icons.arrow_back,

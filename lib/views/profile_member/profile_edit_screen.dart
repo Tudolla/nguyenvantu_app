@@ -6,11 +6,14 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:monstar/components/button/app_button.dart';
 import 'package:monstar/components/core/app_text_style.dart';
-import 'package:monstar/views/profile_member/setting_app_screen.dart';
-import 'package:monstar/views/profile_member/text_input_items.dart';
+import 'package:monstar/data/services/secure_storage_local_service/secure_storate_service.dart';
+import 'package:monstar/views/profile_member/widget/text_input_items.dart';
 
+import '../../providers/secure_profile_provider.dart';
 import '../../utils/api_base_url.dart';
 import '../../providers/memer_information_provider.dart';
+
+final secureStorageProvider = Provider((ref) => SecureStorageService());
 
 class ProfileEditScreen extends ConsumerStatefulWidget {
   const ProfileEditScreen({super.key});
@@ -47,6 +50,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     emailController.dispose();
     addressController.dispose();
     positionController.dispose();
+
     super.dispose();
   }
 
@@ -59,28 +63,23 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
             orElse: () => null,
           );
 
+      ref.read(memberViewModelProvider.notifier).getMemberInfor();
+
       if (member != null) {
-        // Chỉ khởi tạo giá trị một lần khi member có dữ liệu
         nameController.text = member.name ?? "";
         emailController.text = member.email ?? "";
         addressController.text = member.address ?? "";
         positionController.text = member.position ?? "";
       }
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(memberViewModelProvider.notifier).getMemberInfor();
-      });
     });
-    // đảm bảo không cập nhật state trong quá trình build()
   }
 
   @override
   Widget build(BuildContext context) {
     var sizeWidth = MediaQuery.of(context).size.width;
-    // tại sao ở đây có mỗi notifier
+
     final memberViewModel = ref.watch(memberViewModelProvider);
     final isHidden = ref.watch(isHiddenProvider);
-    final pinCode = ref.watch(pinCodeProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -98,13 +97,14 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
           ),
         ],
       ),
-      body: isHidden == true
-          ? ElevatedButton(
-              onPressed: () {
-                _showPinDialog(context, ref);
-              },
-              child: Text(
-                "Nhap ma PIN de xem thong tin",
+      body: isHidden
+          ? Center(
+              child: ElevatedButton(
+                onPressed: () => _showPinDialog(
+                  context,
+                  ref,
+                ),
+                child: Text("Enter PIN to unlock"),
               ),
             )
           : memberViewModel.when(
@@ -207,7 +207,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                                 data: (_) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text("Xong"),
+                                      content: Text("You are updated!"),
                                     ),
                                   );
                                 },
@@ -215,7 +215,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                                   return ScaffoldMessenger.of(context)
                                       .showSnackBar(
                                     SnackBar(
-                                      content: Text("error"),
+                                      content: Text("Getting error!"),
                                     ),
                                   );
                                 },
@@ -247,7 +247,8 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
 }
 
 void _showPinDialog(BuildContext context, WidgetRef ref) {
-  final pinCode = ref.read(pinCodeProvider);
+  final pinProvier = ref.watch(secureStorageProvider);
+  final getPinStored = pinProvier.getPin();
   final TextEditingController pinController = TextEditingController();
 
   showDialog(
@@ -255,14 +256,14 @@ void _showPinDialog(BuildContext context, WidgetRef ref) {
     builder: (context) {
       return AlertDialog(
         title: Text(
-          "Nhap ma PIN",
+          "Enter PIN:",
         ),
         content: TextField(
           controller: pinController,
           maxLength: 6,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
-            hintText: "Nhap ma PIN",
+            hintText: "Enter PIN:",
           ),
         ),
         actions: [
@@ -274,13 +275,13 @@ void _showPinDialog(BuildContext context, WidgetRef ref) {
           ),
           TextButton(
             onPressed: () {
-              if (pinController.text == pinCode) {
+              if (pinController.text == getPinStored) {
                 Get.back();
-                ref.read(isHiddenProvider.notifier).state = false;
+                ref.read(isHiddenProvider.notifier).setIsHidden(false);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text("Ma PIN khong chinh xac"),
+                    content: Text("The PIN is not correct!"),
                   ),
                 );
               }
