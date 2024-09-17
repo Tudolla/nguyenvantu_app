@@ -42,38 +42,15 @@ class _PinInputItemState extends ConsumerState<PinInputItem> {
             ),
           ),
           value: isHidden,
-          onChanged: (value) async {
-            if (value) {
-              ref.read(isHiddenProvider.notifier).setIsHidden(true);
-            } else {
-              ref.read(isHiddenProvider.notifier).setIsHidden(false);
-            }
+          onChanged: (value) {
+            ref.read(isHiddenProvider.notifier).setIsHidden(value);
+            // if (value) {
+            //   ref.read(isHiddenProvider.notifier).setIsHidden(true);
+            // } else {
+            //   ref.read(isHiddenProvider.notifier).setIsHidden(false);
+            // }
           },
         ),
-        // if (isHidden && _showTextField)
-        //   TextField(
-        //     controller: _pinController,
-        //     decoration: InputDecoration(
-        //       labelText: "Setting PIN with 6 number",
-        //     ),
-        //     keyboardType: TextInputType.number,
-        //     maxLength: 6,
-        //     onChanged: (value) async {
-        //       if (value.length == 6) {
-        //         await storageService.saveHiddenState('true');
-        //         await storageService.savePin(_pinController.text);
-
-        //         ScaffoldMessenger.of(context).showSnackBar(
-        //           SnackBar(
-        //             content: Text("Your PIN code is saved"),
-        //           ),
-        //         );
-        //         setState(() {
-        //           _showTextField = false;
-        //         });
-        //       }
-        //     },
-        //   ),
       ],
     );
   }

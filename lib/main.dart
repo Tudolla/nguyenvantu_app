@@ -6,7 +6,7 @@ import 'package:monstar/provider_observer.dart';
 import 'components/theme/theme_provider.dart';
 import 'views/signup/signup_screen.dart';
 
-final GlobalKey<NavigatorState> navigatoKey = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   final providerObserver = AppStateNotifier();
   runApp(
@@ -25,7 +25,7 @@ class MyApp extends ConsumerWidget {
     final themeProvider = ref.watch(themeNotifierProvider);
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      navigatorKey: navigatoKey,
+      navigatorKey: navigatorKey,
       title: 'Monstar',
       theme: themeProvider,
       home: const SignUpScreen(),

@@ -16,24 +16,35 @@ class AppStateNotifier extends ProviderObserver {
     Object? newValue,
     ProviderContainer container,
   ) {
-    if (provider.name == 'isHiddenProvider' && newValue == false) {
-      _promtForPinCreation(container);
-    } else {
-      if (provider.name == 'isHiddenProvider' &&
-          previousValue == true &&
-          newValue == false) {
-        // function to turn off the mode : secure profile
-        _promtForPinVerification(container);
-      }
-    }
     super.didUpdateProvider(provider, previousValue, newValue, container);
+
+    // Bật chế độ ẩn thông tin
+    if (provider.name == 'isHiddenProvider' && newValue == true) {
+      _promtForPinCreation(container);
+    }
+
+    // Tắt chế độ ẩn thông tin
+    if (provider.name == 'isHiddenProvider' &&
+        previousValue == true &&
+        newValue == false) {
+      _promtForPinVerification(container);
+    }
   }
 
   Future<void> _promtForPinVerification(ProviderContainer container) async {
-    final context = navigatoKey.currentState?.overlay?.context;
+    final context = navigatorKey.currentState?.overlay?.context;
     if (context == null) return;
 
-    final pin = await _secureStorage.read(key: _hiddenKey);
+    final pin = await _secureStorage.read(key: _pinKey);
+
+    if (pin == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('No PIN found'),
+        ),
+      );
+      return;
+    }
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -43,12 +54,24 @@ class AppStateNotifier extends ProviderObserver {
         action: SnackBarAction(
           label: "Enter PIN",
           onPressed: () async {
-            final enterPin = await showDialog(
-              context: context,
-              builder: (context) {
-                return _PinVerificationDialog();
-              },
-            );
+            final enterPin = await _showPinVerificationDialog(context);
+            if (enterPin != null && enterPin == pin) {
+              await _secureStorage.delete(key: _pinKey);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Hidden mode disable successully"),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    "Incrrect PIN, try again!",
+                  ),
+                ),
+              );
+              container.read(isHiddenProvider.notifier).setIsHidden(true);
+            }
           },
         ),
       ),
@@ -56,7 +79,7 @@ class AppStateNotifier extends ProviderObserver {
   }
 
   Future<void> _promtForPinCreation(ProviderContainer container) async {
-    final context = navigatoKey.currentState?.overlay?.context;
+    final context = navigatorKey.currentState?.overlay?.context;
     if (context == null) return;
     final enterdPin = await _showPinCreationDialog(context);
 
@@ -64,10 +87,11 @@ class AppStateNotifier extends ProviderObserver {
       await _secureStorage.write(key: _pinKey, value: enterdPin);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Your PIN is saved"),
+          content: Text("Your PIN has been saved thanh cong"),
         ),
       );
     } else {
+      // Nếu PIN không hợp lệ hoặc không được nhập
       container.read(isHiddenProvider.notifier).setIsHidden(false);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -107,6 +131,8 @@ class AppStateNotifier extends ProviderObserver {
       },
     );
   }
+
+  // Dialog xác minh mã PIN -- xác minh thành công thì xóa hết dữ liệu trong SecureStorage
 
   Future<String?> _showPinVerificationDialog(BuildContext context) async {
     TextEditingController pinVerificationController = TextEditingController();

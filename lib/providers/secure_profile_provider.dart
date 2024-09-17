@@ -20,9 +20,13 @@ class IsHiddenNotifier extends StateNotifier<bool> {
   }
 }
 
-final isHiddenProvider = StateNotifierProvider<IsHiddenNotifier, bool>((ref) {
-  final storageService = ref.read(secureStorageProvider);
-  final notifier = IsHiddenNotifier(storageService);
-  notifier.loadInitialState();
-  return notifier;
-});
+final isHiddenProvider = StateNotifierProvider<IsHiddenNotifier, bool>(
+  (ref) {
+    final storageService = ref.read(secureStorageProvider);
+    final notifier = IsHiddenNotifier(storageService);
+    notifier.loadInitialState();
+    return notifier;
+  },
+  // đặt tên ở đây để ProviderObserver có thể nhận diện tốt.
+  name: 'isHiddenProvider',
+);

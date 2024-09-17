@@ -19,11 +19,31 @@ class _MyDrawerState extends State<MyDrawer> {
   void _openDialogChoice(BuildContext context) {
     AwesomeDialog(
       context: context,
-      dialogType: DialogType.question,
+      dialogType: DialogType.noHeader,
       animType: AnimType.topSlide,
       showCloseIcon: true,
+      closeIcon: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey,
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Icon(
+          Icons.close,
+          color: Colors.redAccent,
+        ),
+      ),
       title: "happy to hear from you",
+      titleTextStyle: TextStyle(
+        fontFamily: AppTextStyle.drawerFontStyle,
+        fontSize: 18,
+        color: Colors.blueGrey,
+      ),
       desc: "make a choice",
+      descTextStyle: TextStyle(
+        fontFamily: AppTextStyle.drawerFontStyle,
+        fontSize: 18,
+        color: Colors.blueGrey,
+      ),
       btnCancelText: "standard",
       btnCancelColor: Colors.lightBlue,
       btnOkText: "vote",
