@@ -8,10 +8,10 @@ import 'views/signup/signup_screen.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
-  final providerObserver = AppStateNotifier();
+  // final providerObserver = AppStateNotifier();
   runApp(
     ProviderScope(
-      observers: [providerObserver],
+      // observers: [providerObserver],
       child: MyApp(),
     ),
   );

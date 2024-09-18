@@ -94,13 +94,23 @@ class _TextPostListScreenState extends ConsumerState<TextPostListScreen>
                         ),
                       ],
                     ),
-                    subtitle: Text(
-                      post.title!,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: AppTextStyle.drawerFontStyle,
-                        fontSize: 20,
-                      ),
+                    subtitle: Row(
+                      children: [
+                        Text(
+                          post.title!,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: AppTextStyle.drawerFontStyle,
+                            fontSize: 20,
+                          ),
+                        ),
+                        Container(
+                          height: 50,
+                          child: LottieBuilder.asset(
+                            "assets/dropdown.json",
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   AnimatedSize(

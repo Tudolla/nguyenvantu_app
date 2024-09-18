@@ -2,18 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:monstar/components/button/app_button.dart';
 import 'package:monstar/components/core/app_text_style.dart';
-import 'package:monstar/data/services/secure_storage_local_service/secure_storate_service.dart';
+import 'package:monstar/providers/profile_state_provider.dart';
+import 'package:monstar/views/profile_member/widget/pin_code_dialog.dart';
 import 'package:monstar/views/profile_member/widget/text_input_items.dart';
 
-import '../../providers/secure_profile_provider.dart';
 import '../../utils/api_base_url.dart';
 import '../../providers/memer_information_provider.dart';
-
-final secureStorageProvider = Provider((ref) => SecureStorageService());
 
 class ProfileEditScreen extends ConsumerStatefulWidget {
   const ProfileEditScreen({super.key});
@@ -50,6 +47,9 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     emailController.dispose();
     addressController.dispose();
     positionController.dispose();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(profileStateProvider.notifier).toggleHidden(true);
+    });
 
     super.dispose();
   }
@@ -72,6 +72,16 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
         positionController.text = member.position ?? "";
       }
     });
+    _checkAndUpdateHiddenState();
+  }
+
+  Future<void> _checkAndUpdateHiddenState() async {
+    final profileNotifier = ref.read(profileStateProvider.notifier);
+    final currentHiddenState = await profileNotifier.getCurrentHiddenState();
+
+    if (currentHiddenState != ref.read(profileStateProvider).isHidden) {
+      await profileNotifier.toggleHidden(currentHiddenState);
+    }
   }
 
   @override
@@ -79,7 +89,9 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     var sizeWidth = MediaQuery.of(context).size.width;
 
     final memberViewModel = ref.watch(memberViewModelProvider);
-    final isHidden = ref.watch(isHiddenProvider);
+
+    final profileState = ref.watch(profileStateProvider);
+    final profileNotifier = ref.read(profileStateProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -97,14 +109,35 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
           ),
         ],
       ),
-      body: isHidden
+      body: profileState.isHidden
           ? Center(
               child: ElevatedButton(
-                onPressed: () => _showPinDialog(
-                  context,
-                  ref,
-                ),
-                child: Text("Enter PIN to unlock"),
+                child: Text("View"),
+                onPressed: () async {
+                  final enterdPinCode = await showDialog<String>(
+                    context: context,
+                    builder: (context) => PinCodeDialog(
+                      isSettingPin: false,
+                    ),
+                  );
+
+                  if (enterdPinCode != null &&
+                      profileNotifier.verifyPinCode(enterdPinCode)) {
+                    await profileNotifier.toggleHidden(false);
+
+                    await ref
+                        .read(memberViewModelProvider.notifier)
+                        .getMemberInfor();
+
+                    setState(() {});
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Incorrect PIN. Please try again."),
+                      ),
+                    );
+                  }
+                },
               ),
             )
           : memberViewModel.when(
@@ -128,8 +161,9 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                                       pickedImage != null
                                           ? CircleAvatar(
                                               radius: sizeWidth * 1 / 5,
-                                              backgroundImage:
-                                                  FileImage(pickedImage!),
+                                              backgroundImage: FileImage(
+                                                pickedImage!,
+                                              ),
                                             )
                                           : CircleAvatar(
                                               radius: sizeWidth * 1 / 5,
@@ -195,7 +229,9 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                             text: "Updated Profile",
                             function: () async {
                               await ref
-                                  .read(memberViewModelProvider.notifier)
+                                  .read(
+                                    memberViewModelProvider.notifier,
+                                  )
                                   .updateProfile(
                                     nameController.text,
                                     emailController.text,
@@ -225,6 +261,13 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                             textColor: Colors.white,
                             backgroundColor: Colors.blueGrey,
                           ),
+                          ElevatedButton(
+                            onPressed: () async {
+                              await profileNotifier.toggleHidden(true);
+                              setState(() {});
+                            },
+                            child: Text("Secure profile"),
+                          ),
                         ],
                       ),
                     ),
@@ -244,52 +287,4 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
             ),
     );
   }
-}
-
-void _showPinDialog(BuildContext context, WidgetRef ref) {
-  final pinProvier = ref.watch(secureStorageProvider);
-  final getPinStored = pinProvier.getPin();
-  final TextEditingController pinController = TextEditingController();
-
-  showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: Text(
-          "Enter PIN:",
-        ),
-        content: TextField(
-          controller: pinController,
-          maxLength: 6,
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(
-            hintText: "Enter PIN:",
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Get.back();
-            },
-            child: Text("Cancel"),
-          ),
-          TextButton(
-            onPressed: () {
-              if (pinController.text == getPinStored) {
-                Get.back();
-                ref.read(isHiddenProvider.notifier).setIsHidden(false);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text("The PIN is not correct!"),
-                  ),
-                );
-              }
-            },
-            child: Text("Xac nhan"),
-          ),
-        ],
-      );
-    },
-  );
 }

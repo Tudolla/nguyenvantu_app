@@ -71,3 +71,7 @@ flutter:
     - family: DrawerFontApp
       fonts:
         - asset: assets/fonts/NerkoOne-Regular.ttf
+
+    - family: ReadingFont
+      fonts:
+        - asset: assets/fonts/ComingSoon-Regular.ttf

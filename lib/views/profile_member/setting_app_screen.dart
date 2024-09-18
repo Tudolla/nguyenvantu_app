@@ -7,6 +7,7 @@ import 'package:monstar/components/theme/theme.dart';
 import 'package:monstar/components/theme/theme_provider.dart';
 
 import '../../components/button/arrow_back_button.dart';
+import '../../providers/profile_state_provider.dart';
 import 'widget/pin_input_item.dart';
 
 final pinCodeProvider = StateProvider<String?>((ref) => null);
@@ -33,6 +34,8 @@ class _SettingAppScreenState extends ConsumerState<SettingAppScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // final profileState = ref.watch(profileStateProvider);
+    // final ProfileNotifier = ref.read(profileStateProvider.notifier);
     final themeMode = ref.watch(themeNotifierProvider);
 
     bool isLightMode = themeMode == lightMode;
@@ -117,7 +120,7 @@ class _SettingAppScreenState extends ConsumerState<SettingAppScreen> {
               onPressed: () async {
                 await _clearAllData();
               },
-              child: Text("Delte"),
+              child: Text("Delete"),
             ),
           ],
         ),
