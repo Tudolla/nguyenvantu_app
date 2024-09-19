@@ -9,7 +9,8 @@ class ProfileState {
 
   ProfileState copyWith({bool? isHidden, String? pinCode}) {
     return ProfileState(
-      isHidden: isHidden ?? this.isHidden,
+      isHidden: isHidden ??
+          this.isHidden, // ?? nghĩa là , nếu giá trị null, sẽ giữ giá trị ban đầu.
       pinCode: pinCode ?? this.pinCode,
     );
   }

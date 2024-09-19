@@ -21,14 +21,19 @@ class _PinInputItemState extends ConsumerState<PinInputItem> {
     super.dispose();
   }
 
+  // Nếu isHidden = false ngay từ đầu thì không nói, vì mặc định ProfileState = false rồi.
+  // Nếu isHidden = true thì nó sẽ load dữ liệu sau khi khởi tạo, và cập nhật trạng thái tương ứng.
   Future<void> _toggleHidden(bool value) async {
     final profileNotifier = ref.read(profileStateProvider.notifier);
 
     if (value) {
-      // Chuyen sang che do an, khong can xac minh PIN
+      // value ở chuyển sang true, thì là đang bật chế độ ẩn
+      // Bật sang chế độ ẩn thông tin cá nhân, tạo mã PIN mới
 
       final pinCode = await showDialog<String>(
         context: context,
+        // ở đây, sau khi nhập mã PIN xong, chuyển isSettingPin = true, trả về cả mã PIN đã nhập.
+        // bỏ isSettingPin cũng được thì phải
         builder: (context) => PinCodeDialog(isSettingPin: true),
       );
 
@@ -37,6 +42,7 @@ class _PinInputItemState extends ConsumerState<PinInputItem> {
         await profileNotifier.toggleHidden(value);
       }
     } else {
+      // Tắt chế độ ẩn thông tin cá nhân, xác minh mã PIN
       final enteredPinCode = await showDialog<String>(
         context: context,
         builder: (context) => PinCodeDialog(isSettingPin: false),
@@ -59,7 +65,6 @@ class _PinInputItemState extends ConsumerState<PinInputItem> {
   @override
   Widget build(BuildContext context) {
     final profileState = ref.watch(profileStateProvider);
-    final profileNotifier = ref.read(profileStateProvider.notifier);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,

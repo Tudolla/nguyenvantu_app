@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../components/core/app_text_style.dart';
 
+// This widget as a Dialog for both: CreatePIN function and VerifiedPIN function
 class PinCodeDialog extends StatefulWidget {
   final bool isSettingPin;
 
@@ -65,6 +66,8 @@ class _PinCodeDialogState extends State<PinCodeDialog> {
             ),
             Expanded(
               child: TextButton(
+                // Navigator.pop(context) : là đóng hộp thoại hiện tại, trở về Screen trước đó
+                // Navigator.pop(context, _pinCode): vừa đóng hộp thoại, vừa trả về giá trị _pinCode.
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();

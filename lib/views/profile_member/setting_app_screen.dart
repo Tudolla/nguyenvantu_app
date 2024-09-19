@@ -8,7 +8,7 @@ import 'package:monstar/components/theme/theme_provider.dart';
 
 import '../../components/button/arrow_back_button.dart';
 import '../../providers/profile_state_provider.dart';
-import 'widget/pin_input_item.dart';
+import 'widget/hidden_information_item.dart';
 
 final pinCodeProvider = StateProvider<String?>((ref) => null);
 
@@ -26,11 +26,6 @@ class _SettingAppScreenState extends ConsumerState<SettingAppScreen> {
   var firstSwitchValue = false;
   var firstStateHidden = false;
   final FlutterSecureStorage secureStorage = FlutterSecureStorage();
-
-  // Future<void> _clearAllData() async {
-  //   await secureStorage.deleteAll();
-  //   print("All data is delted");
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -114,12 +109,6 @@ class _SettingAppScreenState extends ConsumerState<SettingAppScreen> {
             const SizedBox(
               height: 30,
             ),
-            // ElevatedButton(
-            //   onPressed: () async {
-            //     await _clearAllData();
-            //   },
-            //   child: Text("Delete"),
-            // ),
           ],
         ),
       ),

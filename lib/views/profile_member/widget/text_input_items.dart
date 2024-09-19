@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// This CustomTextInput use for input of ProfileScreen
 class CustomTextInput extends StatelessWidget {
   final String title;
   final IconData icon;

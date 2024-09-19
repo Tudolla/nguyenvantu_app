@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
+
+// This widget is showed in ProfileScreen, as a ListTile
 class ProfileSettingItem extends StatelessWidget {
   final Icon icon;
   final String typeSetting;
