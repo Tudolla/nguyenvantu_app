@@ -48,6 +48,7 @@ class _PinInputItemState extends ConsumerState<PinInputItem> {
       } else if (enteredPinCode != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
+            backgroundColor: Colors.blueGrey,
             content: Text('Incorrect PIN. Please try again.'),
           ),
         );

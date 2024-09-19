@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:monstar/provider_observer.dart';
 
 import 'components/theme/theme_provider.dart';
 import 'views/signup/signup_screen.dart';

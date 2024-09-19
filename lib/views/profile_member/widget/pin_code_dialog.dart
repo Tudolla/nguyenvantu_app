@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:monstar/providers/profile_state_provider.dart';
+
+import '../../../components/core/app_text_style.dart';
 
 class PinCodeDialog extends StatefulWidget {
   final bool isSettingPin;
@@ -19,10 +20,17 @@ class _PinCodeDialogState extends State<PinCodeDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Enter PIN Code'),
+      title: Text(
+        'Enter PIN Code',
+        style: TextStyle(
+          fontFamily: AppTextStyle.secureFontStyle,
+        ),
+      ),
       content: Form(
         key: _formKey,
         child: TextFormField(
+          maxLength: 6,
+          keyboardType: TextInputType.number,
           obscureText: true,
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -34,18 +42,51 @@ class _PinCodeDialogState extends State<PinCodeDialog> {
         ),
       ),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              _formKey.currentState!.save();
-              Navigator.pop(context, _pinCode);
-            }
-          },
-          child: const Text('OK'),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Expanded(
+              child: TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Container(
+                  padding: const EdgeInsets.only(
+                    top: 10,
+                    left: 15,
+                    right: 15,
+                    bottom: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.blueGrey,
+                  ),
+                  child: const Text('Cancel'),
+                ),
+              ),
+            ),
+            Expanded(
+              child: TextButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
+                    Navigator.pop(context, _pinCode);
+                  }
+                },
+                child: Container(
+                  padding: const EdgeInsets.only(
+                    top: 10,
+                    left: 25,
+                    right: 25,
+                    bottom: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.blueGrey,
+                  ),
+                  child: const Text('OK'),
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );

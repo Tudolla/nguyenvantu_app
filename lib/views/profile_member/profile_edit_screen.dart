@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 import 'package:monstar/components/button/app_button.dart';
 import 'package:monstar/components/core/app_text_style.dart';
 import 'package:monstar/providers/profile_state_provider.dart';
@@ -10,7 +11,8 @@ import 'package:monstar/views/profile_member/widget/pin_code_dialog.dart';
 import 'package:monstar/views/profile_member/widget/text_input_items.dart';
 
 import '../../utils/api_base_url.dart';
-import '../../providers/memer_information_provider.dart';
+import '../../providers/member_information_provider.dart';
+import '../../utils/enums.dart';
 
 class ProfileEditScreen extends ConsumerStatefulWidget {
   const ProfileEditScreen({super.key});
@@ -27,6 +29,8 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
   final TextEditingController positionController = TextEditingController();
+
+  int failedAttempts = 0;
 
   File? pickedImage;
 
@@ -101,18 +105,43 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
         ),
         centerTitle: true,
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.security_rounded,
-            ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: 60,
+                width: 60,
+                child: ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                    Colors.redAccent,
+                    BlendMode.srcATop,
+                  ),
+                  child: LottieBuilder.asset(
+                    'assets/arrow-right.json',
+                  ),
+                ),
+              ),
+              IconButton(
+                onPressed: () async {
+                  await profileNotifier.toggleHidden(true);
+                  setState(() {});
+                },
+                icon: Icon(
+                  Icons.security_rounded,
+                ),
+              ),
+            ],
           ),
         ],
       ),
       body: profileState.isHidden
           ? Center(
               child: ElevatedButton(
-                child: Text("View"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blueGrey,
+                  elevation: 4,
+                ),
+                child: Text("Enter PIN to view"),
                 onPressed: () async {
                   final enterdPinCode = await showDialog<String>(
                     context: context,
@@ -131,8 +160,12 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
 
                     setState(() {});
                   } else {
+                    failedAttempts++;
+                    if (failedAttempts >=
+                        PinVerificationLimit.maxAttempts.value) {}
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
+                        backgroundColor: Colors.blueGrey,
                         content: Text("Incorrect PIN. Please try again."),
                       ),
                     );
@@ -260,13 +293,6 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                             },
                             textColor: Colors.white,
                             backgroundColor: Colors.blueGrey,
-                          ),
-                          ElevatedButton(
-                            onPressed: () async {
-                              await profileNotifier.toggleHidden(true);
-                              setState(() {});
-                            },
-                            child: Text("Secure profile"),
                           ),
                         ],
                       ),

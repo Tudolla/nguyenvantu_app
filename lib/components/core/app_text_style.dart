@@ -12,4 +12,6 @@ class AppTextStyle {
   static String boldFontStyle = 'BoldFontApp';
   static String regularFontStyle = 'RegularFontApp';
   static String drawerFontStyle = 'DrawerFontApp';
+
+  static String secureFontStyle = 'SecureFont';
 }

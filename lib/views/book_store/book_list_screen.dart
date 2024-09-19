@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:monstar/components/core/app_text_style.dart';
 import 'package:monstar/views/book_store/book_detail_screen.dart';
 
 import '../../providers/get_list_book_provider.dart';
+import '../../providers/reading_book_tracking_provider.dart';
 
 class BookListScreen extends ConsumerStatefulWidget {
   const BookListScreen({super.key});
@@ -22,6 +24,7 @@ class _BookListScreenState extends ConsumerState<BookListScreen> {
   @override
   Widget build(BuildContext context) {
     final stateListBook = ref.watch(bookListViewModelProvider);
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(
@@ -50,9 +53,13 @@ class _BookListScreenState extends ConsumerState<BookListScreen> {
                 final itemBook = bookList[index];
                 return GestureDetector(
                   onTap: () {
+                    ref
+                        .read(readingTrackingViewModelProvider.notifier)
+                        .startRading(itemBook.id!);
                     Get.to(BookDetailScreen(id: itemBook.id!));
                   },
                   child: Card(
+                    elevation: 4,
                     color: Colors.grey,
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -71,6 +78,9 @@ class _BookListScreenState extends ConsumerState<BookListScreen> {
                                     ? "Truyện cười"
                                     : "Truyện tâm linh")
                                 : "",
+                            style: TextStyle(
+                              fontFamily: AppTextStyle.secureFontStyle,
+                            ),
                           ),
                           const SizedBox(
                             height: 20,
@@ -85,6 +95,9 @@ class _BookListScreenState extends ConsumerState<BookListScreen> {
                             itemBook.title ?? "",
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
+                            style: TextStyle(
+                              fontFamily: AppTextStyle.regularFontStyle,
+                            ),
                           ),
                         ],
                       ),

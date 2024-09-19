@@ -35,7 +35,7 @@ class _PollPostScreenState extends ConsumerState<PollPostScreen> {
       body: statePollPost.when(
         error: (e, strackTrace) {
           return Center(
-            child: Text("Having some: $e"),
+            child: Text("Having some error: $e"),
           );
         },
         loading: () => Center(
@@ -72,10 +72,9 @@ class _PollPostScreenState extends ConsumerState<PollPostScreen> {
                       final isVoted = stateVote[firstItem.choices[index].id];
                       return Container(
                         margin: const EdgeInsets.only(
-                          top: 10,
-                          left: 20,
+                          top: 5,
                           right: 20,
-                          bottom: 10,
+                          bottom: 5,
                         ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),

@@ -7,10 +7,12 @@ import '../snackbar/dialog_helper.dart';
 class ArrowBackButton extends StatelessWidget {
   bool? showSnackbar;
   bool? popScreen;
+  final Function? onTap;
   ArrowBackButton({
     super.key,
     this.showSnackbar,
     this.popScreen,
+    this.onTap,
   });
 
   @override
@@ -30,6 +32,10 @@ class ArrowBackButton extends StatelessWidget {
       ),
       child: IconButton(
         onPressed: () {
+          if (onTap != null) {
+            onTap!();
+          }
+
           popScreen == true
               ? Get.back()
               : Get.off(

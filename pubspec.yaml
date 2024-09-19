@@ -75,3 +75,7 @@ flutter:
     - family: ReadingFont
       fonts:
         - asset: assets/fonts/ComingSoon-Regular.ttf
+
+    - family: SecureFont
+      fonts:
+        - asset: assets/fonts/Oswald-VariableFont_wght.ttf

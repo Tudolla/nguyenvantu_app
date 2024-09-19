@@ -6,6 +6,7 @@ import 'package:monstar/components/core/color_reading.dart';
 import '../../components/button/arrow_back_button.dart';
 import '../../components/core/app_text_style.dart';
 import '../../providers/get_book_detail_provider.dart';
+import '../../providers/reading_book_tracking_provider.dart';
 
 class BookDetailScreen extends ConsumerStatefulWidget {
   final int id;
@@ -28,6 +29,13 @@ class _BookDetailScreenState extends ConsumerState<BookDetailScreen> {
   }
 
   @override
+  void dispose() {
+    // Xử lý sau, khi người dùng dispose thì sẽ tracking -- end reading()
+    // ref.read(readingTrackingViewModelProvider.notifier).endReading(widget.id);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     final stateDetailBook = ref.watch(bookDetailViewModelProvider);
@@ -43,6 +51,11 @@ class _BookDetailScreenState extends ConsumerState<BookDetailScreen> {
         leading: ArrowBackButton(
           popScreen: true,
           showSnackbar: false,
+          onTap: () {
+            ref
+                .read(readingTrackingViewModelProvider.notifier)
+                .endReading(widget.id);
+          },
         ),
         actions: [
           IconButton(

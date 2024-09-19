@@ -27,15 +27,13 @@ class _SettingAppScreenState extends ConsumerState<SettingAppScreen> {
   var firstStateHidden = false;
   final FlutterSecureStorage secureStorage = FlutterSecureStorage();
 
-  Future<void> _clearAllData() async {
-    await secureStorage.deleteAll();
-    print("All data is delted");
-  }
+  // Future<void> _clearAllData() async {
+  //   await secureStorage.deleteAll();
+  //   print("All data is delted");
+  // }
 
   @override
   Widget build(BuildContext context) {
-    // final profileState = ref.watch(profileStateProvider);
-    // final ProfileNotifier = ref.read(profileStateProvider.notifier);
     final themeMode = ref.watch(themeNotifierProvider);
 
     bool isLightMode = themeMode == lightMode;
@@ -116,12 +114,12 @@ class _SettingAppScreenState extends ConsumerState<SettingAppScreen> {
             const SizedBox(
               height: 30,
             ),
-            ElevatedButton(
-              onPressed: () async {
-                await _clearAllData();
-              },
-              child: Text("Delete"),
-            ),
+            // ElevatedButton(
+            //   onPressed: () async {
+            //     await _clearAllData();
+            //   },
+            //   child: Text("Delete"),
+            // ),
           ],
         ),
       ),
