@@ -29,7 +29,8 @@ class _PinInputItemState extends ConsumerState<PinInputItem> {
     if (value) {
       // value ở chuyển sang true, thì là đang bật chế độ ẩn
       // Bật sang chế độ ẩn thông tin cá nhân, tạo mã PIN mới
-
+      // showDialog không phải là widget, nó là 1 hàm, xử lý thao tác đóng mở hộp thoại
+      // showDialog trả về 1 future để nhận giá trị trả về khi dialog đóng.
       final pinCode = await showDialog<String>(
         context: context,
         // ở đây, sau khi nhập mã PIN xong, chuyển isSettingPin = true, trả về cả mã PIN đã nhập.
@@ -39,7 +40,7 @@ class _PinInputItemState extends ConsumerState<PinInputItem> {
 
       if (pinCode != null) {
         await profileNotifier.setPinCode(pinCode);
-        await profileNotifier.toggleHidden(value);
+        await profileNotifier.toggleHidden(value); // true
       }
     } else {
       // Tắt chế độ ẩn thông tin cá nhân, xác minh mã PIN
@@ -80,6 +81,8 @@ class _PinInputItemState extends ConsumerState<PinInputItem> {
             ),
           ),
           value: profileState.isHidden,
+          // onChanged ở đây, Flutter tự động nhận diện true, false khi thực diện đóng mở công tác
+          // trong SwitchListTile ròi, nên hàm _toggleHidden không cần truyền tham số bool nữa.
           onChanged: _toggleHidden,
         ),
       ],

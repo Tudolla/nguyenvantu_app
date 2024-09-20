@@ -42,10 +42,10 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
     return state.pinCode == enterdPinCode;
   }
 
-  Future<bool> getCurrentHiddenState() async {
-    final isHiddenString = await _storage.read(key: 'isHidden');
-    return isHiddenString == 'true';
-  }
+  // Future<bool> getCurrentHiddenState() async {
+  //   final isHiddenString = await _storage.read(key: 'isHidden');
+  //   return isHiddenString == 'true';
+  // }
 }
 
 final profileStateProvider =

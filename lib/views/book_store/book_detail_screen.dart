@@ -30,8 +30,6 @@ class _BookDetailScreenState extends ConsumerState<BookDetailScreen> {
 
   @override
   void dispose() {
-    // Xử lý sau, khi người dùng dispose thì sẽ tracking -- end reading()
-    // ref.read(readingTrackingViewModelProvider.notifier).endReading(widget.id);
     super.dispose();
   }
 

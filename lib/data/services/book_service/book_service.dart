@@ -7,7 +7,8 @@ import 'package:monstar/utils/api_base_url.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BookService {
-  Future<List<BookModel>> fetchBookList() async {
+  // {int page = 1}: tham số mặc định, không yêu cầu truyền vào khi gọi ở class khác.
+  Future<List<BookModel>> fetchBookList({int page = 1}) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? accessToken = pref.getString('accessToken');
 
@@ -16,7 +17,7 @@ class BookService {
     }
 
     final response = await http.get(
-      Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/stories/'),
+      Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/stories/?page=$page'),
       headers: {
         'Authorization': 'Bearer $accessToken',
         'Content-Type': 'application/json;charset=UTF-8',
