@@ -21,7 +21,8 @@ class BookDetailScreen extends ConsumerStatefulWidget {
       _BookDetailScreenState();
 }
 
-class _BookDetailScreenState extends ConsumerState<BookDetailScreen> {
+class _BookDetailScreenState extends ConsumerState<BookDetailScreen>
+    with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
@@ -30,7 +31,18 @@ class _BookDetailScreenState extends ConsumerState<BookDetailScreen> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    // Call endReading when the widget is disposed
+    ref.read(readingTrackingViewModelProvider.notifier).endReading(widget.id);
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      // Application is in background (e.g., user presses Home button)
+      ref.read(readingTrackingViewModelProvider.notifier).endReading(widget.id);
+    }
   }
 
   @override

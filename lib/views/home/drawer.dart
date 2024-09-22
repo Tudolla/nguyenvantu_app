@@ -5,6 +5,7 @@ import 'package:monstar/views/contribution/add_textpost_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/core/app_text_style.dart';
+import '../company_introduction/company_sign_screen.dart';
 import '../contribution/add_pollpost_creen.dart';
 import '../signup/signup_screen.dart';
 
@@ -45,7 +46,8 @@ class _MyDrawerState extends State<MyDrawer> {
         color: Colors.blueGrey,
       ),
       btnCancelText: "standard",
-      btnCancelColor: Colors.lightBlue,
+      btnCancelColor: Colors.blueGrey.withOpacity(.5),
+      btnOkColor: Colors.blueGrey.withOpacity(.8),
       btnOkText: "vote",
       btnCancelOnPress: () {
         Get.off(
@@ -163,6 +165,13 @@ class _MyDrawerState extends State<MyDrawer> {
                 ),
               ),
               ListTile(
+                onTap: () {
+                  Get.off(
+                    CompanySignScreen(),
+                    transition: Transition.circularReveal,
+                    duration: const Duration(seconds: 2),
+                  );
+                },
                 title: Text(
                   "About company",
                   style: TextStyle(

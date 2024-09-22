@@ -294,6 +294,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                                 data: (_) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
+                                      backgroundColor: Colors.blueGrey,
                                       content: Text("You are updated!"),
                                     ),
                                   );

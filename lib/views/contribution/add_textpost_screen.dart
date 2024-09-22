@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:monstar/components/core/app_text_style.dart';
 import 'package:monstar/views/contribution/viewmodel/add_text_post_viewmodel.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../components/button/app_button.dart';
 import '../../components/button/arrow_back_button.dart';
 import '../../providers/add_textpost_provider.dart';
-import '../home/home_screen.dart';
 
 class ContributionScreen extends ConsumerStatefulWidget {
   const ContributionScreen({super.key});

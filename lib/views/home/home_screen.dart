@@ -77,11 +77,7 @@ class _HomeScreenDefaultState extends ConsumerState<HomeScreenDefault> {
       drawer: const MyDrawer(),
       body: PageView(
         controller: _pageController,
-        onPageChanged: (index) {
-          // setState(() {
-          //   _curentPage = index;
-          // });
-        },
+        onPageChanged: (index) {},
         children: [
           BookListScreen(),
           PollPostScreen(),

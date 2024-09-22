@@ -45,7 +45,7 @@ class _BookListScreenState extends ConsumerState<BookListScreen> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(
-          top: 30,
+          top: 5,
           left: 20,
           right: 20,
         ),

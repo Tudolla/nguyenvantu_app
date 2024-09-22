@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:monstar/data/models/api/request/member_model/member_model.dart';
-import 'package:monstar/data/repository/api/member_repository/member_repository.dart';
+
+import 'package:monstar/data/repository/api/profile_repository/profile_repository.dart';
 
 class UpateProfileViewModel extends StateNotifier<AsyncValue<void>> {
-  final MemberRepository memberRepository;
+  final ProfileRepository profileRepository;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -15,7 +15,7 @@ class UpateProfileViewModel extends StateNotifier<AsyncValue<void>> {
   final TextEditingController positionController = TextEditingController();
 
   UpateProfileViewModel({
-    required this.memberRepository,
+    required this.profileRepository,
   }) : super(AsyncValue.loading());
 
   Future<void> updateProfile(
@@ -29,7 +29,7 @@ class UpateProfileViewModel extends StateNotifier<AsyncValue<void>> {
     // vì với mỗi API, khi chạy khởi tạo lại, thì sẽ cần loading lại - quá hay
     state = AsyncValue.loading();
     try {
-      final memberUpdated = await memberRepository.updateProfile(
+      final memberUpdated = await profileRepository.updateProfile(
         name,
         email,
         address,
