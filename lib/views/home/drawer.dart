@@ -1,23 +1,25 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:monstar/views/contribution/add_textpost_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:monstar/views/home/widgets/custom_listtile_widget.dart';
 
 import '../../components/core/app_text_style.dart';
+import '../../providers/member_login_provider.dart';
 import '../company_introduction/company_sign_screen.dart';
 import '../contribution/add_pollpost_creen.dart';
-import '../signup/signup_screen.dart';
+import '../login/login_screen.dart';
 
-class MyDrawer extends StatefulWidget {
+class MyDrawer extends ConsumerStatefulWidget {
   const MyDrawer({super.key});
 
   @override
-  State<MyDrawer> createState() => _MyDrawerState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _MyDrawerState();
 }
 
-class _MyDrawerState extends State<MyDrawer> {
-  void _openDialogChoice(BuildContext context) {
+class _MyDrawerState extends ConsumerState<MyDrawer> {
+  void _openDialogChoice(BuildContext context, WidgetRef ref) {
     AwesomeDialog(
       context: context,
       dialogType: DialogType.noHeader,
@@ -67,16 +69,14 @@ class _MyDrawerState extends State<MyDrawer> {
   }
 
   Future<void> _logout() async {
-    // Lấy instance của SharedPreferences
-    final prefs = await SharedPreferences.getInstance();
+    final authViewModel = ref.read(loginViewModelProvider.notifier);
+    await authViewModel.logout();
+    Navigator.of(context).pop();
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => SignUpScreen(),
       ),
     );
-
-    // Xóa toàn bộ dữ liệu trong SharedPreferences
-    await prefs.clear();
   }
 
   @override
@@ -121,103 +121,49 @@ class _MyDrawerState extends State<MyDrawer> {
               const SizedBox(
                 height: 30,
               ),
-              ListTile(
-                onTap: () => _openDialogChoice(context),
-                title: Text(
-                  "Feed back",
-                  style: TextStyle(
-                    fontFamily: AppTextStyle.drawerFontStyle,
-                    color: Colors.blueGrey,
-                    fontSize: 20,
-                  ),
-                ),
-                leading: const Icon(
-                  Icons.feedback_outlined,
-                  color: Colors.blueGrey,
-                ),
+              CustomListtileWidget(
+                voidCallBack: () => _openDialogChoice(context, ref),
+                text: "Feed back",
+                icon: Icons.feedback_outlined,
               ),
-              ListTile(
-                title: Text(
-                  "Achievements",
-                  style: TextStyle(
-                    fontFamily: AppTextStyle.drawerFontStyle,
-                    color: Colors.blueGrey,
-                    fontSize: 20,
-                  ),
-                ),
-                leading: Icon(
-                  Icons.price_change_outlined,
-                  color: Colors.blueGrey,
-                ),
+              CustomListtileWidget(
+                voidCallBack: () => _openDialogChoice(context, ref),
+                text: "Feed Achievements",
+                icon: Icons.price_change_outlined,
               ),
-              ListTile(
-                title: Text(
-                  "Work day",
-                  style: TextStyle(
-                    fontFamily: AppTextStyle.drawerFontStyle,
-                    color: Colors.blueGrey,
-                    fontSize: 20,
-                  ),
-                ),
-                leading: Icon(
-                  Icons.calendar_month_outlined,
-                  color: Colors.blueGrey,
-                ),
+              CustomListtileWidget(
+                text: "Work day",
+                icon: Icons.calendar_month_outlined,
               ),
-              ListTile(
-                onTap: () {
-                  Get.off(
-                    CompanySignScreen(),
-                    transition: Transition.circularReveal,
-                    duration: const Duration(seconds: 2),
-                  );
-                },
-                title: Text(
-                  "About company",
-                  style: TextStyle(
-                    fontFamily: AppTextStyle.drawerFontStyle,
-                    color: Colors.blueGrey,
-                    fontSize: 20,
-                  ),
+              CustomListtileWidget(
+                voidCallBack: () => Get.off(
+                  CompanySignScreen(),
+                  transition: Transition.circularReveal,
+                  duration: const Duration(seconds: 2),
                 ),
-                leading: Icon(
-                  Icons.square_outlined,
-                  color: Colors.blueGrey,
-                ),
+                text: "About company",
+                icon: Icons.square_outlined,
               ),
-              ListTile(
-                onTap: () {},
-                leading: const Icon(
-                  Icons.switch_access_shortcut,
-                  color: Colors.blueGrey,
-                ),
-                title: Text(
-                  "Mode switch",
-                  style: TextStyle(
-                    fontFamily: AppTextStyle.drawerFontStyle,
-                    color: Colors.blueGrey,
-                    fontSize: 20,
-                  ),
-                ),
+              CustomListtileWidget(
+                text: "Mode switch",
+                icon: Icons.switch_access_shortcut,
               ),
             ],
           ),
-          ListTile(
-            onTap: () async {
+          CustomListtileWidget(
+            voidCallBack: () async {
               await _logout();
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Logged out successfully!")),
+                SnackBar(
+                  backgroundColor: Colors.blueGrey,
+                  content: Text(
+                    "Logged out!",
+                  ),
+                ),
               );
             },
-            title: Text(
-              "Sign out !",
-              style: TextStyle(
-                fontFamily: AppTextStyle.drawerFontStyle,
-                color: Colors.blueGrey,
-                fontSize: 20,
-              ),
-            ),
-            leading: Icon(Icons.login_rounded),
+            text: "Log out",
+            icon: Icons.login_rounded,
           ),
         ],
       ),

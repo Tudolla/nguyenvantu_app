@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:monstar/components/core/color_reading.dart';
@@ -68,9 +69,24 @@ class _BookDetailScreenState extends ConsumerState<BookDetailScreen>
           },
         ),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.copy_all_outlined),
+          stateDetailBook.when(
+            data: (bookDetail) => IconButton(
+              onPressed: () {
+                Clipboard.setData(
+                  ClipboardData(text: bookDetail.content ?? ""),
+                );
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    backgroundColor: Colors.blueGrey,
+                    content: Text("Copied story you want"),
+                  ),
+                );
+              },
+              icon: Icon(Icons.copy_all_outlined),
+            ),
+            error: (e, stackTrace) => Container(),
+            loading: () => Container(),
           ),
         ],
       ),

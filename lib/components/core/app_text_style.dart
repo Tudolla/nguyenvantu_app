@@ -14,4 +14,11 @@ class AppTextStyle {
   static String drawerFontStyle = 'DrawerFontApp';
 
   static String secureFontStyle = 'SecureFont';
+
+  // This style is used for style Text in introduce company feature
+  static TextStyle introductionCompanyStyle = TextStyle(
+    fontFamily: 'SecureFont',
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+  );
 }

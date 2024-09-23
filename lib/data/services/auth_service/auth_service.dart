@@ -1,4 +1,3 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -23,50 +22,48 @@ class AuthService {
     await prefs.setString('email', email);
   }
 
-  Future<String> login(String username, String password) async {
-    var connectionChecking = await (Connectivity().checkConnectivity());
-    if (connectionChecking == ConnectivityResult.none) {
-      // No internet
-      return LoginResult.isError("No Internet Connection");
-    }
-    final response = await http.post(
-      Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/login/'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(
-        <String, dynamic>{
-          'username': username,
-          'password': password,
+  Future<bool> userIsLoggedIn() async {
+    final prefs = await SharedPreferences.getInstance();
+    final accessToken = prefs.getString('accessToken');
+    return accessToken != null;
+  }
+
+  Future<bool> login({
+    required String username,
+    required String password,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/login/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
         },
-      ),
-    );
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> responseData = jsonDecode(
-        response.body,
-      ); // co the loi cua secureStorage tu day ma ra, co them fromJson(jsonDecode);
-      await saveTokens(
-        responseData['refresh'],
-        responseData['access'],
-        responseData['id'],
-        responseData['image'],
-        responseData['name'],
-        responseData['email'],
+        body: jsonEncode(
+          <String, dynamic>{
+            'username': username,
+            'password': password,
+          },
+        ),
       );
-      return LoginResult.isSuccess("Welcome");
-    } else {
-      return LoginResult.isError("Something went wrong. Try again");
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = jsonDecode(
+          response.body,
+        ); // co the loi cua secureStorage tu day ma ra, co them fromJson(jsonDecode);
+        await saveTokens(
+          responseData['refresh'],
+          responseData['access'],
+          responseData['id'],
+          responseData['image'],
+          responseData['name'],
+          responseData['email'],
+        );
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      throw Exception("Login failed: $e");
     }
-  }
-}
-
-class LoginResult {
-  static String isSuccess(String success) {
-    return success;
-  }
-
-  static String isError(String error) {
-    return error;
   }
 }

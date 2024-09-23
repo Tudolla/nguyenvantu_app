@@ -1,14 +1,19 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:monstar/data/repository/api/member_repository/member_repository.dart';
-import 'package:monstar/views/signup/signup_view_model.dart';
+import 'package:monstar/data/repository/api/auth_repository/auth_repository.dart';
+import 'package:monstar/data/services/auth_service/auth_service.dart';
+import 'package:monstar/views/login/login_viewmodel.dart';
 
-import '../data/services/auth_service/auth_service.dart';
-
-final memberRepositoryProvider = Provider<MemberRepository>((ref) {
-  return MemberRepositoryImpl(AuthService());
+final authServiceProvider = Provider<AuthService>((ref) {
+  return AuthService();
 });
 
-final loginStateProvider =
-    StateNotifierProvider<SignupViewModel, LoginState>((ref) {
-  return SignupViewModel(ref.read(memberRepositoryProvider));
+final authRepositoryProvider = Provider<AuthRepository>((ref) {
+  final authService = ref.watch(authServiceProvider);
+  return AuthRepositoryImpl(authService);
+});
+
+final loginViewModelProvider =
+    StateNotifierProvider<LoginViewmodel, AsyncValue<bool>>((ref) {
+  final authRepository = ref.watch(authRepositoryProvider);
+  return LoginViewmodel(authRepository);
 });

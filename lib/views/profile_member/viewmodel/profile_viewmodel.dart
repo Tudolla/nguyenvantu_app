@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:monstar/data/repository/api/member_repository/member_repository.dart';
 import 'package:monstar/data/repository/api/profile_repository/profile_repository.dart';
 
 import '../../../data/models/api/request/member_model/member_model.dart';
