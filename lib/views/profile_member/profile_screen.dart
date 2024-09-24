@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:monstar/components/button/app_button.dart';
-import 'package:monstar/components/core/app_text_style.dart';
+import 'package:monstar/components/core/app_textstyle.dart';
 import 'package:monstar/views/profile_member/profile_edit_screen.dart';
 import 'package:monstar/views/profile_member/profile_setting_items.dart';
 import 'package:monstar/views/profile_member/setting_app_screen.dart';

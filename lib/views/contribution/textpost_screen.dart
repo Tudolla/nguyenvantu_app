@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../components/core/app_text_style.dart';
+import '../../components/core/app_textstyle.dart';
 import '../../providers/get_textpost_provider.dart';
 
 class TextPostListScreen extends ConsumerStatefulWidget {

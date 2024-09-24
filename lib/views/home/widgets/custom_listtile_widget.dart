@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../components/core/app_text_style.dart';
+import '../../../components/core/app_textstyle.dart';
 
 class CustomListtileWidget extends ConsumerWidget {
   final String text;

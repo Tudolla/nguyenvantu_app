@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 
 import '../../components/button/arrow_back_button.dart';
-import '../../components/core/app_text_style.dart';
-import '../../components/snackbar/dialog_helper.dart';
+import '../../components/core/app_textstyle.dart';
 import '../../data/models/api/request/contribution_model/pollpost_model.dart';
 import '../../providers/add_pollpost_provider.dart';
-import '../home/home_screen.dart';
 
 class AddPollpostCreen extends ConsumerStatefulWidget {
   const AddPollpostCreen({super.key});

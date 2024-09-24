@@ -12,8 +12,13 @@ class BookViewmodel extends StateNotifier<AsyncValue<List<BookModel>>> {
 
   Future<void> loadListBook() async {
     try {
-      final listBook = await bookRepository.getListBook(page: _currentPage);
-      state = AsyncData(listBook);
+      final result = await bookRepository.getListBook(page: _currentPage);
+      final booksData = result['results'];
+      if (booksData is List) {
+        final books =
+            booksData.map((data) => BookModel.fromJson(data)).toList();
+        state = AsyncData(books);
+      }
     } catch (e, stackTrace) {
       state = AsyncValue.error(e, stackTrace);
     }

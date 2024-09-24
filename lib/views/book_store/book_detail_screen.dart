@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
-import 'package:monstar/components/core/color_reading.dart';
+import 'package:monstar/components/core/app_colors.dart';
 
 import '../../components/button/arrow_back_button.dart';
-import '../../components/core/app_text_style.dart';
+import '../../components/core/app_textstyle.dart';
 import '../../providers/get_book_detail_provider.dart';
 import '../../providers/reading_book_tracking_provider.dart';
 
@@ -51,9 +51,9 @@ class _BookDetailScreenState extends ConsumerState<BookDetailScreen>
     var size = MediaQuery.of(context).size;
     final stateDetailBook = ref.watch(bookDetailViewModelProvider);
     return Scaffold(
-      backgroundColor: BackgroundReading.paperYellow,
+      backgroundColor: AppColors.paperYellow,
       appBar: AppBar(
-        backgroundColor: BackgroundReading.paperYellow,
+        backgroundColor: AppColors.paperYellow,
         title: Text(
           "Story for sharing",
           style: AppTextStyle.appBarStyle,

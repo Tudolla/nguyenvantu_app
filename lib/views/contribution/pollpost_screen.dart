@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:monstar/components/core/app_text_style.dart';
+import 'package:monstar/components/core/app_textstyle.dart';
 
 import '../../providers/get_pollpost_provider.dart';
 import '../../providers/vote_pollpost_provider.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:monstar/components/core/app_text_style.dart';
+import 'package:monstar/components/core/app_textstyle.dart';
 import 'package:monstar/views/book_store/book_detail_screen.dart';
 
 import '../../providers/get_list_book_provider.dart';
@@ -19,11 +19,32 @@ class _BookListScreenState extends ConsumerState<BookListScreen> {
   @override
   void initState() {
     super.initState();
-    final loadListBookState = ref.read(bookListViewModelProvider);
-    if (loadListBookState is! AsyncData) {
-      ref.read(bookListViewModelProvider.notifier).loadListBook();
-    }
+    _loadInitialData();
+    _setupScrollListener();
+    // final loadListBookState = ref.read(bookListViewModelProvider);
+    // if (loadListBookState is! AsyncData) {
+    //   ref.read(bookListViewModelProvider.notifier).loadListBook();
+    // }
 
+    // _scrollController.addListener(() {
+    //   if (_scrollController.position.pixels ==
+    //       _scrollController.position.maxScrollExtent) {
+    //     ref.read(bookListViewModelProvider.notifier).loadMoreBooks();
+    //   }
+    // });
+  }
+
+  void _loadInitialData() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final bookListState = ref.read(bookListViewModelProvider);
+      if (bookListState is! AsyncData ||
+          (bookListState.value?.isEmpty ?? true)) {
+        ref.read(bookListViewModelProvider.notifier).loadListBook();
+      }
+    });
+  }
+
+  void _setupScrollListener() {
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {

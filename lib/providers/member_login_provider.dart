@@ -1,10 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monstar/data/repository/api/auth_repository/auth_repository.dart';
 import 'package:monstar/data/services/auth_service/auth_service.dart';
+import 'package:monstar/providers/http_client_provider.dart';
 import 'package:monstar/views/login/login_viewmodel.dart';
 
 final authServiceProvider = Provider<AuthService>((ref) {
-  return AuthService();
+  final httpClient = ref.read(httpClientProvider);
+  return AuthService(httpClient);
 });
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
@@ -13,7 +15,7 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
 });
 
 final loginViewModelProvider =
-    StateNotifierProvider<LoginViewmodel, AsyncValue<bool>>((ref) {
+    StateNotifierProvider<LoginViewModel, AsyncValue<bool>>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
-  return LoginViewmodel(authRepository);
+  return LoginViewModel(authRepository);
 });

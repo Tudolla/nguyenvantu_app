@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:monstar/components/core/app_text_style.dart';
+import 'package:monstar/components/core/app_textstyle.dart';
 import 'package:monstar/views/company_introduction/viewmodel/company_info_viewmodel.dart';
 
 class CompanyInfoScreen extends ConsumerWidget {

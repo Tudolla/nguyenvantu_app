@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../components/core/app_text_style.dart';
+import '../../../components/core/app_textstyle.dart';
 
 // This widget as a Dialog for both: CreatePIN function and VerifiedPIN function
 class PinCodeDialog extends StatefulWidget {

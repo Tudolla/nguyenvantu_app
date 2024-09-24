@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:monstar/views/contribution/add_textpost_screen.dart';
 import 'package:monstar/views/home/widgets/custom_listtile_widget.dart';
 
-import '../../components/core/app_text_style.dart';
+import '../../components/core/app_textstyle.dart';
 import '../../providers/member_login_provider.dart';
 import '../company_introduction/company_sign_screen.dart';
 import '../contribution/add_pollpost_creen.dart';
@@ -74,7 +74,7 @@ class _MyDrawerState extends ConsumerState<MyDrawer> {
     Navigator.of(context).pop();
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => SignUpScreen(),
+        builder: (context) => LoginScreen(),
       ),
     );
   }

@@ -1,10 +1,12 @@
-import 'package:http/http.dart' as http;
+import 'package:monstar/data/services/http_client/http_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
 import '../../../utils/api_base_url.dart';
 
 class AuthService {
+  final HttpClient _httpClient;
+
+  AuthService(this._httpClient);
   Future<void> saveTokens(
     String refresh,
     String access,
@@ -33,30 +35,26 @@ class AuthService {
     required String password,
   }) async {
     try {
-      final response = await http.post(
-        Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/login/'),
+      final response = await _httpClient.post<Map<String, dynamic>>(
+        '/api/v1/login/',
+        data: {
+          'username': username,
+          'password': password,
+        },
         headers: <String, String>{
           'Content-Type': 'application/json',
         },
-        body: jsonEncode(
-          <String, dynamic>{
-            'username': username,
-            'password': password,
-          },
-        ),
+        requiresAuth: false,
       );
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(
-          response.body,
-        ); // co the loi cua secureStorage tu day ma ra, co them fromJson(jsonDecode);
+      if (response != null) {
         await saveTokens(
-          responseData['refresh'],
-          responseData['access'],
-          responseData['id'],
-          responseData['image'],
-          responseData['name'],
-          responseData['email'],
+          response['refresh'],
+          response['access'],
+          response['id'],
+          response['image'],
+          response['name'],
+          response['email'],
         );
         return true;
       } else {

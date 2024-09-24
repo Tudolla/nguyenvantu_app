@@ -44,7 +44,7 @@ class _MyAppState extends ConsumerState<MyApp> {
             debugShowCheckedModeBanner: false,
             title: 'Monstar',
             theme: themeProvider,
-            home: SignUpScreen(),
+            home: LoginScreen(),
           );
         }
       },

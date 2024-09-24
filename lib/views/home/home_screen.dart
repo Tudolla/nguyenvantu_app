@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monstar/views/home/drawer.dart';
 import 'package:monstar/views/home/widgets/gradient_textstyle_widget.dart';
 import 'package:monstar/views/home/widgets/menu.dart';
-import 'package:monstar/components/core/app_text_style.dart';
+import 'package:monstar/components/core/app_textstyle.dart';
 
 import 'package:rive/rive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
