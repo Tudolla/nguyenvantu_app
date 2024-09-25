@@ -120,10 +120,14 @@ class DefaultHttpClient implements HttpClient {
   // Xử lý các trường hợp trả về với kiểu T
   T? _handleResponse<T>(http.Response response) {
     if (response.statusCode == 200) {
-      if (T == String) {
-        return response.body as T;
+      final decodedResponse = jsonDecode(response.body);
+      print("Decode response: $decodedResponse");
+      if (T == Map<String, dynamic>) {
+        return decodedResponse as T?;
+      } else if (T == List) {
+        return decodedResponse as T?;
       } else {
-        return jsonDecode(response.body) as T?;
+        throw Exception("Unexpected type for response: ${T.toString()}");
       }
     } else {
       throw Exception("Request failed with status: ${response.statusCode}");

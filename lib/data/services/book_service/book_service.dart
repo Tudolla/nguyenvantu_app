@@ -15,29 +15,22 @@ class BookService {
   Future<Map<String, dynamic>> fetchBookList({int page = 1}) async {
     final response = await httpClient.get<Map<String, dynamic>>(
       '/api/v1/stories/',
-      queryParameters: {'page': page},
+      queryParameters: {'page': page.toString()},
     );
 
     if (response != null) {
       final count = response['count'] as int;
       final next = response['next'] as String?;
       final previous = response['previous'] as String?;
-      if (response['results'] is List) {
-        final result = response['results'] as List<dynamic>;
-        print(response['results']);
-        final books = result.map((json) => BookModel.fromJson(json)).toList();
+
+      if (response['results'] is List<dynamic>) {
+        final results = response['results'] as List<dynamic>;
+
         return {
           'count': count,
           'next': next,
           'previous': previous,
-          'results': books,
-        };
-      } else if (response['results'] == null) {
-        return {
-          'count': count,
-          'next': next,
-          'previous': previous,
-          'results': [],
+          'results': results,
         };
       } else {
         throw Exception(

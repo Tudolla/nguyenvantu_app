@@ -154,7 +154,7 @@ class _BookListScreenState extends ConsumerState<BookListScreen> {
                 child: Text("Failed to load story: $e"),
               );
             },
-            loading: () => CircularProgressIndicator(),
+            loading: () => Center(child: CircularProgressIndicator()),
           ),
         ),
       ),

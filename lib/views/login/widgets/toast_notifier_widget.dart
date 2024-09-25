@@ -11,6 +11,7 @@ class ToastNotifier {
         return ToastCard(
           color: AppColors.backgroundButton,
           leading: Icon(
+            color: Colors.white,
             Icons.notifications,
             size: 30,
           ),
