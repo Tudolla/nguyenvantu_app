@@ -1,48 +1,40 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monstar/data/repository/api/auth_repository/auth_repository.dart';
+import 'package:monstar/views/base/base_view_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginViewModel extends StateNotifier<AsyncValue<bool>> {
+class LoginViewModel extends BaseViewModel<bool> {
   final AuthRepository _authRepository;
   LoginViewModel(this._authRepository)
       : super(
-          const AsyncValue.data(false),
+          false,
         );
 
   Future<bool> checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();
     final accessToken = prefs.getString('accessToken');
 
-    if (accessToken != null) {
-      return true;
-    } else {
-      return false;
-    }
+    return accessToken != null;
   }
 
   Future<void> login({
     required String username,
     required String password,
   }) async {
-    state = const AsyncValue.loading();
+    setLoading();
     try {
       final result = await _authRepository.login(
         username: username,
         password: password,
       );
-      if (result) {
-        state = const AsyncValue.data(true);
-      } else {
-        state = const AsyncValue.data(false);
-      }
+      setData(result);
     } catch (e, stackTrace) {
-      state = AsyncValue.error(e, stackTrace);
+      setError(e, stackTrace);
     }
   }
 
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
-    state = AsyncValue.data(false); // Cập nhật trạng thái thành chưa đăng nhập
+    setData(false); // Cập nhật trạng thái thành chưa đăng nhập
   }
 }

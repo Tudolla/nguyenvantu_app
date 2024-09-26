@@ -1,3 +1,4 @@
+import '../../../gen/assets.gen.dart';
 import 'rive_model.dart';
 
 class Menu {
@@ -11,7 +12,7 @@ List<Menu> bottomNavItems = [
   Menu(
     title: "Chat",
     rive: RiveModel(
-      src: "assets/rive/icons.riv",
+      src: Assets.rive.icons,
       artboard: "CHAT",
       stateMachineName: "CHAT_Interactivity",
     ),
@@ -19,7 +20,7 @@ List<Menu> bottomNavItems = [
   Menu(
     title: "Search",
     rive: RiveModel(
-      src: "assets/rive/icons.riv",
+      src: Assets.rive.icons,
       artboard: "SEARCH",
       stateMachineName: "SEARCH_Interactivity",
     ),
@@ -27,7 +28,7 @@ List<Menu> bottomNavItems = [
   Menu(
     title: "Timer",
     rive: RiveModel(
-      src: "assets/rive/icons.riv",
+      src: Assets.rive.icons,
       artboard: "TIMER",
       stateMachineName: "TIMER_Interactivity",
     ),
@@ -35,7 +36,7 @@ List<Menu> bottomNavItems = [
   Menu(
     title: "Notification",
     rive: RiveModel(
-      src: "assets/rive/icons.riv",
+      src: Assets.rive.icons,
       artboard: "BELL",
       stateMachineName: "BELL_Interactivity",
     ),
@@ -43,7 +44,7 @@ List<Menu> bottomNavItems = [
   Menu(
     title: "Profile",
     rive: RiveModel(
-      src: "assets/rive/icons.riv",
+      src: Assets.rive.icons,
       artboard: "USER",
       stateMachineName: "USER_Interactivity",
     ),

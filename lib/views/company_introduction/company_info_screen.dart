@@ -11,7 +11,11 @@ class CompanyInfoScreen extends ConsumerWidget {
     final companyInfo = ref.watch(companyInfoViewModelProvider);
     return Scaffold(
       appBar: AppBar(
-        title: Text(""),
+        title: Text(
+          "Monstarlab Profile",
+          style: AppTextStyle.appBarStyle,
+        ),
+        centerTitle: true,
       ),
       body: companyInfo.when(
         data: (companyInfo) {

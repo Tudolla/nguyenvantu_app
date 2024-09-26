@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../components/core/app_textstyle.dart';
+import '../../gen/assets.gen.dart';
 import '../../providers/get_textpost_provider.dart';
 
 class TextPostListScreen extends ConsumerStatefulWidget {
@@ -16,8 +17,6 @@ class TextPostListScreen extends ConsumerStatefulWidget {
 
 class _TextPostListScreenState extends ConsumerState<TextPostListScreen>
     with SingleTickerProviderStateMixin {
-  // late AnimationController _controller;
-  // late Animation<double> _animation;
   bool _isDownExpanded = false;
   @override
   void initState() {
@@ -90,7 +89,7 @@ class _TextPostListScreenState extends ConsumerState<TextPostListScreen>
                         SizedBox(
                           height: 40,
                           width: 40,
-                          child: LottieBuilder.asset("assets/mybell.json"),
+                          child: LottieBuilder.asset(Assets.mybell),
                         ),
                       ],
                     ),

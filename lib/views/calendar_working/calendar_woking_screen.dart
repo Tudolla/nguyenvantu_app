@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:monstar/gen/assets.gen.dart';
 import 'dart:ui';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -76,7 +77,7 @@ class _CalendarWokingScreenState extends ConsumerState<CalendarWokingScreen> {
                     children: [
                       ClipRRect(
                         child: Image.asset(
-                          "assets/images/calendar.jpg",
+                          Assets.images.calendar.path,
                           // fit: BoxFit.cover,
                           width: 150,
                           height: 150,

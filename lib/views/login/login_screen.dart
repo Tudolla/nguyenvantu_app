@@ -8,6 +8,8 @@ import 'package:monstar/views/home/home_screen.dart';
 import 'package:monstar/views/login/widgets/input_widget.dart';
 import 'package:monstar/views/login/widgets/toast_notifier_widget.dart';
 
+import '../../gen/assets.gen.dart';
+
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
@@ -86,7 +88,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           SizedBox(
             height: MediaQuery.of(context).size.width / 4,
             width: MediaQuery.of(context).size.width / 4,
-            child: LottieBuilder.asset("assets/tree.json"),
+            child: LottieBuilder.asset(Assets.tree),
           ),
           Text(
             "Monstarlab Company",

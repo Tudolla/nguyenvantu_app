@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../gen/assets.gen.dart';
+
 // This is dialog that use for show snall dialog from top of Screen
 class FloatingTopDialog extends StatefulWidget {
   final String message;
@@ -87,7 +89,7 @@ class _FloatingTopDialogState extends State<FloatingTopDialog>
                       Container(
                         width: 40,
                         height: 40,
-                        child: LottieBuilder.asset("assets/mybell.json"),
+                        child: LottieBuilder.asset(Assets.bell),
                       ),
                     ],
                   ),

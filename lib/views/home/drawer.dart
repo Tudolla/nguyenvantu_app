@@ -6,6 +6,7 @@ import 'package:monstar/views/contribution/add_textpost_screen.dart';
 import 'package:monstar/views/home/widgets/custom_listtile_widget.dart';
 
 import '../../components/core/app_textstyle.dart';
+import '../../gen/assets.gen.dart';
 import '../../providers/member_login_provider.dart';
 import '../company_introduction/company_sign_screen.dart';
 import '../contribution/add_pollpost_creen.dart';
@@ -99,10 +100,10 @@ class _MyDrawerState extends ConsumerState<MyDrawer> {
                       Container(
                         height: 150,
                         width: 100,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                            image: AssetImage("assets/images/avatar.png"),
+                            image: AssetImage(Assets.images.avatar.path),
                           ),
                         ),
                       ),

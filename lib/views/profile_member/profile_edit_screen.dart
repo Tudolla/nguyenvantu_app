@@ -10,9 +10,9 @@ import 'package:monstar/providers/profile_state_provider.dart';
 import 'package:monstar/views/profile_member/widget/pin_code_dialog.dart';
 import 'package:monstar/views/profile_member/widget/text_input_items.dart';
 
+import '../../gen/assets.gen.dart';
 import '../../utils/api_base_url.dart';
 import '../../providers/member_information_provider.dart';
-import '../../utils/enums.dart';
 
 class ProfileEditScreen extends ConsumerStatefulWidget {
   const ProfileEditScreen({super.key});
@@ -23,15 +23,12 @@ class ProfileEditScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
-  final _formKey = GlobalKey<FormState>();
+  // final _formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
   final TextEditingController positionController = TextEditingController();
-
-  // This value is used for counting the times User input wrong PIN code.
-  int failedAttempts = 0;
 
   File? pickedImage;
 
@@ -52,9 +49,6 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     emailController.dispose();
     addressController.dispose();
     positionController.dispose();
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   ref.read(profileStateProvider.notifier).toggleHidden(true);
-    // });
 
     super.dispose();
   }
@@ -80,25 +74,6 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     // _checkAndUpdateHiddenState();
     _syncStateFromStorage();
   }
-
-  // This function is similar with _syncStateFromStorage() but more complicated.
-  // Future<void> _checkAndUpdateHiddenState() async {
-  //   // "profileNotifier" đại diện cho ProfileNotifier, do profileStateProvider quản lí
-  //   // .notifier cho phép "profileNotifier" có quyền truy cập tới các phương thức bên trong nó.
-  //   final profileNotifier = ref.read(profileStateProvider.notifier);
-  //   // currentHiddenState là trạng thái lấy từ SecureStorage.
-  //   final currentHiddenState = await profileNotifier.getCurrentHiddenState();
-
-  //   // kiểm tra trạng thái trong SecureStorage với trạng thái hiện tại.
-  //   // nếu không khớp, state sẽ cập nhật với state trong Storage
-  //   // ref.read(profileStateProvider) : vì profileStateProvider là StateNotifierProvider
-  //   // mà StateNotifierProvider đang cung cấp ProfileNotifier: lớp quản lí State
-  //   // và ProfileState: State được quản lí
-  //   // nên ref.read(profileStateProvider).isHidden : truy cập trực tiếp State hiện tại.
-  //   if (currentHiddenState != ref.read(profileStateProvider).isHidden) {
-  //     await profileNotifier.toggleHidden(currentHiddenState);
-  //   }
-  // }
 
   Future<void> _syncStateFromStorage() async {
     final profileNotifier = ref.read(profileStateProvider.notifier);
@@ -135,7 +110,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                     BlendMode.srcATop,
                   ),
                   child: LottieBuilder.asset(
-                    'assets/arrow-right.json',
+                    Assets.arrowRight,
                   ),
                 ),
               ),
@@ -172,15 +147,8 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                       profileNotifier.verifyPinCode(enterdPinCode)) {
                     await profileNotifier.toggleHidden(false);
 
-                    // await ref
-                    //     .read(memberViewModelProvider.notifier)
-                    //     .getMemberInfor();
-
                     setState(() {});
                   } else {
-                    failedAttempts++;
-                    if (failedAttempts >=
-                        PinVerificationLimit.maxAttempts.value) {}
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         backgroundColor: Colors.blueGrey,
@@ -303,7 +271,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                                   return ScaffoldMessenger.of(context)
                                       .showSnackBar(
                                     SnackBar(
-                                      content: Text("Getting error!"),
+                                      content: Text("Getting some error!"),
                                     ),
                                   );
                                 },

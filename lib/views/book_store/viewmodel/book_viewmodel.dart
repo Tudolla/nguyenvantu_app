@@ -1,18 +1,18 @@
-import 'dart:convert';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:monstar/views/base/base_view_model.dart';
 
 import '../../../data/models/api/request/book_model/book_model.dart';
 import '../../../data/repository/api/book_repository/book_repository.dart';
 
-class BookViewmodel extends StateNotifier<AsyncValue<List<BookModel>>> {
+class BookViewmodel extends BaseViewModel<List<BookModel>> {
   int _currentPage = 1;
   bool _isFetchingMore = false;
   final BookRepository bookRepository;
 
-  BookViewmodel({required this.bookRepository}) : super(AsyncLoading());
+  BookViewmodel({required this.bookRepository}) : super([]);
 
   Future<void> loadListBook() async {
+    setLoading();
     try {
       final result = await bookRepository.getListBook(page: _currentPage);
 
@@ -20,14 +20,15 @@ class BookViewmodel extends StateNotifier<AsyncValue<List<BookModel>>> {
         final booksData = ((result['results']) as List<dynamic>)
             .map((json) => BookModel.fromJson(json))
             .toList();
-        state = AsyncData(booksData);
+
+        setData(booksData);
       } else {
         throw Exception(
           "Expected to be a list, got ${result['results'].runtimeType}",
         );
       }
     } catch (e, stackTrace) {
-      state = AsyncValue.error(e, stackTrace);
+      setError(e, stackTrace);
     }
   }
 
@@ -43,12 +44,12 @@ class BookViewmodel extends StateNotifier<AsyncValue<List<BookModel>>> {
             .map((json) => BookModel.fromJson(json))
             .toList();
         final currentBooks = state.asData?.value ?? [];
-        state = AsyncData([...currentBooks, ...moreBooks]);
+        setData([...currentBooks, ...moreBooks]);
       } else {
-        throw Exception("VC");
+        throw Exception("Exception error");
       }
     } catch (e, stackTrace) {
-      state = AsyncValue.error(e, stackTrace);
+      setError(e, stackTrace);
     } finally {
       _isFetchingMore = false;
     }

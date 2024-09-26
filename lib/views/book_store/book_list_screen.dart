@@ -21,17 +21,6 @@ class _BookListScreenState extends ConsumerState<BookListScreen> {
     super.initState();
     _loadInitialData();
     _setupScrollListener();
-    // final loadListBookState = ref.read(bookListViewModelProvider);
-    // if (loadListBookState is! AsyncData) {
-    //   ref.read(bookListViewModelProvider.notifier).loadListBook();
-    // }
-
-    // _scrollController.addListener(() {
-    //   if (_scrollController.position.pixels ==
-    //       _scrollController.position.maxScrollExtent) {
-    //     ref.read(bookListViewModelProvider.notifier).loadMoreBooks();
-    //   }
-    // });
   }
 
   void _loadInitialData() {
