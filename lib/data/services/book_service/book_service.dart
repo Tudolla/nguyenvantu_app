@@ -13,18 +13,20 @@ class BookService {
   BookService(this.httpClient);
   // {int page = 1}: tham số mặc định, không yêu cầu truyền vào khi gọi ở class khác.
   Future<Map<String, dynamic>> fetchBookList({int page = 1}) async {
-    final response = await httpClient.get<Map<String, dynamic>>(
+    final response = await httpClient.get(
       '/api/v1/stories/',
       queryParameters: {'page': page.toString()},
     );
 
-    if (response != null) {
+    if (response.statusCode == 200) {
+      final utf8Body = utf8.decode(response.bodyBytes);
+      final jsonResponse = jsonDecode(utf8Body) as Map<String, dynamic>;
       final count = response['count'] as int;
       final next = response['next'] as String?;
       final previous = response['previous'] as String?;
 
       if (response['results'] is List<dynamic>) {
-        final results = response['results'] as List<dynamic>;
+        final results = jsonResponse['results'] as List<dynamic>;
 
         return {
           'count': count,

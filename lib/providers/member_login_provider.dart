@@ -6,6 +6,7 @@ import 'package:monstar/views/login/login_viewmodel.dart';
 
 final authServiceProvider = Provider<AuthService>((ref) {
   final httpClient = ref.read(httpClientProvider);
+
   return AuthService(httpClient);
 });
 

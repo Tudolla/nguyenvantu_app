@@ -167,14 +167,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       icon: Icon(Icons.find_in_page_outlined),
                       typeSetting: "Find friend",
                     ),
-                    ProfileSettingItem(
-                      icon: Icon(Icons.find_in_page_outlined),
-                      typeSetting: "Find friend",
-                    ),
-                    ProfileSettingItem(
-                      icon: Icon(Icons.find_in_page_outlined),
-                      typeSetting: "Find friend",
-                    ),
                   ],
                 ),
               ),

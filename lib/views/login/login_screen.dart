@@ -135,6 +135,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               if (isLoginPressed) {
                 if (isLoggedIn) {
                   // Hiển thị thông báo đăng nhập thành công
+                  // Sử dụng WidgetsBinding - chắc chắn UI toàn màn hình đã được build xong
+                  // rồi mới hiển thị Dialog này: 10đ
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     ToastNotifier.showDialogMessage(
                       context,
@@ -193,7 +195,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
               // Although used Riverpod State, but setState is quick
               setState(() {
-                isLoginPressed = true; // Cập nhật cờ khi nhấn nút đăng nhập
+                isLoginPressed = true;
               });
 
               // Gọi hàm login

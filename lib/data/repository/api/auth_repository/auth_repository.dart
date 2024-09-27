@@ -9,10 +9,7 @@ abstract class AuthRepository {
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthService _authService;
-
-  AuthRepositoryImpl(
-    this._authService,
-  );
+  AuthRepositoryImpl(this._authService);
 
   @override
   Future<bool> login({

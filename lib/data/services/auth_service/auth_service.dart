@@ -1,12 +1,13 @@
 import 'package:monstar/data/services/http_client/http_client.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:monstar/data/services/storage_service/flutter_secure_storage_service.dart';
 
 import '../../../utils/api_base_url.dart';
 
+// Singleton class
 class AuthService {
   final HttpClient _httpClient;
-
   AuthService(this._httpClient);
+
   Future<void> saveTokens(
     String refresh,
     String access,
@@ -15,19 +16,35 @@ class AuthService {
     String name,
     String email,
   ) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('refreshToken', refresh);
-    await prefs.setString('accessToken', access);
-    await prefs.setInt('id', id);
-    await prefs.setString('imageAvatar', ApiBaseUrl.baseUrl + imageAvatar);
-    await prefs.setString('name', name);
-    await prefs.setString('email', email);
+    Map<String, String> tokenData = {
+      'refreshToken': refresh,
+      'accessToken': access,
+      'id': id.toString(),
+      'imageAvatar': ApiBaseUrl.baseUrl + imageAvatar,
+      'name': name,
+      'email': email,
+    };
+    await Future.wait(
+      tokenData.entries.map(
+        (entry) {
+          return StorageService.instance.write(entry.key, entry.value);
+        },
+      ),
+    );
+  }
+
+  Future<void> clearTokens() async {
+    await StorageService.instance.deleteAll();
   }
 
   Future<bool> userIsLoggedIn() async {
-    final prefs = await SharedPreferences.getInstance();
-    final accessToken = prefs.getString('accessToken');
+    final accessToken = await StorageService.instance.read('accessToken');
+
     return accessToken != null;
+  }
+
+  static Future<String?> getAccessToken() async {
+    return await StorageService.instance.read('accessToken');
   }
 
   Future<bool> login({
