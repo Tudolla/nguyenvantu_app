@@ -30,6 +30,16 @@ class ProfileViewModel extends StateNotifier<AsyncValue<MemberModel>> {
     }
   }
 
+  Future<void> getMemberInfoFromLocal() async {
+    try {
+      state = AsyncValue.loading();
+      final memberLocal = await profileRepository.getMemberInfoFromLocal();
+      state = AsyncValue.data(memberLocal);
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
+  }
+
   Future<void> updateProfile(
     String? name,
     String? email,
@@ -37,8 +47,6 @@ class ProfileViewModel extends StateNotifier<AsyncValue<MemberModel>> {
     String? position,
     File? image,
   ) async {
-    // cái này quá hay, tại sao ở trong Constructor có AsyncLoading rồi, mà ở đây đặt lại loading() làm gì
-    // vì với mỗi API, khi chạy khởi tạo lại, thì sẽ cần loading lại - quá hay
     state = AsyncValue.loading();
     try {
       final memberUpdated = await profileRepository.updateProfile(

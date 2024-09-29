@@ -1,25 +1,13 @@
 import 'dart:convert';
 
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../utils/api_base_url.dart';
+import 'package:monstar/data/services/http_client/http_client.dart';
 
 class ReadingService {
+  final HttpClient _httpClient;
+  ReadingService(this._httpClient);
   Future<void> startReading(int storyId) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String? accessToken = pref.getString('accessToken');
-
-    if (accessToken == null) {
-      throw Exception("Access token is missing");
-    }
-
-    final response = await http.post(
-      Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/start-reading/$storyId/'),
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'Content-Type': 'application/json',
-      },
+    final response = await _httpClient.post(
+      '/api/v1/start-reading/$storyId/',
     );
 
     if (response.statusCode != 200) {
@@ -28,21 +16,9 @@ class ReadingService {
   }
 
   Future<double> endReading(int storyId) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String? accessToken = pref.getString('accessToken');
-
-    if (accessToken == null) {
-      throw Exception("Access token is missing");
-    }
-
-    final response = await http.post(
-      Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/end-reading/$storyId/'),
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'Content-Type': 'application/json',
-      },
+    final response = await _httpClient.post(
+      '/api/v1/end-reading/$storyId/',
     );
-
     if (response.statusCode != 200) {
       throw Exception("Failed to end reading");
     }

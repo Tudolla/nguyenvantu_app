@@ -188,7 +188,9 @@ class _BookDetailScreenState extends ConsumerState<BookDetailScreen>
               child: Text("Fail to load detail: ${e}"),
             );
           },
-          loading: () => CircularProgressIndicator(),
+          loading: () => const Center(
+            child: CircularProgressIndicator(),
+          ),
         ),
       ),
     );

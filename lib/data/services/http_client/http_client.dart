@@ -1,7 +1,8 @@
 import 'package:monstar/data/api/api_config.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+
+import '../auth_service/auth_service.dart';
 
 abstract class HttpClient {
   Future<T?> get<T>(
@@ -43,8 +44,7 @@ class DefaultHttpClient implements HttpClient {
     };
 
     if (requiresAuth) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? accessToken = prefs.getString('accessToken');
+      String? accessToken = await AuthService.getAccessToken();
       if (accessToken != null) {
         defaultHeaders['Authorization'] = 'Bearer $accessToken';
       }
@@ -120,11 +120,15 @@ class DefaultHttpClient implements HttpClient {
   // Xử lý các trường hợp trả về với kiểu T
   T? _handleResponse<T>(http.Response response) {
     if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      print("Decode response: $decodedResponse");
-      if (T == Map<String, dynamic>) {
+      final utf8Body = utf8.decode(response.bodyBytes);
+      final decodedResponse = jsonDecode(utf8Body);
+
+      if (T == dynamic) {
         return decodedResponse as T?;
-      } else if (T == List) {
+      } else if (decodedResponse is Map<String, dynamic> &&
+          T == Map<String, dynamic>) {
+        return decodedResponse as T?;
+      } else if (decodedResponse is List && T == List) {
         return decodedResponse as T?;
       } else {
         throw Exception("Unexpected type for response: ${T.toString()}");

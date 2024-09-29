@@ -3,7 +3,6 @@ import 'package:monstar/data/services/storage_service/flutter_secure_storage_ser
 
 import '../../../utils/api_base_url.dart';
 
-// Singleton class
 class AuthService {
   final HttpClient _httpClient;
   AuthService(this._httpClient);
@@ -33,11 +32,11 @@ class AuthService {
     );
   }
 
-  Future<void> clearTokens() async {
+  static Future<void> clearTokens() async {
     await StorageService.instance.deleteAll();
   }
 
-  Future<bool> userIsLoggedIn() async {
+  static Future<bool> userIsLoggedIn() async {
     final accessToken = await StorageService.instance.read('accessToken');
 
     return accessToken != null;
@@ -45,6 +44,10 @@ class AuthService {
 
   static Future<String?> getAccessToken() async {
     return await StorageService.instance.read('accessToken');
+  }
+
+  static Future<String?> getUserId() async {
+    return await StorageService.instance.read('id');
   }
 
   Future<bool> login({

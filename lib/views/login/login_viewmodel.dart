@@ -1,6 +1,6 @@
 import 'package:monstar/data/repository/api/auth_repository/auth_repository.dart';
+import 'package:monstar/data/services/auth_service/auth_service.dart';
 import 'package:monstar/views/base/base_view_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginViewModel extends BaseViewModel<bool> {
   final AuthRepository _authRepository;
@@ -10,10 +10,7 @@ class LoginViewModel extends BaseViewModel<bool> {
         );
 
   Future<bool> checkLoginStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    final accessToken = prefs.getString('accessToken');
-
-    return accessToken != null;
+    return AuthService.userIsLoggedIn();
   }
 
   Future<void> login({
@@ -33,8 +30,8 @@ class LoginViewModel extends BaseViewModel<bool> {
   }
 
   Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+    AuthService.clearTokens();
+
     setData(false); // Cập nhật trạng thái thành chưa đăng nhập
   }
 }

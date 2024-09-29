@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:monstar/components/button/app_button.dart';
 import 'package:monstar/components/core/app_textstyle.dart';
+import 'package:monstar/data/models/api/request/member_model/member_model.dart';
 import 'package:monstar/providers/profile_state_provider.dart';
 import 'package:monstar/views/profile_member/widget/pin_code_dialog.dart';
 import 'package:monstar/views/profile_member/widget/text_input_items.dart';
@@ -56,22 +57,26 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      final member = ref.read(memberViewModelProvider).maybeWhen(
-            data: (member) => member,
-            orElse: () => null,
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.watch(memberViewModelProvider).when(
+            data: (member) {
+              nameController.text = member.name ?? "";
+              emailController.text = member.email ?? "";
+              addressController.text = member.address ?? "";
+              positionController.text = member.position ?? "";
+            },
+            error: (error, stackTrace) {},
+            loading: () {},
           );
-
-      ref.read(memberViewModelProvider.notifier).getMemberInfor();
-
-      if (member != null) {
-        nameController.text = member.name ?? "";
-        emailController.text = member.email ?? "";
-        addressController.text = member.address ?? "";
-        positionController.text = member.position ?? "";
-      }
     });
-    // _checkAndUpdateHiddenState();
+
+    // Tải thông tin Member khi màn hình bắt đầu
+    Future.microtask(() {
+      ref.read(memberViewModelProvider.notifier).getMemberInfor();
+    });
+
+    //this function to _checkAndUpdateHiddenState();
     _syncStateFromStorage();
   }
 
@@ -88,6 +93,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     final memberViewModel = ref.watch(memberViewModelProvider);
 
     final profileState = ref.watch(profileStateProvider);
+
     final profileNotifier = ref.read(profileStateProvider.notifier);
 
     return Scaffold(

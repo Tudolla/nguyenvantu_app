@@ -6,7 +6,8 @@ import 'package:monstar/components/core/app_textstyle.dart';
 import 'package:monstar/views/profile_member/profile_edit_screen.dart';
 import 'package:monstar/views/profile_member/profile_setting_items.dart';
 import 'package:monstar/views/profile_member/setting_app_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../providers/member_information_provider.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -20,23 +21,28 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   String? _nameMember;
   String? _emailMember;
 
-  Future<void> _loadMemberInfor() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _imageAvatar = prefs.getString('imageAvatar');
-      _nameMember = prefs.getString('name');
-      _emailMember = prefs.getString('email');
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    _loadMemberInfor();
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   final member = ref.read(memberViewModelProvider).maybeWhen(
+    //         data: (member) => member,
+    //         orElse: () => null,
+    //       );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(memberViewModelProvider.notifier).getMemberInfoFromLocal();
+    });
+    // if (member != null) {
+    //   _imageAvatar = member.image;
+    //   _nameMember = member.name;
+    //   _emailMember = member.email;
+    // }
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
+    final memberState = ref.watch(memberViewModelProvider);
     var sizeWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
@@ -54,124 +60,135 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding:
-            const EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Expanded(
-              flex: 4,
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    _imageAvatar != null
-                        ? Stack(
-                            children: [
-                              CircleAvatar(
+      body: memberState.when(
+        data: (member) {
+          return Padding(
+            padding:
+                const EdgeInsets.only(left: 30, right: 30, top: 10, bottom: 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  flex: 4,
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        member.image != null
+                            ? Stack(
+                                children: [
+                                  CircleAvatar(
+                                    radius: sizeWidth * 1 / 4,
+                                    backgroundImage:
+                                        NetworkImage(member.image!),
+                                  ),
+                                  Positioned(
+                                    bottom: 8,
+                                    right: 8,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      padding: EdgeInsets.all(
+                                        0,
+                                      ),
+                                      child: Icon(
+                                        Icons.check_circle,
+                                        color: Colors.green,
+                                        size: 34,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : CircleAvatar(
                                 radius: sizeWidth * 1 / 4,
-                                backgroundImage: NetworkImage(_imageAvatar!),
+                                backgroundImage: null,
                               ),
-                              Positioned(
-                                bottom: 8,
-                                right: 8,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  padding: EdgeInsets.all(
-                                    0,
-                                  ),
-                                  child: Icon(
-                                    Icons.check_circle,
-                                    color: Colors.green,
-                                    size: 34,
-                                  ),
+                        member.name != null
+                            ? Text(
+                                member.name!,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            : Text(
+                                "No name",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ],
-                          )
-                        : CircleAvatar(
-                            radius: sizeWidth * 1 / 4,
-                            backgroundImage: null,
-                          ),
-                    _nameMember != null
-                        ? Text(
-                            _nameMember!,
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
-                        : Text(
-                            "No name",
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                    _emailMember != null
-                        ? Text(
-                            _emailMember!,
-                            style: TextStyle(
-                              fontSize: 15,
-                            ),
-                          )
-                        : Text(
-                            "monstarlab.vn@gmail.vn.com",
-                            style: TextStyle(
-                              fontSize: 15,
-                            ),
-                          ),
-                    const SizedBox(
-                      height: 20,
+                        member.email != null
+                            ? Text(
+                                member.email!,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              )
+                            : Text(
+                                "monstarlab.vn@gmail.vn.com",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        AppButton(
+                          text: "View Profile",
+                          function: () {
+                            Get.to(ProfileEditScreen());
+                          },
+                          textColor: Colors.white,
+                          backgroundColor: Colors.blueGrey,
+                        ),
+                      ],
                     ),
-                    AppButton(
-                      text: "View Profile",
-                      function: () {
-                        Get.to(ProfileEditScreen());
-                      },
-                      textColor: Colors.white,
-                      backgroundColor: Colors.blueGrey,
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            Expanded(
-              flex: 2,
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ProfileSettingItem(
-                      voidCallback: () {
-                        Get.to(
-                          SettingAppScreen(),
-                        );
-                      },
-                      icon: Icon(Icons.settings),
-                      typeSetting: "Setting",
-                    ),
-                    ProfileSettingItem(
-                      icon: Icon(Icons.medical_information),
-                      typeSetting: "Information",
-                    ),
-                    ProfileSettingItem(
-                      icon: Icon(Icons.find_in_page_outlined),
-                      typeSetting: "Find friend",
-                    ),
-                  ],
+                const SizedBox(
+                  height: 30,
                 ),
-              ),
+                Expanded(
+                  flex: 2,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ProfileSettingItem(
+                          voidCallback: () {
+                            Get.to(
+                              SettingAppScreen(),
+                            );
+                          },
+                          icon: Icon(Icons.settings),
+                          typeSetting: "Setting",
+                        ),
+                        ProfileSettingItem(
+                          icon: Icon(Icons.medical_information),
+                          typeSetting: "Information",
+                        ),
+                        ProfileSettingItem(
+                          icon: Icon(Icons.find_in_page_outlined),
+                          typeSetting: "Find friend",
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          );
+        },
+        error: (error, stackTrace) => Center(
+          child: Text('Error: $error'),
+        ),
+        loading: () => const Center(
+          child: CircularProgressIndicator(),
         ),
       ),
     );

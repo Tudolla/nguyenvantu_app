@@ -2,20 +2,20 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
-
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:monstar/data/services/auth_service/auth_service.dart';
 
 import '../../../utils/api_base_url.dart';
 import '../../models/api/request/member_model/member_model.dart';
 
 class ProfileService {
+  /// Function to get user information
   Future<MemberModel> getMemberInfor() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String? accessToken = pref.getString('accessToken');
-    int? memberId = pref.getInt('id');
+    String? accessToken = await AuthService.getAccessToken();
+
+    String? id = await AuthService.getUserId();
 
     final response = await http.get(
-      Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/profile/$memberId/'),
+      Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/profile/$id/'),
       headers: {
         'Authorization': 'Bearer $accessToken',
         'Content-Type': 'application/json',
@@ -34,6 +34,7 @@ class ProfileService {
     }
   }
 
+  /// Function to update Profile
   Future<MemberModel> updateProfile({
     String? name,
     String? email,
@@ -41,9 +42,9 @@ class ProfileService {
     String? position,
     File? image,
   }) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String? accessToken = pref.getString('accessToken');
-    int? id = pref.getInt('id');
+    String? accessToken = await AuthService.getAccessToken();
+
+    String? id = await AuthService.getUserId();
 
     final uri = Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/profile/$id/update/');
 

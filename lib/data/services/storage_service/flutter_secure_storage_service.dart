@@ -4,7 +4,7 @@ class StorageService {
   // Singleton pattern
   static final StorageService _instance = StorageService._internal();
 
-  // instance
+  // instance of it self
   final FlutterSecureStorage _secureStorage;
 
   // constructor khi tao Singleton

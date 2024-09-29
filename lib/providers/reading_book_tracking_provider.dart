@@ -1,10 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monstar/data/repository/api/book_repository/book_tracking_repository.dart';
 import 'package:monstar/data/services/book_service/book_tracking_service.dart';
+import 'package:monstar/providers/http_client_provider.dart';
 import 'package:monstar/views/book_store/viewmodel/book_tracking_viewmodel.dart';
 
 final readingServiceProvider = Provider<ReadingService>((ref) {
-  return ReadingService();
+  final httpClient = ref.read(httpClientProvider);
+
+  return ReadingService(httpClient);
 });
 
 final readingRepositoryProvider = Provider<ReadingRepository>((ref) {
