@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monstar/views/home/drawer.dart';
-import 'package:monstar/views/home/widgets/gradient_textstyle_widget.dart';
 import 'package:monstar/views/home/widgets/menu.dart';
 import 'package:monstar/components/core/app_textstyle.dart';
 
 import 'package:rive/rive.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../providers/avatar_image_provider.dart';
 import '../book_store/book_list_screen.dart';
 import '../calendar_working/calendar_woking_screen.dart';
 
@@ -30,23 +29,15 @@ class _HomeScreenDefaultState extends ConsumerState<HomeScreenDefault> {
   final PageController _pageController = PageController();
 
   int selectedID = 0;
-  String? _imageAvatar;
-
-  Future<void> _loadMemberImage() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _imageAvatar = prefs.getString('imageAvatar');
-    });
-  }
 
   @override
   void initState() {
     super.initState();
-    _loadMemberImage();
   }
 
   @override
   Widget build(BuildContext context) {
+    final avatarImage = ref.watch(avatarProvider);
     return Scaffold(
       appBar: selectedID == 0
           ? AppBar(
@@ -62,14 +53,24 @@ class _HomeScreenDefaultState extends ConsumerState<HomeScreenDefault> {
               actions: [
                 IconButton(
                   onPressed: () {},
-                  icon: _imageAvatar != null
-                      ? CircleAvatar(
+                  icon: avatarImage.when(
+                    data: (image) {
+                      if (image == null || image.isEmpty) {
+                        return CircleAvatar(
                           radius: 15,
-                          backgroundImage: NetworkImage(_imageAvatar!),
-                        )
-                      : CircleAvatar(
+                        );
+                      } else {
+                        return CircleAvatar(
                           radius: 15,
-                        ),
+                          backgroundImage: NetworkImage(image),
+                        );
+                      }
+                    },
+                    error: (e, stackTrace) => Center(
+                      child: Text("Error: $e"),
+                    ),
+                    loading: () => const CircularProgressIndicator(),
+                  ),
                 ),
               ],
             )

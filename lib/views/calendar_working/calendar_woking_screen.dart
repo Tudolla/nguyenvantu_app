@@ -17,11 +17,18 @@ class CalendarWokingScreen extends ConsumerStatefulWidget {
 
 class _CalendarWokingScreenState extends ConsumerState<CalendarWokingScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
+  late DateTime _focusedDay;
 
   @override
   void initState() {
     super.initState();
-    ref.read(attendanceViewModelProvider.notifier).loadAttendanceData();
+    _focusedDay = DateTime.now();
+    final currentMonth = _focusedDay.month;
+    final currentYear = _focusedDay.year;
+    ref.read(attendanceViewModelProvider.notifier).loadAttendanceData(
+          currentMonth,
+          currentYear,
+        );
   }
 
   @override
@@ -97,7 +104,18 @@ class _CalendarWokingScreenState extends ConsumerState<CalendarWokingScreen> {
                   ),
                 ),
                 TableCalendar(
-                  focusedDay: DateTime.now(),
+                  onPageChanged: (focusedDay) {
+                    setState(() {
+                      _focusedDay = focusedDay;
+                    });
+                    final selectedMonth = focusedDay.month;
+                    final selectedYear = focusedDay.year;
+
+                    ref
+                        .read(attendanceViewModelProvider.notifier)
+                        .loadAttendanceData(selectedMonth, selectedYear);
+                  },
+                  focusedDay: _focusedDay,
                   firstDay: DateTime.utc(2024, 01, 01),
                   lastDay: DateTime.utc(2025, 01, 01),
                   headerStyle: HeaderStyle(

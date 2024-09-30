@@ -43,38 +43,6 @@ class _AddPollpostCreenState extends BaseScreen<AddPollpostCreen> {
     });
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   final statePollPost = ref.watch(pollPostProvider);
-  //   final pollpostViewmodel = ref.watch(pollPostProvider.notifier);
-
-  //   void _submit() {
-  //     final title = _titleController.text;
-  //     final choices =
-  //         _choiceController.map((controller) => controller.text).toList();
-  //     List<Choice> listChoice =
-  //         choices.map((e) => Choice(choiceText: e)).toList();
-  //     pollpostViewmodel.submitPollPost(title, choices);
-  //   }
-
-  //   var size = MediaQuery.of(context).size.width;
-  //   return Scaffold(
-  //     appBar: AppBar(
-  //       leading: ArrowBackButton(),
-  //       title: Text(
-  //         "Create a pollpost",
-  //         style: TextStyle(
-  //           fontFamily: AppTextStyle.drawerFontStyle,
-  //           fontSize: 25,
-  //           color: const Color.fromARGB(255, 109, 105, 105),
-  //         ),
-  //       ),
-  //       centerTitle: true,
-  //     ),
-  //     body:
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,7 +65,7 @@ class _AddPollpostCreenState extends BaseScreen<AddPollpostCreen> {
   @override
   Widget buildBody(BuildContext context) {
     final statePollPost = ref.watch(pollPostProvider);
-    final pollpostViewmodel = ref.watch(pollPostProvider.notifier);
+    final pollpostViewmodel = ref.read(pollPostProvider.notifier);
     var size = MediaQuery.of(context).size.width;
 
     void _submit() {

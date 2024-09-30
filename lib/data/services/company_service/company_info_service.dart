@@ -1,15 +1,14 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:monstar/data/services/auth_service/auth_service.dart';
 import 'package:monstar/utils/api_base_url.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/api/request/company/company_info_model.dart';
 
 class CompanyService {
   Future<CompanyInfo> fetchCompanyInfo() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String? accessToken = pref.getString('accessToken');
+    String? accessToken = await AuthService.getAccessToken();
 
     if (accessToken == null) {
       throw Exception("Access token is missing");

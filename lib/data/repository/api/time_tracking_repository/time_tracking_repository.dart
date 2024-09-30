@@ -3,7 +3,7 @@ import 'package:monstar/data/services/time_tracking_service/time_tracking_servic
 import '../../../models/api/request/attendance_day_model/attendance_model.dart';
 
 abstract class TimeTrackingRepository {
-  Future<List<AttendaceModel>> getAttendanceForAMonth();
+  Future<List<AttendaceModel>> getAttendanceForAMonth(int month, int year);
 }
 
 class TimeTrackingRepositoryImpl implements TimeTrackingRepository {
@@ -12,7 +12,8 @@ class TimeTrackingRepositoryImpl implements TimeTrackingRepository {
   TimeTrackingRepositoryImpl(this._timeTrackingService);
 
   @override
-  Future<List<AttendaceModel>> getAttendanceForAMonth() async {
-    return await _timeTrackingService.fetchAttendance();
+  Future<List<AttendaceModel>> getAttendanceForAMonth(
+      int month, int year) async {
+    return await _timeTrackingService.fetchAttendance(month, year);
   }
 }

@@ -40,7 +40,7 @@ class DefaultHttpClient implements HttpClient {
     bool requiresAuth,
   ) async {
     final defaultHeaders = <String, String>{
-      'Content-Type': 'application/json;charset=UTF-8',
+      'Content-Type': 'application/json;',
     };
 
     if (requiresAuth) {

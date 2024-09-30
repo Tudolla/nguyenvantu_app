@@ -31,7 +31,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData && snapshot.data == true) {
-          // Nếu đã đăng nhập, chuyển đến HomeScreen
+          // Sủ dụng Get thì tốc độ chuyển trang rất nhanh mượt, hơn MaterialApp
           return GetMaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Monstar',
@@ -39,7 +39,6 @@ class _MyAppState extends ConsumerState<MyApp> {
             home: HomeScreenDefault(),
           );
         } else {
-          // Nếu chưa đăng nhập, chuyển đến màn hình SignUpScreen
           return GetMaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Monstar',

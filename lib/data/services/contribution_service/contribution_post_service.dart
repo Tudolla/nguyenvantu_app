@@ -1,69 +1,63 @@
 import 'dart:convert';
 
 import 'package:monstar/data/models/api/request/contribution_model/contribution_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:monstar/data/services/auth_service/auth_service.dart';
 
 import '../../../utils/api_base_url.dart';
 import '../../models/api/request/contribution_model/pollpost_model.dart';
+import '../http_client/http_client.dart';
 
 class TextPostService {
+  final HttpClient _httpClient;
+
+  TextPostService(this._httpClient);
   // Create a text post that other member only watch
   Future<bool> createTextPost(String title, String description) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String? accessToken = pref.getString('accessToken');
+    try {
+      final response = await _httpClient.post<Map<String, dynamic>>(
+        '/api/v1/create-post/',
+        data: {
+          'title': title,
+          'description': description,
+        },
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        },
+      );
 
-    if (accessToken == null) {
-      return false;
-    }
-
-    final response = await http.post(
-      Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/create-post/'),
-      body: jsonEncode({
-        'title': title,
-        'description': description,
-      }),
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'Content-Type': 'application/json',
-      },
-    );
-
-    if (response.statusCode == 201) {
-      return true;
-    } else {
+      if (response != null) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print("Error when creating text post: $e");
       return false;
     }
   }
 
   // Create a pollpost that other member can interact with it
 
-  Future<bool> createPollPost(String title, List<String> list) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String? accessToken = pref.getString('accessToken');
-    int? userId = pref.getInt('id');
+  Future<bool> createPollPost(
+    String title,
+    List<String> list,
+  ) async {
+    int? userId = int.tryParse(await AuthService.getUserId() ?? '');
 
-    final pollPost = jsonEncode({
-      'title': title,
-      'user': userId,
-      'choices': list.map((e) => {'choice_text': e}).toList(),
-    });
-
-    // final data = jsonEncode(pollPost.toJson());
-
-    if (accessToken == null) {
-      return false;
-    }
-
-    final response = await http.post(
-      Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/create-pollpost/'),
-      headers: {
-        'Authorization': 'Bearer $accessToken',
+    final response = await _httpClient.post<Map<String, dynamic>>(
+      '/api/v1/create-pollpost/',
+      data: {
+        'title': title,
+        'user': userId,
+        'choices': list.map((e) => {'choice_text': e}).toList(),
+      },
+      headers: <String, String>{
         'Content-Type': 'application/json',
       },
-      body: pollPost,
     );
-    if (response.statusCode == 201) {
+
+    if (response != null) {
       return true;
     } else {
       return false;
@@ -71,80 +65,68 @@ class TextPostService {
   }
 
   Future<List<TextPostModel>> fetchTextPosts() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String? accessToken = pref.getString('accessToken');
+    try {
+      final response = await _httpClient.get<List<dynamic>>(
+        '/api/v1/get-activated-posts/',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      ).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          throw Exception("Request to server timed out");
+        },
+      );
 
-    if (accessToken == null) {
-      throw Exception("Access token is missing");
-    }
-    final response = await http.get(
-      Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/get-activated-posts/'),
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'Content-Type': 'application/json',
-      },
-    ).timeout(
-      const Duration(seconds: 10),
-      onTimeout: () {
-        throw Exception("Request to server timed out");
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
-
-      return data.map((json) => TextPostModel.fromJson(json)).toList();
-    } else {
-      print("Error: ${response.statusCode} - ${response.body}");
-      throw Exception("Faild to load list textpost!");
+      if (response != null) {
+        return response.map((json) => TextPostModel.fromJson(json)).toList();
+      } else {
+        throw Exception("Faild to load list textpost!");
+      }
+    } catch (e) {
+      print("Error fetching text post: $e");
+      throw Exception("Failed to fetch text posts");
     }
   }
 
   Future<List<PollPostWithChoice>> fetchPollPost() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String? accessToken = pref.getString('accessToken');
-
-    if (accessToken == null) {
-      throw Exception("Access token is missing");
-    }
-
-    final response = await http.get(
-      Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/get-pollpost/'),
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'Content-Type': 'application/json',
-      },
-    ).timeout(
+    final response = await _httpClient
+        .get<List<dynamic>>(
+      '/api/v1/get-pollpost/',
+    )
+        .timeout(
       const Duration(seconds: 10),
       onTimeout: () {
-        throw Exception("Request to server timed our");
+        throw Exception("Request to server get timed out");
       },
     );
-    if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(utf8.decode(response.bodyBytes));
-      return data.map((json) => PollPostWithChoice.fromJson(json)).toList();
+
+    if (response != null) {
+      try {
+        return response
+            .map((json) => PollPostWithChoice.fromJson(json))
+            .toList();
+      } catch (e) {
+        throw Exception("Failed to fetch poll post: $e");
+      }
     } else {
-      print("Error: ${response.statusCode} - ${response.body}");
       throw Exception("Faild to load PollPost!");
     }
   }
 
   Future<void> votePollPost(int choiceId) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String? accessToken = pref.getString('accessToken');
-
-    if (accessToken == null) {
-      throw Exception("Access token is missing");
-    }
-    final response = await http.post(
-      Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/vote-pollpost/$choiceId/'),
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'Content-Type': 'application/json',
-      },
-    );
-    if (response.statusCode != 200) {
-      throw Exception("Fail to vote - hehe");
+    try {
+      final response = await _httpClient.post<Map<String, dynamic>>(
+        '/api/v1/vote-pollpost/$choiceId/',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+      if (response == null) {
+        throw Exception("Failed to vote. Try next time");
+      }
+    } catch (e) {
+      throw Exception("Failed to vote: $e");
     }
   }
 }

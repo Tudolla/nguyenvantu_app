@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -17,27 +18,17 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
-  String? _imageAvatar;
-  String? _nameMember;
-  String? _emailMember;
-
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   final member = ref.read(memberViewModelProvider).maybeWhen(
-    //         data: (member) => member,
-    //         orElse: () => null,
-    //       );
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(memberViewModelProvider.notifier).getMemberInfoFromLocal();
+      final memberState = ref.read(memberViewModelProvider);
+      if (memberState is AsyncData && memberState.value != null) {
+      } else {
+        ref.read(memberViewModelProvider.notifier).getMemberInfoFromLocal();
+      }
     });
-    // if (member != null) {
-    //   _imageAvatar = member.image;
-    //   _nameMember = member.name;
-    //   _emailMember = member.email;
-    // }
-    // });
   }
 
   @override
@@ -78,10 +69,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         member.image != null
                             ? Stack(
                                 children: [
-                                  CircleAvatar(
-                                    radius: sizeWidth * 1 / 4,
-                                    backgroundImage:
-                                        NetworkImage(member.image!),
+                                  CachedNetworkImage(
+                                    imageUrl: member.image!,
+                                    imageBuilder: (context, imageProvider) =>
+                                        CircleAvatar(
+                                      radius: sizeWidth * 1 / 4,
+                                      backgroundImage: imageProvider,
+                                    ),
+                                    placeholder: (context, url) =>
+                                        const CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) => Icon(
+                                      Icons.error,
+                                    ),
                                   ),
                                   Positioned(
                                     bottom: 8,

@@ -5,7 +5,7 @@ import 'package:monstar/providers/http_client_provider.dart';
 import 'package:monstar/views/book_store/viewmodel/book_tracking_viewmodel.dart';
 
 final readingServiceProvider = Provider<ReadingService>((ref) {
-  final httpClient = ref.read(httpClientProvider);
+  final httpClient = ref.watch(httpClientProvider);
 
   return ReadingService(httpClient);
 });

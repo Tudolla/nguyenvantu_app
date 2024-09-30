@@ -39,7 +39,7 @@ class AuthService {
   static Future<bool> userIsLoggedIn() async {
     final accessToken = await StorageService.instance.read('accessToken');
 
-    return accessToken != null;
+    return accessToken != null && accessToken.isNotEmpty;
   }
 
   static Future<String?> getAccessToken() async {

@@ -17,12 +17,6 @@ class BookListScreen extends ConsumerStatefulWidget {
 
 class _BookListScreenState extends BaseScreen<BookListScreen> {
   ScrollController _scrollController = ScrollController();
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _loadInitialData();
-  //   _setupScrollListener();
-  // }
 
   @override
   void loadInitialData() {
@@ -63,13 +57,13 @@ class _BookListScreenState extends BaseScreen<BookListScreen> {
         },
         child: stateListBook.when(
           data: (bookList) {
-            if (bookList.isEmpty) {
-              return const Center(
-                child: Text(
-                  "Nothing at all, wait for the next day",
-                ),
-              );
-            }
+            // if (bookList.isEmpty) {
+            //   return const Center(
+            //     child: Text(
+            //       "Nothing at all, wait for the next day",
+            //     ),
+            //   );
+            // }
             return GridView.builder(
               controller: _scrollController,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -128,7 +122,7 @@ class _BookListScreenState extends BaseScreen<BookListScreen> {
           },
           error: (e, _) => Center(
             child: Text(
-              "Failed to load Story: $e",
+              "Failed to load list story: $e",
             ),
           ),
           loading: () => const Center(

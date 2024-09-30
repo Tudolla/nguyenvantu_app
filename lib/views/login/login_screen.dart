@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:monstar/components/core/app_colors.dart';
 import 'package:monstar/components/core/app_textstyle.dart';
 import 'package:monstar/providers/member_login_provider.dart';
 import 'package:monstar/views/home/home_screen.dart';
+import 'package:monstar/views/login/login_viewmodel.dart';
 import 'package:monstar/views/login/widgets/input_widget.dart';
 import 'package:monstar/views/login/widgets/toast_notifier_widget.dart';
 
@@ -18,11 +20,16 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  // This is a flag to check User clicked to button login or NOT
-  bool isLoginPressed = false;
-
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   ref.read(loginViewModelProvider.notifier).checkLoginStatus();
+    // });
+  }
 
   @override
   void dispose() {
@@ -33,6 +40,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loginViewModel = ref.watch(loginViewModelProvider.notifier);
     final loginState = ref.watch(loginViewModelProvider);
 
     var size = MediaQuery.of(context).size;
@@ -41,7 +49,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       resizeToAvoidBottomInset: false,
       body: Padding(
         padding: EdgeInsets.only(top: size.height / 10),
-        child: _buildBody(size, context, loginState),
+        child: _buildBody(size, context, loginState, loginViewModel),
       ),
     );
   }
@@ -49,12 +57,58 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget _buildBody(
     Size size,
     BuildContext context,
-    AsyncValue<bool> loginState,
+    AsyncValue<bool?> loginState,
+    LoginViewModel loginViewModel,
+  ) {
+    return loginState.when(
+      data: (isLoggedIn) {
+        if (loginViewModel.hasClickedLogin) {
+          if (isLoggedIn == true) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Get.off(const HomeScreenDefault());
+            });
+            return const SizedBox
+                .shrink(); // Tránh hiển thị gì khác trong quá trình
+          } else if (isLoggedIn == false) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              ToastNotifier.showDialogMessage(
+                context,
+                'Login failed! Check your credentials.',
+              );
+            });
+          }
+        }
+        return _buildLoginForm(
+          size,
+          context,
+          loginState,
+          loginViewModel,
+        );
+      },
+      error: (error, stackTrace) => Center(
+        child: Text("Error: $error"),
+      ),
+      loading: () => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+  Widget _buildLoginForm(
+    Size size,
+    BuildContext context,
+    AsyncValue<bool?> loginState,
+    LoginViewModel loginViewModel,
   ) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        loginForm(size, context, loginState),
+        loginForm(
+          size,
+          context,
+          loginState,
+          loginViewModel,
+        ),
         const Spacer(),
         Padding(
           padding: const EdgeInsets.only(
@@ -77,10 +131,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Container loginForm(
     Size size,
     BuildContext context,
-    AsyncValue<bool> loginState,
+    AsyncValue<bool?> loginState,
+    LoginViewModel loginViewModel,
   ) {
     return Container(
-      padding: EdgeInsets.only(left: size.width / 3, right: 20),
+      padding: EdgeInsets.only(
+        left: size.width / 3,
+        right: 20,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,57 +186,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           const SizedBox(
             height: 20,
           ),
-          loginState.when(
-            // state của trạng thái Login
-            data: (isLoggedIn) {
-              // cờ kiểm tra đã click nút Login chưa
-              if (isLoginPressed) {
-                if (isLoggedIn) {
-                  // Hiển thị thông báo đăng nhập thành công
-                  // Sử dụng WidgetsBinding - chắc chắn UI toàn màn hình đã được build xong
-                  // rồi mới hiển thị Dialog này: 10đ
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    ToastNotifier.showDialogMessage(
-                      context,
-                      'Login successful!',
-                    );
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HomeScreenDefault(),
-                      ),
-                    );
-                  });
-                } else {
-                  // Hiển thị thông báo đăng nhập thất bại
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    ToastNotifier.showDialogMessage(
-                      context,
-                      'Login failed! Check your credentials',
-                    );
-                  });
-                }
-                // Đặt lại cờ sau khi hoàn thành đăng nhập
-                isLoginPressed = false;
-              }
-              return const SizedBox.shrink();
-            },
-            error: (e, _) {
-              if (isLoginPressed) {
-                // Hiển thị thông báo khi có lỗi
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  ToastNotifier.showDialogMessage(
-                    context,
-                    'Error occurred: $e',
-                  );
-                });
-                isLoginPressed = false;
-              }
-              return Text('Error: $e');
-            },
-            loading: () => const CircularProgressIndicator(),
-          ),
-          const SizedBox(height: 20),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
@@ -193,25 +200,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               final username = _usernameController.text;
               final password = _passwordController.text;
 
-              // Although used Riverpod State, but setState is quick
-              setState(() {
-                isLoginPressed = true;
-              });
-
-              // Gọi hàm login
-              await ref
-                  .read(loginViewModelProvider.notifier)
-                  .login(username: username, password: password);
+              // Gọi hàm login từ ViewModel, không cần setState
+              await loginViewModel.login(
+                username: username,
+                password: password,
+              );
             },
-            child: const Text(
-              "Login",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                fontSize: 25,
-              ),
-            ),
+            child: loginState.isLoading
+                ? const CircularProgressIndicator()
+                : const Text(
+                    "Login",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 25,
+                    ),
+                  ),
           ),
+          const SizedBox(height: 20),
         ],
       ),
     );

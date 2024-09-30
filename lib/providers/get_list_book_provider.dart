@@ -6,7 +6,7 @@ import 'package:monstar/providers/http_client_provider.dart';
 import 'package:monstar/views/book_store/viewmodel/book_viewmodel.dart';
 
 final bookRepositoryProvider = Provider<BookRepository>((ref) {
-  final httpClient = ref.read(httpClientProvider);
+  final httpClient = ref.watch(httpClientProvider);
   final service = BookService(httpClient);
   return BookRepositoryIml(service);
 });

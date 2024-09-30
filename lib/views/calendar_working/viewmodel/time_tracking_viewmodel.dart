@@ -7,11 +7,11 @@ class AttendanceViewModel extends BaseViewModel<List<AttendaceModel>> {
 
   AttendanceViewModel({required this.timeTrackingRepository}) : super([]);
 
-  Future<void> loadAttendanceData() async {
+  Future<void> loadAttendanceData(int month, int year) async {
     setLoading();
     try {
       final attendanceData =
-          await timeTrackingRepository.getAttendanceForAMonth();
+          await timeTrackingRepository.getAttendanceForAMonth(month, year);
       setData(attendanceData);
     } catch (error, stackTrace) {
       setError(error, stackTrace);

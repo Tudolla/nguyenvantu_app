@@ -5,7 +5,7 @@ import 'package:monstar/providers/http_client_provider.dart';
 import 'package:monstar/views/login/login_viewmodel.dart';
 
 final authServiceProvider = Provider<AuthService>((ref) {
-  final httpClient = ref.read(httpClientProvider);
+  final httpClient = ref.watch(httpClientProvider);
 
   return AuthService(httpClient);
 });
@@ -16,7 +16,7 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
 });
 
 final loginViewModelProvider =
-    StateNotifierProvider<LoginViewModel, AsyncValue<bool>>((ref) {
+    StateNotifierProvider<LoginViewModel, AsyncValue<bool?>>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   return LoginViewModel(authRepository);
 });
