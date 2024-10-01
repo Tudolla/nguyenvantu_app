@@ -2,6 +2,7 @@ import 'package:monstar/data/services/company_service/company_info_service.dart'
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../data/models/api/request/company/company_info_model.dart';
+import '../../../providers/http_client_provider.dart';
 
 part 'company_info_viewmodel.g.dart';
 
@@ -10,7 +11,8 @@ class CompanyInfoViewModel extends _$CompanyInfoViewModel {
   late final CompanyService _companyService;
   @override
   Future<CompanyInfo> build() async {
-    _companyService = CompanyService();
+    final httpProvider = ref.read(httpClientProvider);
+    _companyService = CompanyService(httpProvider);
     return fetchCompanyInfo();
   }
 

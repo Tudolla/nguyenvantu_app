@@ -13,7 +13,9 @@ class TimeTrackingRepositoryImpl implements TimeTrackingRepository {
 
   @override
   Future<List<AttendaceModel>> getAttendanceForAMonth(
-      int month, int year) async {
+    int month,
+    int year,
+  ) async {
     return await _timeTrackingService.fetchAttendance(month, year);
   }
 }

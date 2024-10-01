@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:monstar/components/core/app_textstyle.dart';
 import 'package:monstar/views/company_introduction/company_info_screen.dart';
+import 'package:monstar/views/company_introduction/company_mission_vision_screen.dart';
 import 'package:rive/rive.dart';
 
 import '../../components/button/arrow_back_button.dart';
@@ -93,7 +94,11 @@ class _CompanySignScreenState extends ConsumerState<CompanySignScreen>
                       ),
                       child: ListTile(
                         onTap: () {
-                          Get.to(CompanyInfoScreen());
+                          if (index == 0) {
+                            Get.to(CompanyInfoScreen());
+                          } else if (index == 1) {
+                            Get.to(CompanyMissionVisionScreen());
+                          }
                         },
                         title: Text(
                           companyInfo[index],

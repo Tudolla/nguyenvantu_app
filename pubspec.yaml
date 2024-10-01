@@ -21,14 +21,12 @@ dependencies:
   auto_route: ^7.8.3
   flutter_riverpod: ^2.5.1
   http: ^1.2.2
-  # shared_preferences: ^2.3.2
+
   connectivity_plus: ^6.0.5
   delightful_toast: ^1.1.0
   image_picker: ^1.1.2
   get: ^4.6.6
-  # dio: ^5.7.0
   table_calendar: ^3.1.2
-  # provider: ^6.1.2
   animated_toggle_switch: ^0.8.3
   awesome_dialog: ^3.2.1
   flutter_secure_storage: ^4.2.1

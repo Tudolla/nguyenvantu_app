@@ -1,10 +1,6 @@
-import 'dart:convert';
-
 import 'package:monstar/data/models/api/request/contribution_model/contribution_model.dart';
-import 'package:http/http.dart' as http;
 import 'package:monstar/data/services/auth_service/auth_service.dart';
 
-import '../../../utils/api_base_url.dart';
 import '../../models/api/request/contribution_model/pollpost_model.dart';
 import '../http_client/http_client.dart';
 

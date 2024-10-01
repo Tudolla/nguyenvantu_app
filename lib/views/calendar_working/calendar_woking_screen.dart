@@ -22,6 +22,12 @@ class _CalendarWokingScreenState extends ConsumerState<CalendarWokingScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadData();
+    });
+  }
+
+  void _loadData() {
     _focusedDay = DateTime.now();
     final currentMonth = _focusedDay.month;
     final currentYear = _focusedDay.year;
@@ -29,11 +35,6 @@ class _CalendarWokingScreenState extends ConsumerState<CalendarWokingScreen> {
           currentMonth,
           currentYear,
         );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override

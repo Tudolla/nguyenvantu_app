@@ -1,33 +1,39 @@
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
-import 'package:monstar/data/services/auth_service/auth_service.dart';
-import 'package:monstar/utils/api_base_url.dart';
+import 'package:monstar/data/models/api/request/company/company_mission_vission_model.dart';
+import 'package:monstar/data/services/http_client/http_client.dart';
 
 import '../../models/api/request/company/company_info_model.dart';
 
 class CompanyService {
+  final HttpClient _httpClient;
+  CompanyService(this._httpClient);
   Future<CompanyInfo> fetchCompanyInfo() async {
-    String? accessToken = await AuthService.getAccessToken();
-
-    if (accessToken == null) {
-      throw Exception("Access token is missing");
+    final response = await _httpClient.get<Map<String, dynamic>>(
+      '/api/v1/company/1/',
+    );
+    if (response != null) {
+      try {
+        return CompanyInfo.fromJson(response);
+      } catch (e) {
+        throw Exception("Failed to load company mission : $e");
+      }
+    } else {
+      throw Exception("Failed to load company mission");
     }
+  }
 
-    final response = await http.get(
-      Uri.parse('${ApiBaseUrl.baseUrl}/api/v1/company/1/'),
-      headers: {
-        'Authorization': 'Bearer $accessToken',
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
+  Future<CompanyMission> fetchCompanyMission() async {
+    final response = await _httpClient.get(
+      '/api/v1/company/1/mission-vision/',
     );
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> companyInfo =
-          jsonDecode(utf8.decode(response.bodyBytes));
-      return CompanyInfo.fromJson(companyInfo);
+    if (response != null) {
+      try {
+        return CompanyMission.fromJson(response);
+      } catch (e) {
+        throw Exception("Failed to load company mission: $e");
+      }
     } else {
-      throw Exception("Failed to fetch company information");
+      throw Exception("Failed to load company mission");
     }
   }
 }
