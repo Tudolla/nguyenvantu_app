@@ -6,7 +6,7 @@ import '../../utils/api_base_url.dart';
 class ApiConfig {
   final String baseUrl;
 
-  ApiConfig() : baseUrl = ApiBaseUrl.baseUrl;
+  ApiConfig({String? apiUrl}) : baseUrl = apiUrl ?? ApiBaseUrl.baseUrl;
 
   String get apiUrl => '$baseUrl';
 }

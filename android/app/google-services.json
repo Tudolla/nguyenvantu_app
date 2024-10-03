@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "601191241341",
+    "project_id": "flutter-notification-befbf",
+    "storage_bucket": "flutter-notification-befbf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:601191241341:android:8e9bfef1308cb0dbd20314",
+        "android_client_info": {
+          "package_name": "com.example.monstar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKs9MjFN9qZMbakXUpUN80Dg1JyVfh-dI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
