@@ -6,12 +6,8 @@ import '../data/models/app_state.dart';
 class ProfileNotifier extends StateNotifier<ProfileState> {
   final _storage = const FlutterSecureStorage();
 
-  // super() khởi tạo ProfileState với isHidden = false, pinCode = null mặc định
-  // _loadState() là bất động bộ, được gọi sau khi khởi tạo trạng thái mặc định trong super().
-  // super() chỉ có thể chưa đồng bộ, không thể đặt bất đồng bộ bên trong super().
-
-  // 1. Khởi tạo trạng thái mặc định
-  // 2. Load dữ liệu từ _loadState() và cập nhật trạng thái mới.
+  // 1. Khởi tạo trạng thái mặc định là false
+  // 2. Load dữ liệu từ loadState() và cập nhật trạng thái mới.
 
   ProfileNotifier() : super(const ProfileState()) {
     loadState();
@@ -41,11 +37,6 @@ class ProfileNotifier extends StateNotifier<ProfileState> {
   bool verifyPinCode(String enterdPinCode) {
     return state.pinCode == enterdPinCode;
   }
-
-  // Future<bool> getCurrentHiddenState() async {
-  //   final isHiddenString = await _storage.read(key: 'isHidden');
-  //   return isHiddenString == 'true';
-  // }
 }
 
 final profileStateProvider =

@@ -34,7 +34,7 @@ migrate_working_dir/
 .pub/
 /build/
 lib/gen/
-lib/test1/
+lib/secrets/
 # Symbolication related
 app.*.symbols
 

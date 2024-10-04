@@ -6,7 +6,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:monstar/components/button/app_button.dart';
 import 'package:monstar/components/core/app_textstyle.dart';
-import 'package:monstar/data/models/api/request/member_model/member_model.dart';
 import 'package:monstar/providers/profile_state_provider.dart';
 import 'package:monstar/views/profile_member/widget/pin_code_dialog.dart';
 import 'package:monstar/views/profile_member/widget/text_input_items.dart';
@@ -193,7 +192,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                                           : CircleAvatar(
                                               radius: sizeWidth * 1 / 5,
                                               backgroundImage: NetworkImage(
-                                                ApiBaseUrl.baseUrl +
+                                                ApiBaseUrl.baseUrl! +
                                                     member.image!,
                                               ),
                                             ),

@@ -30,10 +30,11 @@ abstract class HttpClient {
 }
 
 class DefaultHttpClient implements HttpClient {
-  // final String baseUrl;
   final ApiConfig apiConfig;
 
-  DefaultHttpClient(this.apiConfig);
+  DefaultHttpClient(
+    this.apiConfig,
+  );
 
   Future<Map<String, String>> _getHeaders(
     Map<String, String>? headers,

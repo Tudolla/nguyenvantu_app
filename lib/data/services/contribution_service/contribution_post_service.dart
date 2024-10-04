@@ -7,7 +7,9 @@ import '../http_client/http_client.dart';
 class TextPostService {
   final HttpClient _httpClient;
 
-  TextPostService(this._httpClient);
+  TextPostService(
+    this._httpClient,
+  );
   // Create a text post that other member only watch
   Future<bool> createTextPost(String title, String description) async {
     try {

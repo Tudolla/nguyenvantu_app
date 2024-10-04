@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:monstar/components/button/app_button.dart';
 import 'package:monstar/components/core/app_textstyle.dart';
+import 'package:monstar/providers/avatar_image_provider.dart';
 import 'package:monstar/views/profile_member/profile_edit_screen.dart';
 import 'package:monstar/views/profile_member/profile_setting_items.dart';
 import 'package:monstar/views/profile_member/setting_app_screen.dart';
@@ -17,7 +18,11 @@ class ProfileScreen extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+class _ProfileScreenState extends ConsumerState<ProfileScreen>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   void initState() {
     super.initState();
@@ -33,6 +38,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final memberState = ref.watch(memberViewModelProvider);
     var sizeWidth = MediaQuery.of(context).size.width;
     return Scaffold(
