@@ -26,9 +26,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   ref.read(loginViewModelProvider.notifier).checkLoginStatus();
-    // });
   }
 
   @override
@@ -117,7 +114,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             bottom: 10,
           ),
           child: Text(
-            "When you log in to the application, you also aggree to our terms.",
+            "When you log in to the application, you also agree to our terms.",
             textAlign: TextAlign.center,
             style: TextStyle(
               color: AppColors.backgroundButton,

@@ -22,13 +22,14 @@ class _CalendarWokingScreenState extends ConsumerState<CalendarWokingScreen> {
   @override
   void initState() {
     super.initState();
+    _focusedDay = DateTime.now();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadData();
     });
   }
 
   void _loadData() {
-    _focusedDay = DateTime.now();
     final currentMonth = _focusedDay.month;
     final currentYear = _focusedDay.year;
     ref.read(attendanceViewModelProvider.notifier).loadAttendanceData(
