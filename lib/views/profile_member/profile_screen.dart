@@ -4,12 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:monstar/components/button/app_button.dart';
 import 'package:monstar/components/core/app_textstyle.dart';
-import 'package:monstar/providers/avatar_image_provider.dart';
 import 'package:monstar/views/profile_member/profile_edit_screen.dart';
 import 'package:monstar/views/profile_member/profile_setting_items.dart';
 import 'package:monstar/views/profile_member/setting_app_screen.dart';
 
 import '../../providers/member_information_provider.dart';
+import '../../utils/api_base_url.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -72,11 +72,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        member.image != null
+                        member.image != null && member.image!.isNotEmpty
                             ? Stack(
                                 children: [
                                   CachedNetworkImage(
-                                    imageUrl: member.image!,
+                                    imageUrl:
+                                        ApiBaseUrl.baseUrl + member.image!,
                                     imageBuilder: (context, imageProvider) =>
                                         CircleAvatar(
                                       radius: sizeWidth * 1 / 4,

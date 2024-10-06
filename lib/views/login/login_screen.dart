@@ -11,6 +11,7 @@ import 'package:monstar/views/login/widgets/input_widget.dart';
 import 'package:monstar/views/login/widgets/toast_notifier_widget.dart';
 
 import '../../gen/assets.gen.dart';
+import '../base/sound_view_model.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -194,6 +195,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               shadowColor: Colors.green.withOpacity(.2),
             ),
             onPressed: () async {
+              AudioViewModel().playClickSound();
+
               final username = _usernameController.text;
               final password = _passwordController.text;
 

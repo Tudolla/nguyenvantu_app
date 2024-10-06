@@ -192,7 +192,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                                           : CircleAvatar(
                                               radius: sizeWidth * 1 / 5,
                                               backgroundImage: NetworkImage(
-                                                ApiBaseUrl.baseUrl! +
+                                                ApiBaseUrl.baseUrl +
                                                     member.image!,
                                               ),
                                             ),

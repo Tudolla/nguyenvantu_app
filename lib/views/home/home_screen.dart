@@ -7,6 +7,7 @@ import 'package:monstar/components/core/app_textstyle.dart';
 import 'package:rive/rive.dart';
 
 import '../../providers/avatar_image_provider.dart';
+import '../base/sound_view_model.dart';
 import '../book_store/book_list_screen.dart';
 import '../calendar_working/calendar_woking_screen.dart';
 
@@ -52,7 +53,9 @@ class _HomeScreenDefaultState extends ConsumerState<HomeScreenDefault> {
               ),
               actions: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    AudioViewModel().playClickSound();
+                  },
                   icon: avatarImage.when(
                     data: (image) {
                       if (image == null || image.isEmpty) {
