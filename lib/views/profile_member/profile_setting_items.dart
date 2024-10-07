@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 
 // This widget is showed in ProfileScreen, as a ListTile
+// ignore: must_be_immutable
 class ProfileSettingItem extends StatelessWidget {
   final Icon icon;
   final String typeSetting;

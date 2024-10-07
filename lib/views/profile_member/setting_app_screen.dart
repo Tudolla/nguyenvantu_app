@@ -5,9 +5,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:monstar/components/core/app_textstyle.dart';
 import 'package:monstar/components/theme/theme.dart';
 import 'package:monstar/components/theme/theme_provider.dart';
+import 'package:monstar/providers/audio_provider.dart';
+import 'package:monstar/views/profile_member/widget/toggle_switch.dart';
 
 import '../../components/button/arrow_back_button.dart';
-import '../../providers/profile_state_provider.dart';
 import 'widget/hidden_information_item.dart';
 
 final pinCodeProvider = StateProvider<String?>((ref) => null);
@@ -24,12 +25,13 @@ class SettingAppScreen extends ConsumerStatefulWidget {
 
 class _SettingAppScreenState extends ConsumerState<SettingAppScreen> {
   var firstSwitchValue = false;
-  var firstStateHidden = false;
+  // var firstStateHidden = false;
   final FlutterSecureStorage secureStorage = FlutterSecureStorage();
 
   @override
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeNotifierProvider);
+    final isSoundOn = ref.watch(audioProvider);
 
     bool isLightMode = themeMode == lightMode;
     return Scaffold(
@@ -48,62 +50,59 @@ class _SettingAppScreenState extends ConsumerState<SettingAppScreen> {
         padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Theme App:",
-                  style: TextStyle(
-                    fontSize: 25,
-                    color: Colors.blueGrey,
-                    fontFamily: AppTextStyle.drawerFontStyle,
-                  ),
-                ),
-                AnimatedToggleSwitch.size(
-                  current: isLightMode,
-                  values: const [false, true],
-                  iconOpacity: 0.2,
-                  indicatorSize: const Size.fromWidth(90),
-                  customIconBuilder: (context, local, global) => Text(
-                    local.value ? 'light' : 'dark',
-                    style: TextStyle(
-                      color: local.value ? Colors.white : Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  borderWidth: 5.0,
-                  iconAnimationType: AnimationType.onHover,
-                  style: ToggleStyle(
-                    indicatorColor: Colors.teal,
-                    borderColor: Colors.transparent,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      const BoxShadow(
-                        color: Colors.black26,
-                        spreadRadius: 1,
-                        blurRadius: 3,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  selectedIconScale: 1.0,
-                  onChanged: (value) {
-                    ref.read(themeNotifierProvider.notifier).setTheme(
-                          value ? lightMode : darkMode,
-                        );
-
-                    setState(
-                      () => firstSwitchValue = value,
+            Text(
+              "General Settings",
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            ToggleSwitch(
+              title: "Theme Color:",
+              currentValue: isLightMode,
+              values: const [false, true],
+              onChanged: (value) {
+                ref.read(themeNotifierProvider.notifier).setTheme(
+                      value ? lightMode : darkMode,
                     );
-                  },
-                ),
-              ],
+
+                setState(() {
+                  firstSwitchValue = value;
+                });
+              },
+              trueLabel: 'light',
+              falseLabel: 'dark',
             ),
             const SizedBox(
               height: 20,
+            ),
+            ToggleSwitch(
+              title: "Sound Click:",
+              currentValue: isSoundOn,
+              values: const [false, true],
+              onChanged: (value) {
+                ref.read(audioProvider.notifier).toggleSound();
+
+                setState(() {
+                  firstSwitchValue = value;
+                });
+              },
+              trueLabel: 'on',
+              falseLabel: 'off',
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Text(
+              "Security",
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             PinInputItem(),
             const SizedBox(

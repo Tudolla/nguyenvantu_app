@@ -195,7 +195,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               shadowColor: Colors.green.withOpacity(.2),
             ),
             onPressed: () async {
-              AudioViewModel().playClickSound();
+              AudioViewModel().playClickSound(ref);
 
               final username = _usernameController.text;
               final password = _passwordController.text;

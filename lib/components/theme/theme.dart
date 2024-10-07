@@ -20,7 +20,7 @@ ThemeData darkMode = ThemeData(
     displayLarge: AppTextStyle.appBarStyle,
   ),
   colorScheme: ColorScheme.dark(
-    background: Colors.grey.shade900,
+    background: const Color.fromARGB(255, 92, 92, 92),
     primary: Colors.grey.shade800,
     secondary: Colors.grey.shade700,
   ),

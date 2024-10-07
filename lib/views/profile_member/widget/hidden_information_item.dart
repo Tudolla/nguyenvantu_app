@@ -67,16 +67,25 @@ class _PinInputItemState extends ConsumerState<PinInputItem> {
   Widget build(BuildContext context) {
     final profileState = ref.watch(profileStateProvider);
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        SwitchListTile(
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.grey,
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      height: 60,
+      child: Align(
+        alignment: Alignment.center,
+        child: SwitchListTile(
           contentPadding: const EdgeInsets.all(0),
           title: Text(
             "Hidden information",
             style: TextStyle(
-              fontSize: 25,
-              fontFamily: AppTextStyle.drawerFontStyle,
+              fontSize: 20,
+              fontFamily: AppTextStyle.secureFontStyle,
               color: Colors.blueGrey,
             ),
           ),
@@ -85,7 +94,7 @@ class _PinInputItemState extends ConsumerState<PinInputItem> {
           // trong SwitchListTile ròi, nên hàm _toggleHidden không cần truyền tham số bool nữa.
           onChanged: _toggleHidden,
         ),
-      ],
+      ),
     );
   }
 }

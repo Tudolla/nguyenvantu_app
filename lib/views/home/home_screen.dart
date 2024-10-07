@@ -54,10 +54,11 @@ class _HomeScreenDefaultState extends ConsumerState<HomeScreenDefault> {
               actions: [
                 IconButton(
                   onPressed: () {
-                    AudioViewModel().playClickSound();
+                    AudioViewModel().playClickSound(ref);
                   },
                   icon: avatarImage.when(
                     data: (image) {
+                      // print("Image Avatar: $image");
                       if (image == null || image.isEmpty) {
                         return CircleAvatar(
                           radius: 15,
@@ -111,6 +112,7 @@ class _HomeScreenDefaultState extends ConsumerState<HomeScreenDefault> {
               final riveIcon = bottomNavItems[index].rive;
               return GestureDetector(
                 onTap: () {
+                  AudioViewModel().playClickSound(ref);
                   riveIconInputs[index].change(true);
                   setState(() {
                     selectedID = index;
