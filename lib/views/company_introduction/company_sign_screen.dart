@@ -7,7 +7,6 @@ import 'package:lottie/lottie.dart';
 import 'package:monstar/components/core/app_textstyle.dart';
 import 'package:monstar/views/company_introduction/company_info_screen.dart';
 import 'package:monstar/views/company_introduction/company_mission_vision_screen.dart';
-import 'package:rive/rive.dart';
 
 import '../../components/button/arrow_back_button.dart';
 

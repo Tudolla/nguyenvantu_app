@@ -49,6 +49,9 @@ class $AssetsFontsGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/5898.jpg
+  AssetGenImage get a5898 => const AssetGenImage('assets/images/5898.jpg');
+
   /// File path: assets/images/avatar.png
   AssetGenImage get avatar => const AssetGenImage('assets/images/avatar.png');
 
@@ -56,21 +59,8 @@ class $AssetsImagesGen {
   AssetGenImage get calendar =>
       const AssetGenImage('assets/images/calendar.jpg');
 
-  /// File path: assets/images/com.jpg
-  AssetGenImage get com => const AssetGenImage('assets/images/com.jpg');
-
-  /// File path: assets/images/company.jpg
-  AssetGenImage get company => const AssetGenImage('assets/images/company.jpg');
-
-  /// File path: assets/images/mvvm.png
-  AssetGenImage get mvvm => const AssetGenImage('assets/images/mvvm.png');
-
-  /// File path: assets/images/wood.jpg
-  AssetGenImage get wood => const AssetGenImage('assets/images/wood.jpg');
-
   /// List of all assets
-  List<AssetGenImage> get values =>
-      [avatar, calendar, com, company, mvvm, wood];
+  List<AssetGenImage> get values => [a5898, avatar, calendar];
 }
 
 class $AssetsRiveGen {
@@ -102,6 +92,16 @@ class $AssetsRiveGen {
       [button, check, confetti, house, icons, menuButton, shapes];
 }
 
+class $AssetsSoundGen {
+  const $AssetsSoundGen();
+
+  /// File path: assets/sound/click.mp3
+  String get click => 'assets/sound/click.mp3';
+
+  /// List of all assets
+  List<String> get values => [click];
+}
+
 class Assets {
   Assets._();
 
@@ -119,6 +119,7 @@ class Assets {
   static const String mybell = 'assets/mybell.json';
   static const String notification = 'assets/notification.json';
   static const $AssetsRiveGen rive = $AssetsRiveGen();
+  static const $AssetsSoundGen sound = $AssetsSoundGen();
   static const String tree = 'assets/tree.json';
 
   /// List of all assets
