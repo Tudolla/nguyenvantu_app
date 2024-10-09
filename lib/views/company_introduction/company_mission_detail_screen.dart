@@ -5,10 +5,12 @@ import 'package:monstar/components/core/app_textstyle.dart';
 class CompanyMissionDetailScreen extends ConsumerStatefulWidget {
   final String missionTitle;
   final String descrptionMission;
+  final String heroTag;
   const CompanyMissionDetailScreen({
     super.key,
     required this.missionTitle,
     required this.descrptionMission,
+    required this.heroTag,
   });
 
   @override
@@ -32,13 +34,21 @@ class _CompanyMissionDetailScreenState
                   width: double.infinity,
                   height: 350,
                   child: PageView.builder(
+                    key: PageStorageKey<String>('pageview'),
                     onPageChanged: (value) => setState(() {
                       currentIndex = value;
                     }),
                     scrollDirection: Axis.vertical,
                     itemCount: 3,
-                    itemBuilder: (context, index) => Image.asset(
-                      "assets/images/5898.jpg",
+                    itemBuilder: (context, index) => AspectRatio(
+                      aspectRatio: 0.9,
+                      child: Hero(
+                        tag: widget.heroTag,
+                        child: Image.asset(
+                          "assets/images/5898.jpg",
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                   ),
                 ),

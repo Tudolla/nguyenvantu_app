@@ -6,7 +6,7 @@ import 'package:monstar/components/core/app_colors.dart';
 import 'package:monstar/components/core/app_textstyle.dart';
 import 'package:monstar/providers/member_login_provider.dart';
 import 'package:monstar/views/home/home_screen.dart';
-import 'package:monstar/views/login/login_viewmodel.dart';
+import 'package:monstar/views/login/login_view_model.dart';
 import 'package:monstar/views/login/widgets/input_widget.dart';
 import 'package:monstar/views/login/widgets/toast_notifier_widget.dart';
 

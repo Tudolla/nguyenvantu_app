@@ -4,7 +4,7 @@ import 'package:monstar/data/repository/api/profile_repository/profile_repositor
 import 'package:monstar/data/services/profile_service/profile_service.dart';
 import 'package:monstar/providers/http_client_provider.dart';
 
-import '../views/profile_member/viewmodel/profile_viewmodel.dart';
+import '../views/profile_member/viewmodel/profile_view_model.dart';
 
 final getMemberRepositoryProvider = Provider<ProfileRepository>((ref) {
   final httpClient = ref.watch(httpClientProvider);

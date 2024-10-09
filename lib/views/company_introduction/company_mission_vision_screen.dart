@@ -4,7 +4,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:monstar/components/core/app_textstyle.dart';
 import 'package:monstar/views/company_introduction/company_mission_detail_screen.dart';
-import 'package:monstar/views/company_introduction/viewmodel/company_mission_viewmodel.dart';
+import 'package:monstar/views/company_introduction/viewmodel/company_mission_view_model.dart';
 
 class CompanyMissionVisionScreen extends ConsumerWidget {
   const CompanyMissionVisionScreen({super.key});
@@ -19,17 +19,17 @@ class CompanyMissionVisionScreen extends ConsumerWidget {
       "Tạo giá trị cho xã hội",
       "Trao quyền cho nhân tài",
     ];
-    return companyMisison.when(
-      data: (data) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              "Mission and Vision",
-              style: AppTextStyle.appBarStyle,
-            ),
-            centerTitle: true,
-          ),
-          body: Center(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Mission and Vision",
+          style: AppTextStyle.appBarStyle,
+        ),
+        centerTitle: true,
+      ),
+      body: companyMisison.when(
+        data: (data) {
+          return Center(
             child: MasonryGridView(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               crossAxisSpacing: 20,
@@ -42,7 +42,7 @@ class CompanyMissionVisionScreen extends ConsumerWidget {
               ),
               children: [
                 Text(
-                  "Our mission",
+                  "Monstarlab",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 25,
@@ -52,10 +52,14 @@ class CompanyMissionVisionScreen extends ConsumerWidget {
                 for (int i = 0; i < missionTitle.length; i++)
                   GestureDetector(
                     onTap: () {
-                      Get.to(
-                        CompanyMissionDetailScreen(
-                          missionTitle: missionTitle[i],
-                          descrptionMission: data.visions[i].description,
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CompanyMissionDetailScreen(
+                            missionTitle: missionTitle[i],
+                            descrptionMission: data.visions[i].description,
+                            heroTag: 'mission_$i',
+                          ),
                         ),
                       );
                     },
@@ -79,10 +83,13 @@ class CompanyMissionVisionScreen extends ConsumerWidget {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(30),
                               child: AspectRatio(
-                                aspectRatio: 0.9,
-                                child: Image.asset(
-                                  "assets/images/5898.jpg",
-                                  fit: BoxFit.cover,
+                                aspectRatio: 0.95,
+                                child: Hero(
+                                  tag: 'mission_$i',
+                                  child: Image.asset(
+                                    "assets/images/5898.jpg",
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             ),
@@ -99,16 +106,16 @@ class CompanyMissionVisionScreen extends ConsumerWidget {
                   ),
               ],
             ),
-          ),
-        );
-      },
-      error: (e, stackTrace) {
-        return Center(
-          child: Text('Error: $e'),
-        );
-      },
-      loading: () => const Center(
-        child: CircularProgressIndicator(),
+          );
+        },
+        error: (e, stackTrace) {
+          return Center(
+            child: Text('Error: $e'),
+          );
+        },
+        loading: () => const Center(
+          child: CircularProgressIndicator(),
+        ),
       ),
     );
   }

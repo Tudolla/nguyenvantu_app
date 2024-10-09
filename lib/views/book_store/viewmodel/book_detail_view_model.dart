@@ -1,18 +1,19 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monstar/data/models/api/request/book_model/book_model.dart';
 import 'package:monstar/data/repository/api/book_repository/book_repository.dart';
+import 'package:monstar/views/base/base_view_model.dart';
 
-class BookDetailViewmodel extends StateNotifier<AsyncValue<BookModel>> {
+class BookDetailViewmodel extends BaseViewModel<BookModel?> {
   final BookRepository bookRepository;
 
-  BookDetailViewmodel({required this.bookRepository}) : super(AsyncLoading());
+  BookDetailViewmodel({required this.bookRepository}) : super(null);
 
   Future<void> loadDetailBook(int id) async {
+    setLoading();
     try {
       final bookDetail = await bookRepository.getDetailBook(id);
-      state = AsyncData(bookDetail);
+      setData(bookDetail);
     } catch (e, stackTrace) {
-      state = AsyncError(e, stackTrace);
+      setError(e, stackTrace);
     }
   }
 }

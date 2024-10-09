@@ -4,7 +4,7 @@ import 'package:monstar/data/services/contribution_service/contribution_post_ser
 import 'package:monstar/providers/http_client_provider.dart';
 
 import '../data/models/api/request/contribution_model/pollpost_model.dart';
-import '../views/contribution/viewmodel/get_poll_post_viewmodel.dart';
+import '../views/contribution/viewmodel/get_poll_post_view_model.dart';
 
 final pollPostRepositoryProvider = Provider<PollpostRepository>((ref) {
   final httpClient = ref.watch(httpClientProvider);

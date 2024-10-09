@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:monstar/components/core/app_textstyle.dart';
-import 'package:monstar/views/contribution/viewmodel/add_text_post_viewmodel.dart';
+import 'package:monstar/views/contribution/viewmodel/add_text_post_view_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../components/button/app_button.dart';
 import '../../components/button/arrow_back_button.dart';
@@ -24,17 +24,17 @@ class _ContributionScreenState extends ConsumerState<ContributionScreen> {
     super.dispose();
   }
 
-  void _checkPostStatus(BuildContext context, PostState stateTextPost) {
-    if (stateTextPost.isSuccess) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Add post successful")),
-      );
-    } else if (stateTextPost.errorMessage != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: ${stateTextPost.errorMessage}")),
-      );
-    }
-  }
+  // void _checkPostStatus(BuildContext context, PostState stateTextPost) {
+  //   if (stateTextPost.isSuccess) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text("Add post successful")),
+  //     );
+  //   } else if (stateTextPost.errorMessage != null) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text("Error: ${stateTextPost.errorMessage}")),
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +180,7 @@ class _ContributionScreenState extends ConsumerState<ContributionScreen> {
                             _titleController.text,
                             _descriptionController.text,
                           );
-                          _checkPostStatus(context, stateTextPost);
+                          // _checkPostStatus(context, stateTextPost);
                         },
                         textColor: Colors.white,
                         sizeHeight: 50.0,

@@ -4,8 +4,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:monstar/data/repository/api/profile_repository/profile_repository.dart';
+import 'package:monstar/views/base/base_view_model.dart';
 
-class UpateProfileViewModel extends StateNotifier<AsyncValue<void>> {
+class UpateProfileViewModel extends BaseViewModel<void> {
   final ProfileRepository profileRepository;
 
   final TextEditingController nameController = TextEditingController();
@@ -16,7 +17,7 @@ class UpateProfileViewModel extends StateNotifier<AsyncValue<void>> {
 
   UpateProfileViewModel({
     required this.profileRepository,
-  }) : super(AsyncValue.loading());
+  }) : super(null);
 
   Future<void> updateProfile(
     String? name,
@@ -27,7 +28,7 @@ class UpateProfileViewModel extends StateNotifier<AsyncValue<void>> {
   ) async {
     // cái này quá hay, tại sao ở trong Constructor có AsyncLoading rồi, mà ở đây đặt lại loading() làm gì
     // vì với mỗi API, khi chạy khởi tạo lại, thì sẽ cần loading lại - quá hay
-    state = AsyncValue.loading();
+    setLoading();
     try {
       final memberUpdated = await profileRepository.updateProfile(
         name,
@@ -37,9 +38,9 @@ class UpateProfileViewModel extends StateNotifier<AsyncValue<void>> {
         image,
       );
 
-      state = AsyncValue.data(memberUpdated);
+      setData(memberUpdated);
     } catch (e, stackTrace) {
-      state = AsyncValue.error(e, stackTrace);
+      setError(e, stackTrace);
     }
   }
 }

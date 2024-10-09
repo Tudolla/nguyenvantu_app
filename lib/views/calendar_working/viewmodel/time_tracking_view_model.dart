@@ -5,7 +5,8 @@ import '../../base/base_view_model.dart';
 class AttendanceViewModel extends BaseViewModel<List<AttendaceModel>> {
   final TimeTrackingRepository timeTrackingRepository;
 
-  AttendanceViewModel({required this.timeTrackingRepository}) : super([]);
+  AttendanceViewModel({required this.timeTrackingRepository})
+      : super(null); // change [] to null . Check again!
 
   Future<void> loadAttendanceData(int month, int year) async {
     setLoading();

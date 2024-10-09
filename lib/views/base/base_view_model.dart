@@ -1,7 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 abstract class BaseViewModel<T> extends StateNotifier<AsyncValue<T>> {
-  BaseViewModel(T initialState) : super(AsyncData(initialState));
+  BaseViewModel(T? firstState)
+      : super(
+          firstState != null ? AsyncData(firstState) : const AsyncLoading(),
+        );
 
   // trang thai khi Loading
   void setLoading() {

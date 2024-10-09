@@ -31,21 +31,21 @@ class _BookDetailScreenState extends ConsumerState<BookDetailScreen>
     ref.read(bookDetailViewModelProvider.notifier).loadDetailBook(widget.id);
   }
 
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    // Call endReading when the widget is disposed
-    ref.read(readingTrackingViewModelProvider.notifier).endReading(widget.id);
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   WidgetsBinding.instance.removeObserver(this);
+  //   // Call endReading when the widget is disposed
+  //   ref.read(readingTrackingViewModelProvider.notifier).endReading(widget.id);
+  //   super.dispose();
+  // }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused) {
-      // Application is in background (e.g., user presses Home button)
-      ref.read(readingTrackingViewModelProvider.notifier).endReading(widget.id);
-    }
-  }
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   if (state == AppLifecycleState.paused) {
+  //     // Application is in background (e.g., user presses Home button)
+  //     ref.read(readingTrackingViewModelProvider.notifier).endReading(widget.id);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -71,21 +71,23 @@ class _BookDetailScreenState extends ConsumerState<BookDetailScreen>
         ),
         actions: [
           stateDetailBook.when(
-            data: (bookDetail) => IconButton(
-              onPressed: () {
-                Clipboard.setData(
-                  ClipboardData(text: bookDetail.content ?? ""),
-                );
+            data: (bookDetail) => bookDetail != null
+                ? IconButton(
+                    onPressed: () {
+                      Clipboard.setData(
+                        ClipboardData(text: bookDetail.content ?? ""),
+                      );
 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    backgroundColor: Colors.blueGrey,
-                    content: Text("Copied story you want"),
-                  ),
-                );
-              },
-              icon: Icon(Icons.copy_all_outlined),
-            ),
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.blueGrey,
+                          content: Text("Copied story you want"),
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.copy_all_outlined),
+                  )
+                : Container(), // TH bookDetail == null
             error: (e, stackTrace) => Container(),
             loading: () => Container(),
           ),
@@ -99,6 +101,11 @@ class _BookDetailScreenState extends ConsumerState<BookDetailScreen>
         ),
         child: stateDetailBook.when(
           data: (bookDetail) {
+            if (bookDetail == null) {
+              return Center(
+                child: Text("Nothing to show"),
+              );
+            }
             return SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -131,7 +138,7 @@ class _BookDetailScreenState extends ConsumerState<BookDetailScreen>
                     ],
                   ),
                   Text(
-                    "Thể loại: ${bookDetail.type}" ?? "",
+                    "Thể loại: ${bookDetail.type}",
                     style: TextStyle(
                       fontFamily: 'ReadingFont',
                       fontWeight: FontWeight.bold,

@@ -3,10 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monstar/data/repository/api/profile_repository/profile_repository.dart';
+import 'package:monstar/views/base/base_view_model.dart';
 
 import '../../../data/models/api/request/member_model/member_model.dart';
 
-class ProfileViewModel extends StateNotifier<AsyncValue<MemberModel>> {
+class ProfileViewModel extends BaseViewModel<MemberModel> {
   final ProfileRepository profileRepository;
 
   final TextEditingController nameController = TextEditingController();
@@ -18,23 +19,23 @@ class ProfileViewModel extends StateNotifier<AsyncValue<MemberModel>> {
 
   ProfileViewModel(
     this.profileRepository,
-  ) : super(AsyncValue.loading());
+  ) : super(null);
 
   Future<void> getMemberInfor() async {
+    setLoading();
     try {
-      state = AsyncValue.loading();
       final member = await profileRepository.getMemberInfor();
-      state = AsyncValue.data(member);
+      setData(member);
     } catch (error, stackTrace) {
-      state = AsyncValue.error(error, stackTrace);
+      setError(error, stackTrace);
     }
   }
 
   Future<void> getMemberInfoFromLocal() async {
+    setLoading();
     try {
-      state = AsyncValue.loading();
       final memberLocal = await profileRepository.getMemberInfoFromLocal();
-      state = AsyncValue.data(memberLocal);
+      setData(memberLocal);
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
     }
@@ -47,7 +48,7 @@ class ProfileViewModel extends StateNotifier<AsyncValue<MemberModel>> {
     String? position,
     File? image,
   ) async {
-    state = AsyncValue.loading();
+    setLoading();
     try {
       final memberUpdated = await profileRepository.updateProfile(
         name,
@@ -57,9 +58,9 @@ class ProfileViewModel extends StateNotifier<AsyncValue<MemberModel>> {
         image,
       );
 
-      state = AsyncValue.data(memberUpdated);
+      setData(memberUpdated);
     } catch (e, stackTrace) {
-      state = AsyncValue.error(e, stackTrace);
+      setError(e, stackTrace);
     }
   }
 }

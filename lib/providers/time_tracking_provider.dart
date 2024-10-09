@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monstar/providers/http_client_provider.dart';
-import 'package:monstar/views/calendar_working/viewmodel/time_tracking_viewmodel.dart';
+import 'package:monstar/views/calendar_working/viewmodel/time_tracking_view_model.dart';
 
 import '../data/models/api/request/attendance_day_model/attendance_model.dart';
 import '../data/repository/api/time_tracking_repository/time_tracking_repository.dart';
