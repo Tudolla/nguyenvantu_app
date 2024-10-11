@@ -88,3 +88,6 @@ flutter:
     - family: SecureFont
       fonts:
         - asset: assets/fonts/Oswald-VariableFont_wght.ttf
+    - family: AppFont
+      fonts:
+        - asset: assets/fonts/TenaliRamakrishna-Regular.ttf

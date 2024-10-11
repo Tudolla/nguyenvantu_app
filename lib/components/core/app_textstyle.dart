@@ -10,6 +10,7 @@ class AppTextStyle {
   );
 
   static const String boldFontStyle = 'BoldFontApp';
+  static const String appFont = 'AppFont';
   static const String regularFontStyle = 'RegularFontApp';
   static const String drawerFontStyle = 'DrawerFontApp';
 

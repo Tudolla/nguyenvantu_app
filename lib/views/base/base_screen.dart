@@ -24,9 +24,7 @@ abstract class BaseScreen<T extends ConsumerStatefulWidget>
     );
   }
 
-  String? getScreenTitle() {
-    return null;
-  }
+  String? getScreenTitle() => null;
 
   // hàm khởi tạo dữ liệu ban đầu, override tùy màn hình
   void loadInitialData() {}
@@ -38,6 +36,7 @@ abstract class BaseScreen<T extends ConsumerStatefulWidget>
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: buildAppBar(context),
         body: buildBody(context),
       ),
     );
@@ -47,6 +46,7 @@ abstract class BaseScreen<T extends ConsumerStatefulWidget>
   void initState() {
     super.initState();
     loadInitialData();
+    setupScrollListener();
   }
 
   void pushScreen(Widget screen) {
@@ -56,29 +56,30 @@ abstract class BaseScreen<T extends ConsumerStatefulWidget>
     );
   }
 
-  void showButtomDialog(BuildContext context, String text) {
-    var sizeWidth = MediaQuery.of(context).size.width;
+  void pushReplacementScreen(Widget screen) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (BuildContext context) => screen),
+    );
+  }
+
+  void showBottomDialog(BuildContext context, String text) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (BuildContext context) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Container(
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          decoration: BoxDecoration(
             color: Colors.blueGrey,
-            width: sizeWidth - 50,
-            height: 100,
-            child: Text(
-              text,
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Text(
+            text,
+            style: TextStyle(color: Colors.white),
           ),
         );
       },
@@ -97,15 +98,8 @@ abstract class BaseScreen<T extends ConsumerStatefulWidget>
     );
   }
 
-  void pushReplacementScreen(Widget screen) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (BuildContext context) => screen),
-    );
-  }
-
-  void showLoadingDialog(BuildContext context) {
-    showDialog(
+  Future<void> showLoadingDialog(BuildContext context) {
+    return showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) {

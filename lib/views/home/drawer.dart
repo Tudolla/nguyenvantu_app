@@ -129,7 +129,7 @@ class _MyDrawerState extends ConsumerState<MyDrawer> {
               ),
               CustomListtileWidget(
                 voidCallBack: () => _openDialogChoice(context, ref),
-                text: "Feed Achievements",
+                text: "Achievements",
                 icon: Icons.price_change_outlined,
               ),
               CustomListtileWidget(

@@ -56,15 +56,21 @@ class _TextPostListScreenState extends ConsumerState<TextPostListScreen>
           itemBuilder: (context, index) {
             final post = posts[index];
             return Container(
-              margin: const EdgeInsets.only(
-                top: 10,
-                left: 20,
-                right: 20,
-                bottom: 10,
+              margin: const EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: 20,
               ),
+              padding: const EdgeInsets.all(
+                15,
+              ), // Thêm padding để hiển thị thoáng hơn
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.blueGrey,
+                borderRadius: BorderRadius.circular(12), // Viền tròn vừa phải
+                color: Colors.transparent, // Nền trong suốt
+                border: Border.all(
+                  // Viền nâu xung quanh
+                  color: Colors.brown,
+                  width: 1.5,
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,9 +87,9 @@ class _TextPostListScreenState extends ConsumerState<TextPostListScreen>
                         Text(
                           "News in day: ${formatDateFromApi(post.createdAt!)}",
                           style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: AppTextStyle.drawerFontStyle,
-                            fontSize: 20,
+                            color: Colors.black, // Sử dụng màu tối cho văn bản
+                            fontFamily: AppTextStyle.appFont,
+                            fontSize: 22,
                           ),
                         ),
                         SizedBox(
@@ -95,39 +101,41 @@ class _TextPostListScreenState extends ConsumerState<TextPostListScreen>
                     ),
                     subtitle: Row(
                       children: [
-                        Text(
-                          post.title!,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: AppTextStyle.drawerFontStyle,
-                            fontSize: 20,
+                        Expanded(
+                          // Đảm bảo không bị tràn ra ngoài màn hình
+                          child: Text(
+                            post.title!,
+                            style: TextStyle(
+                              color: Colors.black, // Giữ màu đen cho tiêu đề
+                              fontFamily: AppTextStyle.appFont,
+                              fontSize: 22,
+                            ),
                           ),
                         ),
-                        Container(
-                          height: 50,
-                          child: LottieBuilder.asset(
-                            "assets/dropdown.json",
-                          ),
+                        SizedBox(
+                          height: 40,
+                          width: 40,
+                          child: LottieBuilder.asset("assets/dropdown.json"),
                         ),
                       ],
                     ),
                   ),
                   AnimatedSize(
                     alignment: Alignment.topLeft,
-                    duration: Duration(microseconds: 500),
+                    duration: Duration(milliseconds: 500),
                     curve: Curves.easeInOut,
                     child: ConstrainedBox(
                       constraints: _isDownExpanded
                           ? BoxConstraints()
                           : BoxConstraints(maxHeight: 0),
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
+                        padding: const EdgeInsets.only(left: 15.0, top: 5.0),
                         child: Text(
                           post.description!,
                           style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: AppTextStyle.drawerFontStyle,
-                            fontSize: 20,
+                            color: Colors.black87, // Màu văn bản tối để dễ nhìn
+                            fontFamily: AppTextStyle.appFont,
+                            fontSize: 22,
                           ),
                         ),
                       ),

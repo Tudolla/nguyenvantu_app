@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monstar/views/base/base_screen.dart';
+import 'package:monstar/views/home/home_screen.dart';
 
 import '../../components/button/arrow_back_button.dart';
 import '../../components/core/app_textstyle.dart';
-import '../../data/models/api/request/contribution_model/pollpost_model.dart';
 import '../../providers/add_pollpost_provider.dart';
 
 class AddPollpostCreen extends ConsumerStatefulWidget {
@@ -18,11 +18,6 @@ class AddPollpostCreen extends ConsumerStatefulWidget {
 class _AddPollpostCreenState extends BaseScreen<AddPollpostCreen> {
   final TextEditingController _titleController = TextEditingController();
   final List<TextEditingController> _choiceController = [];
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   void dispose() {
@@ -68,13 +63,46 @@ class _AddPollpostCreenState extends BaseScreen<AddPollpostCreen> {
     final pollpostViewmodel = ref.read(pollPostProvider.notifier);
     var size = MediaQuery.of(context).size.width;
 
-    void _submit() {
+    void _submit() async {
+      if (_titleController.text.isEmpty ||
+          _choiceController.any((controller) => controller.text.isEmpty)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Please fill in all fields"),
+          ),
+        );
+        return;
+      }
       final title = _titleController.text;
       final choices =
           _choiceController.map((controller) => controller.text).toList();
-      List<Choice> listChoice =
-          choices.map((e) => Choice(choiceText: e)).toList();
-      pollpostViewmodel.submitPollPost(title, choices);
+
+      try {
+        await pollpostViewmodel.submitPollPost(title, choices);
+
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Bài viết đã được gửi thành công')),
+        );
+        await Future.delayed(
+          Duration(seconds: 2),
+        );
+        if (!mounted) return;
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return HomeScreenDefault();
+            },
+          ),
+        );
+      } catch (e) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error was happened: $e')),
+        );
+      }
     }
 
     return SingleChildScrollView(
@@ -201,23 +229,31 @@ class _AddPollpostCreenState extends BaseScreen<AddPollpostCreen> {
             const SizedBox(
               height: 10,
             ),
-            statePollPost.isLoading
-                ? CircularProgressIndicator()
-                : SizedBox(
-                    width: size / 2,
-                    height: 50,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blueGrey,
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
+            statePollPost.when(
+              data: (isLoading) {
+                return SizedBox(
+                  width: size / 2,
+                  height: 50,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueGrey,
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
                       ),
-                      onPressed: _submit,
-                      child: Text("Submit"),
                     ),
+                    onPressed: isLoading ? null : _submit,
+                    child: isLoading
+                        ? const CircularProgressIndicator()
+                        : const Text("Submit"),
                   ),
+                );
+              },
+              error: (e, stackTrace) => Center(
+                child: Text("Error : $e"),
+              ),
+              loading: () => const CircularProgressIndicator(),
+            ),
           ],
         ),
       ),

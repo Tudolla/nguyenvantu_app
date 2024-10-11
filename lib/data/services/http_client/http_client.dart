@@ -120,7 +120,7 @@ class DefaultHttpClient implements HttpClient {
 
   // Xử lý các trường hợp trả về với kiểu T
   T? _handleResponse<T>(http.Response response) {
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       final utf8Body = utf8.decode(response.bodyBytes);
       final decodedResponse = jsonDecode(utf8Body);
 

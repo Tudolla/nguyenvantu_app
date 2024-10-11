@@ -29,6 +29,12 @@ class _BookListScreenState extends BaseScreen<BookListScreen> {
     });
   }
 
+  // interface PreferredSizeWidget
+  @override
+  PreferredSizeWidget? buildAppBar(BuildContext context) {
+    return null;
+  }
+
   @override
   void setupScrollListener() {
     _scrollController.addListener(() {
@@ -57,13 +63,6 @@ class _BookListScreenState extends BaseScreen<BookListScreen> {
         },
         child: stateListBook.when(
           data: (bookList) {
-            // if (bookList.isEmpty) {
-            //   return const Center(
-            //     child: Text(
-            //       "Nothing at all, wait for the next day",
-            //     ),
-            //   );
-            // }
             return GridView.builder(
               controller: _scrollController,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
