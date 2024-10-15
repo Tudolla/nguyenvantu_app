@@ -7,7 +7,7 @@ import 'package:monstar/components/core/app_textstyle.dart';
 import 'package:monstar/providers/member_login_provider.dart';
 import 'package:monstar/views/home/home_screen.dart';
 import 'package:monstar/views/login/login_view_model.dart';
-import 'package:monstar/views/login/widgets/input_widget.dart';
+import 'package:monstar/views/login/widgets/login_text_field.dart';
 import 'package:monstar/views/login/widgets/toast_notifier_widget.dart';
 
 import '../../gen/assets.gen.dart';
@@ -73,6 +73,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 context,
                 'Login failed! Check your credentials.',
               );
+              loginViewModel.hasClickedLogin = false;
             });
           }
         }
@@ -156,7 +157,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           const SizedBox(
             height: 19,
           ),
-          CustomTextFormField(
+          LoginTextField(
             controller: _usernameController,
             labelText: "username",
             prefixIcon: Icons.person,
@@ -164,7 +165,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           const SizedBox(
             height: 10,
           ),
-          CustomTextFormField(
+          LoginTextField(
             controller: _passwordController,
             labelText: "password",
             obscureText: true,
@@ -200,7 +201,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               final username = _usernameController.text;
               final password = _passwordController.text;
 
-              // Gọi hàm login từ ViewModel, không cần setState
               await loginViewModel.login(
                 username: username,
                 password: password,

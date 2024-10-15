@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class CustomTextFormField extends StatelessWidget {
+class LoginTextField extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;
   final bool obscureText;
   final IconData prefixIcon;
 
-  const CustomTextFormField({
+  const LoginTextField({
     Key? key,
     required this.controller,
     required this.labelText,

@@ -80,16 +80,25 @@ class _HomeScreenDefaultState extends ConsumerState<HomeScreenDefault> {
             )
           : null,
       drawer: const MyDrawer(),
-      body: PageView(
+      body: PageView.builder(
+        itemCount: 5,
         controller: _pageController,
-        onPageChanged: (index) {},
-        children: [
-          BookListScreen(),
-          PollPostScreen(),
-          CalendarWokingScreen(),
-          TextPostListScreen(),
-          ProfileScreen(),
-        ],
+        itemBuilder: (context, index) {
+          switch (index) {
+            case 0:
+              return BookListScreen();
+            case 1:
+              return PollPostScreen();
+            case 2:
+              return CalendarWokingScreen();
+            case 3:
+              return TextPostListScreen();
+            case 4:
+              return ProfileScreen();
+            default:
+              return Container();
+          }
+        },
       ),
       bottomNavigationBar: SafeArea(
         child: Container(

@@ -76,8 +76,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                             ? Stack(
                                 children: [
                                   CachedNetworkImage(
-                                    imageUrl:
-                                        ApiBaseUrl.baseUrl + member.image!,
+                                    imageUrl: member.image!,
                                     imageBuilder: (context, imageProvider) =>
                                         CircleAvatar(
                                       radius: sizeWidth * 1 / 4,
