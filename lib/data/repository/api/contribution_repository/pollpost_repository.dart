@@ -6,6 +6,7 @@ abstract class PollpostRepository {
   Future<bool> createPollPostRepository(String title, List<String> list);
   Future<List<PollPostWithChoice>> getPollPostRepository();
   Future<void> votePollPostRepository(int choiceId);
+  Future<void> unVote(int choiceId);
 }
 
 class PollpostRepositoryIml implements PollpostRepository {
@@ -25,5 +26,10 @@ class PollpostRepositoryIml implements PollpostRepository {
   @override
   Future<void> votePollPostRepository(int choiceId) async {
     return await _textPostService.votePollPost(choiceId);
+  }
+
+  @override
+  Future<void> unVote(int choiceId) async {
+    return await _textPostService.unVote(choiceId);
   }
 }

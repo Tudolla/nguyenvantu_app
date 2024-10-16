@@ -114,6 +114,7 @@ class TextPostService {
 
   Future<void> votePollPost(int choiceId) async {
     try {
+      // convert Map<String, id> to void
       final response = await _httpClient.post<Map<String, dynamic>>(
         '/api/v1/vote-pollpost/$choiceId/',
         headers: {
@@ -125,6 +126,22 @@ class TextPostService {
       }
     } catch (e) {
       throw Exception("Failed to vote: $e");
+    }
+  }
+
+  Future<void> unVote(int choiceId) async {
+    try {
+      final response = await _httpClient.post<Map<String, dynamic>>(
+        '/api/v1/unvote-pollpost/$choiceId/',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+      if (response == null) {
+        throw Exception("Failed to unvote");
+      }
+    } catch (e) {
+      throw Exception("Failed to unvote: $e");
     }
   }
 }
