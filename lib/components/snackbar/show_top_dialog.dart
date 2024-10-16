@@ -70,7 +70,7 @@ class _FloatingTopDialogState extends State<FloatingTopDialog>
               child: Material(
                 elevation: 5,
                 borderRadius: BorderRadius.circular(8),
-                color: Colors.blueGrey,
+                color: Colors.blueGrey.withOpacity(.7),
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 10),

@@ -76,7 +76,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                             ? Stack(
                                 children: [
                                   CachedNetworkImage(
-                                    imageUrl: member.image!,
+                                    imageUrl:
+                                        ApiBaseUrl.baseUrl + member.image!,
                                     imageBuilder: (context, imageProvider) =>
                                         CircleAvatar(
                                       radius: sizeWidth * 1 / 4,
@@ -146,7 +147,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                         AppButton(
                           text: "View Profile",
                           function: () {
-                            Get.to(ProfileEditScreen());
+                            Get.to(() => ProfileEditScreen());
                           },
                           textColor: Colors.white,
                           backgroundColor: Colors.blueGrey,
@@ -167,7 +168,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                         ProfileSettingItem(
                           voidCallback: () {
                             Get.to(
-                              SettingAppScreen(),
+                              () => SettingAppScreen(),
                             );
                           },
                           icon: Icon(Icons.settings),

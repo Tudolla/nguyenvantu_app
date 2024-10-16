@@ -114,7 +114,6 @@ class TextPostService {
 
   Future<void> votePollPost(int choiceId) async {
     try {
-      // convert Map<String, id> to void
       final response = await _httpClient.post<Map<String, dynamic>>(
         '/api/v1/vote-pollpost/$choiceId/',
         headers: {

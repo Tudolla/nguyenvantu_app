@@ -79,7 +79,7 @@ class _BookListScreenState extends BaseScreen<BookListScreen> {
                     ref
                         .read(readingTrackingViewModelProvider.notifier)
                         .startRading(itemBook.id!);
-                    Get.to(BookDetailScreen(id: itemBook.id!));
+                    Get.to(() => BookDetailScreen(id: itemBook.id!));
                   },
                   child: Card(
                     elevation: 4,

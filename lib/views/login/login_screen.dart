@@ -10,6 +10,7 @@ import 'package:monstar/views/login/login_view_model.dart';
 import 'package:monstar/views/login/widgets/login_text_field.dart';
 import 'package:monstar/views/login/widgets/toast_notifier_widget.dart';
 
+import '../../components/loading/loading.dart';
 import '../../gen/assets.gen.dart';
 import '../base/sound_view_model.dart';
 
@@ -62,7 +63,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       data: (isLoggedIn) {
         if (loginViewModel.hasClickedLogin) {
           if (isLoggedIn == true) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
+            WidgetsBinding.instance.addPostFrameCallback((_) async {
+              await Future.delayed(
+                const Duration(seconds: 2),
+              );
               Get.off(const HomeScreenDefault());
             });
             return const SizedBox
@@ -87,9 +91,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       error: (error, stackTrace) => Center(
         child: Text("Error: $error"),
       ),
-      loading: () => const Center(
-        child: CircularProgressIndicator(),
-      ),
+      loading: () {
+        return Stack(
+          children: [
+            _buildLoginForm(
+              size,
+              context,
+              loginState,
+              loginViewModel,
+            ),
+            Container(
+              color: Colors.black.withOpacity(.4),
+              child: spinkit,
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -206,16 +223,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 password: password,
               );
             },
-            child: loginState.isLoading
-                ? const CircularProgressIndicator()
-                : const Text(
-                    "Login",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 25,
-                    ),
-                  ),
+            child: const Text(
+              "Login",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                fontSize: 25,
+              ),
+            ),
           ),
           const SizedBox(height: 20),
         ],

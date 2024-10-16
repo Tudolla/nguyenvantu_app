@@ -10,6 +10,7 @@ import 'package:monstar/providers/profile_state_provider.dart';
 import 'package:monstar/views/profile_member/widget/pin_code_dialog.dart';
 import 'package:monstar/views/profile_member/widget/text_input_items.dart';
 
+import '../../components/loading/loading.dart';
 import '../../gen/assets.gen.dart';
 import '../../utils/api_base_url.dart';
 import '../../providers/member_information_provider.dart';
@@ -292,15 +293,11 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                   ),
                 );
               },
-              loading: () => Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
-                ),
+              loading: () => Center(
+                child: CircularProgressIndicator(),
               ),
-              error: (error, stackTrace) => Scaffold(
-                body: Center(
-                  child: Text("Error : $error"),
-                ),
+              error: (error, stackTrace) => Center(
+                child: Text("Error : $error"),
               ),
             ),
     );

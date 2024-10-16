@@ -134,8 +134,14 @@ class _PollPostScreenState extends ConsumerState<PollPostScreen> {
                             .removeVote();
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            Colors.grey, // Màu đỏ cho nút "Bỏ chọn"
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            10,
+                          ),
+                        ),
+                        backgroundColor: Colors.blueGrey,
+
+                        // Màu đỏ cho nút "Bỏ chọn"
                       ),
                       child: const Text(
                         "Bỏ chọn",

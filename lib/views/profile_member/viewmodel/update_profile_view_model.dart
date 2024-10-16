@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:monstar/data/repository/api/profile_repository/profile_repository.dart';
 import 'package:monstar/views/base/base_view_model.dart';

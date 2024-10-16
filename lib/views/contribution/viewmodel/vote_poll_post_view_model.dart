@@ -28,16 +28,28 @@ class VoteStateViewModel extends StateNotifier<Map<int, bool>> {
   }
 
   Future<void> removeVote() async {
-    try {
-      if (selectedChoiceId != null) {
+    if (selectedChoiceId != null) {
+      final idRemoved = selectedChoiceId;
+
+      final previousState = state; // lưu trạn thái ban đầu
+      final previousSelectedChoiceId =
+          selectedChoiceId; // lưu giá trị trước đó của selectdChoiceId
+      try {
         //Cập nhật trạng thái trong local trước khi gọi API
+        // ..remove , tạo ra bản sao mới của State, sau đó gán lại giá trị mới = state
         state = {...state}..remove(selectedChoiceId);
         selectedChoiceId = null;
 
         // Gui request to server to remove
-        await _pollpostRepository.unVote(selectedChoiceId!);
+        await _pollpostRepository.unVote(idRemoved!);
+      } catch (e) {
+        // Rollback trạng thái nếu có lỗi
+
+        state = previousState; // Khôi phục trạng thái ban đầu
+        selectedChoiceId =
+            previousSelectedChoiceId; // Khôi phục lại selectedChoiceId
       }
-    } catch (e) {}
+    }
   }
 
   bool hasVoted() {

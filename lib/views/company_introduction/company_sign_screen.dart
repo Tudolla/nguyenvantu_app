@@ -94,9 +94,9 @@ class _CompanySignScreenState extends ConsumerState<CompanySignScreen>
                       child: ListTile(
                         onTap: () {
                           if (index == 0) {
-                            Get.to(CompanyInfoScreen());
+                            Get.to(() => CompanyInfoScreen());
                           } else if (index == 1) {
-                            Get.to(CompanyMissionVisionScreen());
+                            Get.to(() => CompanyMissionVisionScreen());
                           }
                         },
                         title: Text(
