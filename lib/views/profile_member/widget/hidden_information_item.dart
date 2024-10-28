@@ -77,11 +77,10 @@ class _PinInputItemState extends ConsumerState<PinInputItem> {
         borderRadius: BorderRadius.circular(15),
       ),
       height: 60,
-      child: Align(
-        alignment: Alignment.center,
-        child: SwitchListTile(
-          contentPadding: const EdgeInsets.all(0),
-          title: Text(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
             "Hidden information",
             style: TextStyle(
               fontSize: 20,
@@ -89,11 +88,8 @@ class _PinInputItemState extends ConsumerState<PinInputItem> {
               color: Colors.blueGrey,
             ),
           ),
-          value: profileState.isHidden,
-          // onChanged ở đây, Flutter tự động nhận diện true, false khi thực diện đóng mở công tác
-          // trong SwitchListTile ròi, nên hàm _toggleHidden không cần truyền tham số bool nữa.
-          onChanged: _toggleHidden,
-        ),
+          Switch(value: profileState.isHidden, onChanged: _toggleHidden),
+        ],
       ),
     );
   }

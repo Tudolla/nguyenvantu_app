@@ -14,9 +14,8 @@ class AudioService {
   Future<void> playClickSound() async {
     try {
       await _audioPlayer.play(AssetSource('sound/click.mp3'));
-      print("Am thanh song dong");
     } catch (e) {
-      print("Loi roi nha: $e");
+      print("Error clicked sound: $e");
     }
   }
 }

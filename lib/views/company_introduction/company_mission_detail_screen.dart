@@ -45,7 +45,7 @@ class _CompanyMissionDetailScreenState
                       child: Hero(
                         tag: widget.heroTag,
                         child: Image.asset(
-                          "assets/images/5898.jpg",
+                          "assets/images/target.jpg",
                           fit: BoxFit.cover,
                         ),
                       ),
