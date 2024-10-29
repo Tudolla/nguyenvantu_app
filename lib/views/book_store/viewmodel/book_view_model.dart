@@ -5,13 +5,17 @@ import '../../../data/models/api/request/book_model/book_model.dart';
 import '../../../data/repository/api/book_repository/book_repository.dart';
 
 class BookViewmodel extends BaseViewModel<List<BookModel>> {
-  int _currentPage = 1;
+  int _currentPage = 1; // Refresh về trang đầu tiên
+  bool _hasMoreData =
+      true; // Kiểm tra dữ liệu có tiếp không khi người dùng load more
   bool _isFetchingMore = false;
   final BookRepository bookRepository;
 
   BookViewmodel({required this.bookRepository}) : super([]);
 
   Future<void> loadListBook() async {
+    _currentPage = 1; // Reset về trang đầu khi tải lại
+    _hasMoreData = true;
     setLoading();
     try {
       final result = await bookRepository.getListBook(page: _currentPage);
@@ -22,6 +26,9 @@ class BookViewmodel extends BaseViewModel<List<BookModel>> {
             .toList();
 
         setData(booksData);
+
+        // Kiểm tra nếu không có trang tiếp theo
+        _hasMoreData = result['next'] != null;
       } else {
         throw Exception(
           "Expected to be a list, got ${result['results'].runtimeType}",
@@ -33,7 +40,7 @@ class BookViewmodel extends BaseViewModel<List<BookModel>> {
   }
 
   Future<void> loadMoreBooks() async {
-    if (_isFetchingMore) return; // Prevent multiple requests
+    if (_isFetchingMore || !_hasMoreData) return; // Prevent multiple requests
     _isFetchingMore = true;
 
     try {
@@ -45,6 +52,9 @@ class BookViewmodel extends BaseViewModel<List<BookModel>> {
             .toList();
         final currentBooks = state.asData?.value ?? [];
         setData([...currentBooks, ...moreBooks]);
+
+        // Cập nhật cờ 'hasMoteData'
+        _hasMoreData = results['next'] != null;
       } else {
         throw Exception("Exception error");
       }
@@ -54,4 +64,7 @@ class BookViewmodel extends BaseViewModel<List<BookModel>> {
       _isFetchingMore = false;
     }
   }
+
+  // Cho phép các class khác kiểm tra ViewModel có đang tải thêm dữ liệu không
+  bool get isLoadingMore => _isFetchingMore;
 }

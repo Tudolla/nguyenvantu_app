@@ -182,13 +182,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                       Positioned.fill(
                         top: 0,
                         bottom: MediaQuery.of(context).size.height - 200,
-                        child: ClipPath(
-                          clipper: TopClipper(),
-                          child: Container(
-                            height: 200,
-                            color: Colors.blueGrey,
-                          ),
-                        ),
+                        child: CustomClippedWidget(),
                       ),
                       Container(
                         child: SingleChildScrollView(
@@ -359,4 +353,26 @@ class TopClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
+}
+
+class CustomClippedWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ClipPath(
+      clipper: TopClipper(),
+      child: ShaderMask(
+        shaderCallback: (bounds) => LinearGradient(
+          colors: [Colors.redAccent, Colors.green],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ).createShader(bounds),
+        blendMode: BlendMode.srcIn,
+        child: Container(
+          height: 200, // Chiều cao tùy chỉnh theo ý muốn
+          width: double.infinity,
+          color: Colors.white, // Màu nền cho ShaderMask
+        ),
+      ),
+    );
+  }
 }

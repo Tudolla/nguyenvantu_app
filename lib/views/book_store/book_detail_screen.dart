@@ -6,7 +6,6 @@ import 'package:monstar/components/core/app_colors.dart';
 
 import '../../components/button/arrow_back_button.dart';
 import '../../components/core/app_textstyle.dart';
-import '../../components/loading/loading.dart';
 import '../../gen/assets.gen.dart';
 import '../../providers/get_book_detail_provider.dart';
 import '../../providers/reading_book_tracking_provider.dart';

@@ -71,8 +71,17 @@ class _BookListScreenState extends BaseScreen<BookListScreen> {
                 mainAxisSpacing: 10.0,
                 childAspectRatio: 0.85,
               ),
-              itemCount: bookList.length,
+              itemCount: bookList.length + 1,
               itemBuilder: (context, index) {
+                if (index == bookList.length) {
+                  return Center(
+                    child: ref
+                            .read(bookListViewModelProvider.notifier)
+                            .isLoadingMore
+                        ? CircularProgressIndicator()
+                        : SizedBox.shrink(),
+                  );
+                }
                 final itemBook = bookList[index];
                 return GestureDetector(
                   onTap: () {
