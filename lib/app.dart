@@ -24,15 +24,19 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    // lắng nghe state đã Login chưa
     final _isLoggedIn =
         ref.watch(loginViewModelProvider.notifier).checkLoginStatus();
 
+    // lắng nghe state màu sắc background APP
     final themeProvider = ref.watch(themeNotifierProvider);
     return FutureBuilder<bool>(
       future: _isLoggedIn,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         } else if (snapshot.hasData && snapshot.data == true) {
           // Sủ dụng Get thì tốc độ chuyển trang rất nhanh mượt, hơn MaterialApp
           return GetMaterialApp(
@@ -41,9 +45,9 @@ class _MyAppState extends ConsumerState<MyApp> {
             theme: themeProvider,
             navigatorKey: navigatorKey,
             home: HomeScreenDefault(),
-            routes: {
-              '/notification_screen': (context) => const TextPostListScreen(),
-            },
+            // routes: {
+            //   '/notification_screen': (context) => const TextPostListScreen(),
+            // },
           );
         } else {
           return GetMaterialApp(
@@ -52,9 +56,9 @@ class _MyAppState extends ConsumerState<MyApp> {
             theme: themeProvider,
             navigatorKey: navigatorKey,
             home: LoginScreen(),
-            routes: {
-              '/notification_screen': (context) => const TextPostListScreen(),
-            },
+            // routes: {
+            //   '/notification_screen': (context) => const TextPostListScreen(),
+            // },
           );
         }
       },

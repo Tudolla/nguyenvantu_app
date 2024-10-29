@@ -15,7 +15,7 @@ class BookViewmodel extends BaseViewModel<List<BookModel>> {
 
   Future<void> loadListBook() async {
     _currentPage = 1; // Reset về trang đầu khi tải lại
-    _hasMoreData = true;
+    _hasMoreData = true; // Có dữ liệu thì mới tải tiếp
     setLoading();
     try {
       final result = await bookRepository.getListBook(page: _currentPage);
@@ -27,7 +27,7 @@ class BookViewmodel extends BaseViewModel<List<BookModel>> {
 
         setData(booksData);
 
-        // Kiểm tra nếu không có trang tiếp theo
+        // Kiểm tra còn dữ liệu không, để chuẩn bị cho hàm loadMoreBooks()
         _hasMoreData = result['next'] != null;
       } else {
         throw Exception(
@@ -51,6 +51,8 @@ class BookViewmodel extends BaseViewModel<List<BookModel>> {
             .map((json) => BookModel.fromJson(json))
             .toList();
         final currentBooks = state.asData?.value ?? [];
+
+        // expand List
         setData([...currentBooks, ...moreBooks]);
 
         // Cập nhật cờ 'hasMoteData'

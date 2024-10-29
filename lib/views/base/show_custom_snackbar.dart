@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 void showCustomSnackBar(
-    BuildContext context, String message, String extraMessage) {
+  BuildContext context,
+  String message,
+  String? extraMessage,
+) {
   // Tạo Animation Controller
   final animationController = AnimationController(
     duration: Duration(milliseconds: 500),
@@ -44,7 +47,7 @@ void showCustomSnackBar(
                 ),
                 Spacer(),
                 Text(
-                  extraMessage,
+                  extraMessage ?? "",
                   style:
                       TextStyle(color: const Color.fromARGB(255, 78, 123, 219)),
                 ),

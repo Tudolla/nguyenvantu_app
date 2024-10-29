@@ -9,6 +9,7 @@ import '../../components/core/app_textstyle.dart';
 import '../../gen/assets.gen.dart';
 import '../../providers/get_book_detail_provider.dart';
 import '../../providers/reading_book_tracking_provider.dart';
+import '../base/show_custom_snackbar.dart';
 
 class BookDetailScreen extends ConsumerStatefulWidget {
   final int id;
@@ -28,24 +29,10 @@ class _BookDetailScreenState extends ConsumerState<BookDetailScreen>
   @override
   void initState() {
     super.initState();
-    ref.read(bookDetailViewModelProvider.notifier).loadDetailBook(widget.id);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(bookDetailViewModelProvider.notifier).loadDetailBook(widget.id);
+    });
   }
-
-  // @override
-  // void dispose() {
-  //   WidgetsBinding.instance.removeObserver(this);
-  //   // Call endReading when the widget is disposed
-  //   ref.read(readingTrackingViewModelProvider.notifier).endReading(widget.id);
-  //   super.dispose();
-  // }
-
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   if (state == AppLifecycleState.paused) {
-  //     // Application is in background (e.g., user presses Home button)
-  //     ref.read(readingTrackingViewModelProvider.notifier).endReading(widget.id);
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +43,7 @@ class _BookDetailScreenState extends ConsumerState<BookDetailScreen>
       appBar: AppBar(
         backgroundColor: AppColors.paperYellow,
         title: Text(
-          "Story for sharing",
+          "Story Content",
           style: AppTextStyle.appBarStyle,
         ),
         centerTitle: true,
@@ -78,11 +65,10 @@ class _BookDetailScreenState extends ConsumerState<BookDetailScreen>
                         ClipboardData(text: bookDetail.content ?? ""),
                       );
 
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          backgroundColor: Colors.blueGrey,
-                          content: Text("Copied story you want"),
-                        ),
+                      showCustomSnackBar(
+                        context,
+                        "Copied story",
+                        null,
                       );
                     },
                     icon: Icon(Icons.copy_all_outlined),
