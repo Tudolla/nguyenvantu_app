@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:monstar/components/theme/theme_provider.dart';
 import 'package:monstar/providers/member_login_provider.dart';
-import 'package:monstar/views/contribution/textpost_screen.dart';
+
 import 'package:monstar/views/home/home_screen.dart';
 import 'package:monstar/views/login/login_screen.dart';
 

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:monstar/views/contribution/add_textpost_screen.dart';
 import 'package:monstar/views/home/widgets/custom_listtile_widget.dart';
+import 'package:monstar/views/video/video_screen.dart';
 
 import '../../components/core/app_textstyle.dart';
 import '../../gen/assets.gen.dart';
@@ -130,6 +131,14 @@ class _MyDrawerState extends ConsumerState<MyDrawer> {
               CustomListtileWidget(
                 text: "Achievements",
                 icon: Icons.price_change_outlined,
+                voidCallBack: () => Get.off(
+                  VideoScreen(
+                    videoUrl:
+                        "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4",
+                  ),
+                  transition: Transition.circularReveal,
+                  duration: const Duration(seconds: 2),
+                ),
               ),
               CustomListtileWidget(
                 text: "Work day",
