@@ -34,14 +34,16 @@ abstract class BaseViewModel<T> extends StateNotifier<AsyncValue<T>> {
     } else if (e is CacheException) {
       errorMessage = "Cache error: ${e.message}";
     } else if (e is ValidationException) {
-      errorMessage = "Validation: ${e.message}";
+      errorMessage = "Validation error: ${e.message}";
     } else {
       errorMessage = "An unexpected error occurred: ${e.message}";
     }
     setError(errorMessage, stackTrace);
   }
 
-  // PHương thức lấy duwxl iệu mới, nhưng giữ nguyên trạng thái cũ
+  // Phương thức lấy dữ iệu mới, nhưng giữ nguyên trạng thái cũ
+  // VD: hiển thị dữ liệu trên UI, User load làm mới, thì loading đè lên dữ liệu cũ đồng thời tải lại dữ liệu mới
+  // Tăng trải nghiệm người dùng
   void setLoadingWithPreviousData() {
     state = AsyncValue<T>.loading().copyWithPrevious(state);
   }

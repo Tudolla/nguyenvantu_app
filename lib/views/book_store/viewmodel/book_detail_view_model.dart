@@ -8,7 +8,7 @@ class BookDetailViewmodel extends BaseViewModel<BookModel?> {
   BookDetailViewmodel({required this.bookRepository}) : super(null);
 
   Future<void> loadDetailBook(int id) async {
-    setLoading();
+    setLoadingWithPreviousData(); // Hiển thị dữ liệu cũ khi tải
     try {
       final bookDetail = await bookRepository.getDetailBook(id);
       setData(bookDetail);

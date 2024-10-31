@@ -4,6 +4,7 @@ import 'package:monstar/views/home/home_screen.dart';
 
 import '../snackbar/dialog_helper.dart';
 
+// ignore: must_be_immutable
 class ArrowBackButton extends StatelessWidget {
   bool? showSnackbar;
   bool? popScreen;

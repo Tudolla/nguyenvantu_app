@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class AppButton extends StatelessWidget {
   final String text;
   final VoidCallback? function;
