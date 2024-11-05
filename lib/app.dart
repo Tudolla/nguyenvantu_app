@@ -44,7 +44,7 @@ class _MyAppState extends ConsumerState<MyApp> {
             title: 'Monstar',
             theme: themeProvider,
             navigatorKey: navigatorKey,
-            home: HomeScreenDefault(),
+            home: HomeScreen(),
             // routes: {
             //   '/notification_screen': (context) => const TextPostListScreen(),
             // },

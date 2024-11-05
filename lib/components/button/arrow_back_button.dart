@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:monstar/views/home/home_screen.dart';
 
+import '../../views/home/home_screen.dart';
 import '../snackbar/dialog_helper.dart';
 
 // ignore: must_be_immutable
@@ -40,7 +40,7 @@ class ArrowBackButton extends StatelessWidget {
           popScreen == true
               ? Get.back()
               : Get.off(
-                  HomeScreenDefault(),
+                  HomeScreen(),
                 );
           showSnackbar == false
               ? null

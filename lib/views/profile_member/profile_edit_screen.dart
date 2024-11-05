@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
+import 'package:monstar/components/bottom_snackbar/bottom_snackbar.dart';
 import 'package:monstar/components/button/app_button.dart';
 import 'package:monstar/components/core/app_textstyle.dart';
 import 'package:monstar/providers/profile_state_provider.dart';
@@ -14,7 +15,6 @@ import 'package:skeletonizer/skeletonizer.dart';
 import '../../gen/assets.gen.dart';
 import '../../utils/api_base_url.dart';
 import '../../providers/member_information_provider.dart';
-import '../base/show_custom_snackbar.dart';
 
 class ProfileEditScreen extends ConsumerStatefulWidget {
   const ProfileEditScreen({super.key});
@@ -181,7 +181,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                     children: [
                       Positioned.fill(
                         top: 0,
-                        bottom: MediaQuery.of(context).size.height - 200,
+                        bottom: MediaQuery.of(context).size.height - 300,
                         child: CustomClippedWidget(),
                       ),
                       Container(
@@ -279,7 +279,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                                         );
                                     memberViewModel.when(
                                       data: (_) {
-                                        showCustomSnackBar(
+                                        bottomSnackbar(
                                           context,
                                           "Profile updated",
                                           "Cancel",
@@ -325,10 +325,10 @@ class TopClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
-    path.lineTo(0, size.height - 40);
+    path.lineTo(0, size.height - 60);
 
-    var firstControlPoint = Offset(size.width / 2.2, size.height + 30);
-    var firstEndPoint = Offset(size.width / 2, size.height - 30);
+    var firstControlPoint = Offset(size.width / 3, size.height + 40);
+    var firstEndPoint = Offset(size.width / 2, size.height - 40);
     path.quadraticBezierTo(
       firstControlPoint.dx,
       firstControlPoint.dy,
@@ -337,8 +337,8 @@ class TopClipper extends CustomClipper<Path> {
     );
 
     var secondControlPoint =
-        Offset((size.width) - (size.width / 3.25), size.height - 80);
-    var secondEndPoint = Offset(size.width, size.height - 45);
+        Offset((size.width) - (size.width * 3), size.height - 40);
+    var secondEndPoint = Offset(size.width / 2, size.height - 40);
     path.quadraticBezierTo(
       secondControlPoint.dx,
       secondControlPoint.dy,

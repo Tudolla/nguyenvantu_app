@@ -62,7 +62,7 @@ class _MyDrawerState extends ConsumerState<MyDrawer> {
       },
       btnOkOnPress: () {
         Get.off(
-          () => AddPollpostCreen(),
+          () => AddPollpostScreen(),
           transition: Transition.circularReveal,
           duration: const Duration(seconds: 2),
         );

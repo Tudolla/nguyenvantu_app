@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:monstar/components/core/app_textstyle.dart';
-import 'package:monstar/views/base/base_screen.dart';
+
 import 'package:monstar/views/book_store/book_detail_screen.dart';
 
 import '../../providers/get_list_book_provider.dart';
 import '../../providers/reading_book_tracking_provider.dart';
+import '../base/base_view.dart';
 
 class BookListScreen extends ConsumerStatefulWidget {
   const BookListScreen({super.key});
@@ -15,27 +16,23 @@ class BookListScreen extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _BookListScreenState();
 }
 
-class _BookListScreenState extends BaseScreen<BookListScreen> {
-  ScrollController _scrollController = ScrollController();
+class _BookListScreenState extends BaseView<BookListScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void onInit() {
+    super.onInit();
+    setupScrollListener();
+  }
 
   @override
   void loadInitialData() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final bookListState = ref.read(bookListViewModelProvider);
-      if (bookListState is! AsyncData ||
-          (bookListState.value?.isEmpty ?? true)) {
-        ref.read(bookListViewModelProvider.notifier).loadListBook();
-      }
-    });
+    final bookListState = ref.read(bookListViewModelProvider);
+    if (bookListState is! AsyncData || (bookListState.value?.isEmpty ?? true)) {
+      ref.read(bookListViewModelProvider.notifier).loadListBook();
+    }
   }
 
-  // interface PreferredSizeWidget
-  @override
-  PreferredSizeWidget? buildAppBar(BuildContext context) {
-    return null;
-  }
-
-  @override
   void setupScrollListener() {
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
@@ -52,91 +49,87 @@ class _BookListScreenState extends BaseScreen<BookListScreen> {
   }
 
   @override
+  PreferredSizeWidget? buildAppBar(BuildContext context) => null;
+
+  @override
+  Future<void> onRefresh() async {
+    await ref.read(bookListViewModelProvider.notifier).loadListBook();
+  }
+
+  @override
   Widget buildBody(BuildContext context) {
     final stateListBook = ref.watch(bookListViewModelProvider);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-      child: RefreshIndicator(
-        onRefresh: () async {
-          await ref.read(bookListViewModelProvider.notifier).loadListBook();
-        },
-        child: stateListBook.when(
-          data: (bookList) {
-            return GridView.builder(
-              controller: _scrollController,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10.0,
-                mainAxisSpacing: 10.0,
-                childAspectRatio: 0.85,
-              ),
-              itemCount: bookList.length + 1,
-              itemBuilder: (context, index) {
-                if (index == bookList.length) {
-                  return Center(
-                    child: ref
-                            .read(bookListViewModelProvider.notifier)
-                            .isLoadingMore
-                        ? CircularProgressIndicator()
-                        : SizedBox.shrink(),
-                  );
-                }
-                final itemBook = bookList[index];
-                return GestureDetector(
-                  onTap: () {
-                    ref
-                        .read(readingTrackingViewModelProvider.notifier)
-                        .startRading(itemBook.id!);
-                    Get.to(() => BookDetailScreen(id: itemBook.id!));
-                  },
-                  child: Card(
-                    elevation: 4,
-                    color: Colors.grey,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            itemBook.type != null
-                                ? (itemBook.type!.contains("cuoi")
-                                    ? "Truyện cười"
-                                    : "Truyện tâm linh")
-                                : "",
-                            style: TextStyle(
-                              fontFamily: AppTextStyle.secureFontStyle,
-                            ),
+      child: stateListBook.when(
+        data: (bookList) {
+          return GridView.builder(
+            controller: _scrollController,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 10.0,
+              mainAxisSpacing: 10.0,
+              childAspectRatio: 0.85,
+            ),
+            itemCount: bookList.length + 1,
+            itemBuilder: (context, index) {
+              if (index == bookList.length) {
+                return Center(
+                  child:
+                      ref.read(bookListViewModelProvider.notifier).isLoadingMore
+                          ? const CircularProgressIndicator()
+                          : const SizedBox.shrink(),
+                );
+              }
+              final itemBook = bookList[index];
+              return GestureDetector(
+                onTap: () {
+                  ref
+                      .read(readingTrackingViewModelProvider.notifier)
+                      .startRading(itemBook.id!);
+                  pushScreen(BookDetailScreen(id: itemBook.id!));
+                },
+                child: Card(
+                  elevation: 4,
+                  color: Colors.grey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          itemBook.type != null
+                              ? (itemBook.type!.contains("cuoi")
+                                  ? "Truyện cười"
+                                  : "Truyện tâm linh")
+                              : "",
+                          style: TextStyle(
+                            fontFamily: AppTextStyle.secureFontStyle,
                           ),
-                          const SizedBox(height: 20),
-                          Text("Số: ${itemBook.id}"),
-                          const SizedBox(height: 2),
-                          Text(
-                            itemBook.title ?? "",
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: TextStyle(
-                              fontFamily: AppTextStyle.regularFontStyle,
-                            ),
+                        ),
+                        const SizedBox(height: 20),
+                        Text("Số: ${itemBook.id}"),
+                        const SizedBox(height: 2),
+                        Text(
+                          itemBook.title ?? "",
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontFamily: AppTextStyle.regularFontStyle,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                );
-              },
-            );
-          },
-          error: (e, _) => Center(
-            child: Text(
-              "Failed to load list story: $e",
-            ),
-          ),
-          loading: () => const Center(
-            child: CircularProgressIndicator(),
-          ),
-        ),
+                ),
+              );
+            },
+          );
+        },
+        error: (e, _) => buildErrorWidget(e, _),
+        loading: () => buildLoadingWidget(),
       ),
     );
   }

@@ -67,7 +67,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               await Future.delayed(
                 const Duration(seconds: 2),
               );
-              Get.off(const HomeScreenDefault());
+              Get.off(const HomeScreen());
             });
             return const SizedBox
                 .shrink(); // Tránh hiển thị gì khác trong quá trình

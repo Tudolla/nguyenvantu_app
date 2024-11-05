@@ -23,18 +23,6 @@ class _ContributionScreenState extends ConsumerState<ContributionScreen> {
     super.dispose();
   }
 
-  // void _checkPostStatus(BuildContext context, PostState stateTextPost) {
-  //   if (stateTextPost.isSuccess) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text("Add post successful")),
-  //     );
-  //   } else if (stateTextPost.errorMessage != null) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text("Error: ${stateTextPost.errorMessage}")),
-  //     );
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     final postViewModel = ref.watch(postNotifierProvider.notifier);

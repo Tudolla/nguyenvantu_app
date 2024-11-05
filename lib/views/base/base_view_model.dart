@@ -26,18 +26,16 @@ abstract class BaseViewModel<T> extends StateNotifier<AsyncValue<T>> {
 
   // hàm xử lý lỗi chung, các lớp con có thể ghi đè nếu có lỗi cụ thể khác
   void handleError(AppException e, StackTrace stackTrace) {
-    String errorMessage;
-    if (e is NetworkException) {
-      errorMessage = "Network error: ${e.message}";
-    } else if (e is ServerException) {
-      errorMessage = "Server error: ${e.message}";
-    } else if (e is CacheException) {
-      errorMessage = "Cache error: ${e.message}";
-    } else if (e is ValidationException) {
-      errorMessage = "Validation error: ${e.message}";
-    } else {
-      errorMessage = "An unexpected error occurred: ${e.message}";
-    }
+    const errorMessages = {
+      NetworkException: "Network error",
+      ServerException: "Server error",
+      CacheException: "Cache error",
+      ValidationException: "Validation error",
+    };
+
+    final errorMessage =
+        errorMessages[e.runtimeType] ?? "An unexpected error occurred ";
+
     setError(errorMessage, stackTrace);
   }
 
@@ -45,6 +43,10 @@ abstract class BaseViewModel<T> extends StateNotifier<AsyncValue<T>> {
   // VD: hiển thị dữ liệu trên UI, User load làm mới, thì loading đè lên dữ liệu cũ đồng thời tải lại dữ liệu mới
   // Tăng trải nghiệm người dùng
   void setLoadingWithPreviousData() {
-    state = AsyncValue<T>.loading().copyWithPrevious(state);
+    if (state.hasValue) {
+      state = AsyncValue<T>.loading().copyWithPrevious(state);
+    } else {
+      state = const AsyncValue.loading();
+    }
   }
 }

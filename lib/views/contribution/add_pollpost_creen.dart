@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:monstar/views/base/base_screen.dart';
-import 'package:monstar/views/home/home_screen.dart';
+import 'package:monstar/components/button/arrow_back_button.dart';
+import 'package:monstar/components/core/app_textstyle.dart';
+import 'package:monstar/views/base/base_view.dart';
 
-import '../../components/button/arrow_back_button.dart';
-import '../../components/core/app_textstyle.dart';
 import '../../providers/add_pollpost_provider.dart';
+import '../home/home_screen.dart';
 
-class AddPollpostCreen extends ConsumerStatefulWidget {
-  const AddPollpostCreen({super.key});
+class AddPollpostScreen extends ConsumerStatefulWidget {
+  const AddPollpostScreen({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _AddPollpostCreenState();
+      _AddPollpostScreenState();
 }
 
-class _AddPollpostCreenState extends BaseScreen<AddPollpostCreen> {
+class _AddPollpostScreenState extends BaseView<AddPollpostScreen> {
   final TextEditingController _titleController = TextEditingController();
   final List<TextEditingController> _choiceController = [];
 
   @override
-  void dispose() {
+  void onDispose() {
     _titleController.dispose();
-    super.dispose();
+    for (var controller in _choiceController) {
+      controller.dispose();
+    }
   }
 
+  // ignore: unused_element
   void _removeChoice(int index) {
     setState(() {
       _choiceController[index].dispose();
@@ -32,6 +35,7 @@ class _AddPollpostCreenState extends BaseScreen<AddPollpostCreen> {
     });
   }
 
+  // ignore: unused_element
   void _addMoreChoice() {
     setState(() {
       _choiceController.add(TextEditingController());
@@ -39,71 +43,62 @@ class _AddPollpostCreenState extends BaseScreen<AddPollpostCreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: ArrowBackButton(),
-        title: Text(
-          "Create a pollpost",
-          style: TextStyle(
-            fontFamily: AppTextStyle.drawerFontStyle,
-            fontSize: 25,
-            color: const Color.fromARGB(255, 109, 105, 105),
-          ),
+  PreferredSizeWidget? buildAppBar(BuildContext context) {
+    return AppBar(
+      leading: ArrowBackButton(),
+      title: Text(
+        "Crate a pollpost",
+        style: TextStyle(
+          fontFamily: AppTextStyle.drawerFontStyle,
+          fontSize: 25,
+          color: Colors.grey,
         ),
-        centerTitle: true,
       ),
-      body: buildBody(context),
+      centerTitle: true,
     );
+  }
+
+  Future<void> _submit() async {
+    if (_titleController.text.isEmpty ||
+        _choiceController.any((controller) => controller.text.isEmpty)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Please fill in all fields")),
+      );
+      return;
+    }
+
+    final title = _titleController.text;
+    final choices =
+        _choiceController.map((controller) => controller.text).toList();
+
+    try {
+      final pollpostViewmodel = ref.read(pollPostProvider.notifier);
+      await pollpostViewmodel.submitPollPost(title, choices);
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Bài viết đã được gửi thành công')),
+      );
+
+      await Future.delayed(Duration(seconds: 2));
+      if (!mounted) return;
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error was happened: $e')),
+      );
+    }
   }
 
   @override
   Widget buildBody(BuildContext context) {
     final statePollPost = ref.watch(pollPostProvider);
-    final pollpostViewmodel = ref.read(pollPostProvider.notifier);
     var size = MediaQuery.of(context).size.width;
-
-    void _submit() async {
-      if (_titleController.text.isEmpty ||
-          _choiceController.any((controller) => controller.text.isEmpty)) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Please fill in all fields"),
-          ),
-        );
-        return;
-      }
-      final title = _titleController.text;
-      final choices =
-          _choiceController.map((controller) => controller.text).toList();
-
-      try {
-        await pollpostViewmodel.submitPollPost(title, choices);
-
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Bài viết đã được gửi thành công')),
-        );
-        await Future.delayed(
-          Duration(seconds: 2),
-        );
-        if (!mounted) return;
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return HomeScreenDefault();
-            },
-          ),
-        );
-      } catch (e) {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error was happened: $e')),
-        );
-      }
-    }
 
     return SingleChildScrollView(
       child: Padding(
@@ -131,18 +126,14 @@ class _AddPollpostCreenState extends BaseScreen<AddPollpostCreen> {
                 filled: true,
                 fillColor: Colors.grey.shade200,
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                    10,
-                  ),
+                  borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
                     color: Colors.grey.shade400,
                     width: 1,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                    10,
-                  ),
+                  borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
                     color: Colors.blue,
                     width: 2,
@@ -156,9 +147,7 @@ class _AddPollpostCreenState extends BaseScreen<AddPollpostCreen> {
                   ),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(
-                    10,
-                  ),
+                  borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(
                     color: Colors.red,
                     width: 2,
@@ -166,9 +155,7 @@ class _AddPollpostCreenState extends BaseScreen<AddPollpostCreen> {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             ..._choiceController.map((controller) {
               int index = _choiceController.indexOf(controller);
               return Row(
@@ -208,9 +195,7 @@ class _AddPollpostCreenState extends BaseScreen<AddPollpostCreen> {
                 ],
               );
             }).toList(),
-            SizedBox(
-              height: 20,
-            ),
+            SizedBox(height: 20),
             SizedBox(
               width: size / 2,
               height: 50,
@@ -226,9 +211,7 @@ class _AddPollpostCreenState extends BaseScreen<AddPollpostCreen> {
                 child: Text("Add more choice"),
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             statePollPost.when(
               data: (isLoading) {
                 return SizedBox(
@@ -249,10 +232,8 @@ class _AddPollpostCreenState extends BaseScreen<AddPollpostCreen> {
                   ),
                 );
               },
-              error: (e, stackTrace) => Center(
-                child: Text("Error : $e"),
-              ),
-              loading: () => const CircularProgressIndicator(),
+              error: (e, stackTrace) => buildErrorWidget(e, stackTrace),
+              loading: () => buildLoadingWidget(),
             ),
           ],
         ),

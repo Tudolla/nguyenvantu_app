@@ -16,15 +16,15 @@ import '../contribution/pollpost_screen.dart';
 import '../profile_member/profile_screen.dart';
 import 'widgets/animated_container_widget.dart';
 
-class HomeScreenDefault extends ConsumerStatefulWidget {
-  const HomeScreenDefault({super.key});
+class HomeScreen extends ConsumerStatefulWidget {
+  const HomeScreen({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _HomeScreenDefaultState();
 }
 
-class _HomeScreenDefaultState extends ConsumerState<HomeScreenDefault> {
+class _HomeScreenDefaultState extends ConsumerState<HomeScreen> {
   List<SMIBool> riveIconInputs = [];
   List<StateMachineController?> controllers = [];
   final PageController _pageController = PageController();
