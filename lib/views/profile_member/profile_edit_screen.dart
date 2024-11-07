@@ -3,18 +3,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lottie/lottie.dart';
 import 'package:monstar/components/bottom_snackbar/bottom_snackbar.dart';
 import 'package:monstar/components/button/app_button.dart';
-import 'package:monstar/components/core/app_textstyle.dart';
 import 'package:monstar/providers/profile_state_provider.dart';
 import 'package:monstar/views/profile_member/widget/pin_code_dialog.dart';
-import 'package:monstar/views/profile_member/widget/text_input_items.dart';
+import 'package:monstar/views/profile_member/widget/custom_text_input.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../gen/assets.gen.dart';
+import '../../components/button/arrow_back_button.dart';
+import '../../data/models/api/request/member_model/member_model.dart';
 import '../../utils/api_base_url.dart';
 import '../../providers/member_information_provider.dart';
+import '../base/base_view.dart';
 
 class ProfileEditScreen extends ConsumerStatefulWidget {
   const ProfileEditScreen({super.key});
@@ -24,35 +24,21 @@ class ProfileEditScreen extends ConsumerStatefulWidget {
       _ProfileEditScreenState();
 }
 
-class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
+class _ProfileEditScreenState extends BaseView<ProfileEditScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
   final TextEditingController positionController = TextEditingController();
+
   File? pickedImage;
-
-  // ignore: unused_field
-  bool _loadingSkeleton = true;
-
   bool _isDataLoaded = false; // Cờ kiểm tra khi dữ liệu được load
 
   @override
-  void initState() {
-    super.initState();
-
-    Future.delayed(Duration(seconds: 2), () {
-      setState(() {
-        // kiểm tra có còn tồn tại trong Widget Tree hiện tại không
-        if (mounted) {
-          _loadingSkeleton = false;
-        }
-      });
-    });
-
+  void onInit() {
+    super.onInit();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(memberViewModelProvider.notifier).getMemberInfor();
-
       //this function to _checkAndUpdateHiddenState();
       _syncStateFromStorage();
     });
@@ -60,8 +46,8 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
 
   Future<void> _syncStateFromStorage() async {
     final profileNotifier = ref.read(profileStateProvider.notifier);
-    await profileNotifier
-        .loadState(); // Gọi hàm để load toàn bộ trạng thái ẨN/ KHÔNG ẨN THÔNG TIN từ SecureStorage
+    // Gọi hàm để load toàn bộ trạng thái ẨN/ KHÔNG ẨN THÔNG TIN từ SecureStorage
+    await profileNotifier.loadState();
   }
 
   Future<void> _pickImageAvatar() async {
@@ -86,7 +72,14 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  String? getScreenTitle() => "Edit Profile";
+  Widget? getAppBarAction() => Icon(Icons.security_outlined);
+  Widget? getAppBarLeading() => ArrowBackButton(
+        showSnackbar: false,
+      );
+
+  @override
+  Widget buildBody(BuildContext context) {
     var sizeWidth = MediaQuery.of(context).size.width;
 
     final memberViewModel = ref.watch(memberViewModelProvider);
@@ -95,228 +88,103 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
 
     final profileNotifier = ref.read(profileStateProvider.notifier);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Edit Profile",
-          style: AppTextStyle.appBarStyle,
-        ),
-        centerTitle: true,
-        actions: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                height: 60,
-                width: 60,
-                child: ColorFiltered(
-                  colorFilter: ColorFilter.mode(
-                    Colors.redAccent,
-                    BlendMode.srcATop,
-                  ),
-                  child: LottieBuilder.asset(
-                    Assets.arrowRight,
-                  ),
-                ),
+    if (profileState.isHidden) {
+      return Center(
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blueGrey,
+            elevation: 4,
+          ),
+          child: Text("Enter PIN to view"),
+          onPressed: () async {
+            final enterdPinCode = await showDialog<String>(
+              context: context,
+              builder: (context) => PinCodeDialog(
+                isSettingPin: false,
               ),
-              IconButton(
-                onPressed: () async {
-                  await profileNotifier.toggleHidden(true);
-                  setState(() {});
-                },
-                icon: Icon(
-                  Icons.security_rounded,
+            );
+            if (enterdPinCode != null &&
+                profileNotifier.verifyPinCode(enterdPinCode)) {
+              await profileNotifier.toggleHidden(false);
+
+              setState(() {});
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Colors.blueGrey,
+                  content: Text("Incorrect PIN. Please try again."),
+                ),
+              );
+            }
+          },
+        ),
+      );
+    }
+
+    return Skeletonizer(
+      enabled: memberViewModel.isLoading,
+      child: memberViewModel.maybeWhen(
+        data: (member) {
+          if (!_isDataLoaded) {
+            // Cập nhật dữ liệu từ member vào controller khi đã tải xong
+            nameController.text = member.name ?? "";
+            emailController.text = member.email ?? "";
+            addressController.text = member.address ?? "";
+            positionController.text = member.position ?? "";
+            _isDataLoaded = true;
+          }
+
+          return Stack(
+            children: [
+              Positioned.fill(
+                top: 0,
+                bottom: MediaQuery.of(context).size.height - 300,
+                child: CustomClippedWidget(),
+              ),
+              Container(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 30,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 20),
+                        AvatarSection(
+                          member: member,
+                          sizeWidth: sizeWidth,
+                          pickedImage: pickedImage,
+                          onTap: _pickImageAvatar,
+                        ),
+                        ProfileFormSection(
+                          nameController: nameController,
+                          passwordController: passwordController,
+                          emailController: emailController,
+                          addressController: addressController,
+                          positionController: positionController,
+                        ),
+                        const SizedBox(height: 20),
+                        UpdateProfileButton(
+                          nameController: nameController,
+                          emailController: emailController,
+                          addressController: addressController,
+                          positionController: positionController,
+                          pickedImage: pickedImage,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],
-          ),
-        ],
+          );
+        },
+        orElse: () => const SizedBox.shrink(),
+        error: (error, _) => Center(
+          child: Text("Error: $error"),
+        ),
       ),
-      body: profileState.isHidden
-          ? Center(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueGrey,
-                  elevation: 4,
-                ),
-                child: Text("Enter PIN to view"),
-                onPressed: () async {
-                  final enterdPinCode = await showDialog<String>(
-                    context: context,
-                    builder: (context) => PinCodeDialog(
-                      isSettingPin: false,
-                    ),
-                  );
-
-                  if (enterdPinCode != null &&
-                      profileNotifier.verifyPinCode(enterdPinCode)) {
-                    await profileNotifier.toggleHidden(false);
-
-                    setState(() {});
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        backgroundColor: Colors.blueGrey,
-                        content: Text("Incorrect PIN. Please try again."),
-                      ),
-                    );
-                  }
-                },
-              ),
-            )
-          : Skeletonizer(
-              enabled: memberViewModel.isLoading,
-              child: memberViewModel.maybeWhen(
-                data: (member) {
-                  if (!_isDataLoaded) {
-                    // Cập nhật dữ liệu từ member vào controller khi đã tải xong
-                    nameController.text = member.name ?? "";
-                    emailController.text = member.email ?? "";
-                    addressController.text = member.address ?? "";
-                    positionController.text = member.position ?? "";
-                    _isDataLoaded = true;
-                  }
-
-                  return Stack(
-                    children: [
-                      Positioned.fill(
-                        top: 0,
-                        bottom: MediaQuery.of(context).size.height - 300,
-                        child: CustomClippedWidget(),
-                      ),
-                      Container(
-                        child: SingleChildScrollView(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 30,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const SizedBox(height: 20),
-                                member.image != null
-                                    ? GestureDetector(
-                                        onTap: _pickImageAvatar,
-                                        child: Stack(
-                                          children: [
-                                            pickedImage != null
-                                                ? CircleAvatar(
-                                                    radius: sizeWidth * 1 / 5,
-                                                    backgroundImage: FileImage(
-                                                      pickedImage!,
-                                                    ),
-                                                  )
-                                                : CircleAvatar(
-                                                    radius: sizeWidth * 1 / 5,
-                                                    backgroundImage:
-                                                        NetworkImage(
-                                                      ApiBaseUrl.baseUrl +
-                                                          member.image!,
-                                                    ),
-                                                  ),
-                                            Positioned(
-                                              bottom: 8,
-                                              right: 8,
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                padding: EdgeInsets.all(0),
-                                                child: Icon(
-                                                  Icons.camera_alt_outlined,
-                                                  color: Colors.grey,
-                                                  size: 34,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    : CircleAvatar(
-                                        radius: sizeWidth * 1 / 4,
-                                        backgroundImage: null,
-                                      ),
-                                CustomTextInput(
-                                  title: "name",
-                                  icon: Icons.person,
-                                  controllerInput: nameController,
-                                ),
-                                CustomTextInput(
-                                  title: "password",
-                                  icon: Icons.password,
-                                  controllerInput: passwordController,
-                                ),
-                                CustomTextInput(
-                                  title: "email",
-                                  icon: Icons.email,
-                                  controllerInput: emailController,
-                                ),
-                                CustomTextInput(
-                                  title: "address",
-                                  icon: Icons.local_activity,
-                                  controllerInput: addressController,
-                                ),
-                                CustomTextInput(
-                                  title: "position",
-                                  icon: Icons.person_2_outlined,
-                                  controllerInput: positionController,
-                                ),
-                                const SizedBox(height: 20),
-                                AppButton(
-                                  text: "Update Profile",
-                                  function: () async {
-                                    await ref
-                                        .read(
-                                          memberViewModelProvider.notifier,
-                                        )
-                                        .updateProfile(
-                                          nameController.text,
-                                          emailController.text,
-                                          addressController.text,
-                                          positionController.text,
-                                          pickedImage,
-                                        );
-                                    memberViewModel.when(
-                                      data: (_) {
-                                        bottomSnackbar(
-                                          context,
-                                          "Profile updated",
-                                          "Cancel",
-                                        );
-                                      },
-                                      error: (e, _) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            backgroundColor: Colors.blueGrey,
-                                            content: Text(
-                                              "Error updating profile!",
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      loading: () =>
-                                          CircularProgressIndicator(),
-                                    );
-                                  },
-                                  textColor: Colors.white,
-                                  backgroundColor: Colors.blueGrey,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-                orElse: () => const SizedBox.shrink(),
-                error: (error, _) => Center(
-                  child: Text("Error: $error"),
-                ),
-              ),
-            ),
     );
   }
 }
@@ -373,6 +241,178 @@ class CustomClippedWidget extends StatelessWidget {
           color: Colors.white, // Màu nền cho ShaderMask
         ),
       ),
+    );
+  }
+}
+
+class AvatarSection extends StatelessWidget {
+  final MemberModel member;
+  final double sizeWidth;
+  final File? pickedImage;
+  final VoidCallback onTap;
+
+  const AvatarSection({
+    Key? key,
+    required this.member,
+    required this.sizeWidth,
+    required this.pickedImage,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (member.image != null) {
+      return GestureDetector(
+        onTap: onTap,
+        child: Stack(
+          children: [
+            pickedImage != null
+                ? CircleAvatar(
+                    radius: sizeWidth * 1 / 5,
+                    backgroundImage: FileImage(pickedImage!),
+                  )
+                : CircleAvatar(
+                    radius: sizeWidth * 1 / 5,
+                    backgroundImage: NetworkImage(
+                      ApiBaseUrl.baseUrl + member.image!,
+                    ),
+                  ),
+            const AvatarEditButton(),
+          ],
+        ),
+      );
+    }
+    return CircleAvatar(
+      radius: sizeWidth * 1 / 4,
+      backgroundImage: null,
+    );
+  }
+}
+
+// Tách Avatar edit button thành component riêng
+class AvatarEditButton extends StatelessWidget {
+  const AvatarEditButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      bottom: 8,
+      right: 8,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+        ),
+        padding: EdgeInsets.zero,
+        child: Icon(
+          Icons.camera_alt_outlined,
+          color: Colors.grey,
+          size: 34,
+        ),
+      ),
+    );
+  }
+}
+
+// Tách Update Profile Button thành component riêng
+class UpdateProfileButton extends ConsumerWidget {
+  final TextEditingController nameController;
+  final TextEditingController emailController;
+  final TextEditingController addressController;
+  final TextEditingController positionController;
+  final File? pickedImage;
+
+  const UpdateProfileButton({
+    Key? key,
+    required this.nameController,
+    required this.emailController,
+    required this.addressController,
+    required this.positionController,
+    required this.pickedImage,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return AppButton(
+      text: "Update Profile",
+      function: () async {
+        final memberViewModel = ref.read(memberViewModelProvider.notifier);
+        await memberViewModel.updateProfile(
+          nameController.text,
+          emailController.text,
+          addressController.text,
+          positionController.text,
+          pickedImage,
+        );
+        print("Profile update completed");
+
+        ref.read(memberViewModelProvider).whenData((_) {
+          print("Profile updated successfully");
+          bottomSnackbar(
+            context,
+            "Profile updated",
+            "Cancel",
+          );
+        }).whenOrNull(
+          error: (e, _) {
+            print("Error updating profile: $e");
+            bottomSnackbar(context, "Error when update profile", "");
+          },
+        );
+      },
+      textColor: Colors.white,
+      backgroundColor: Colors.blueGrey,
+    );
+  }
+}
+
+// Profile Form Section
+class ProfileFormSection extends StatelessWidget {
+  final TextEditingController nameController;
+  final TextEditingController passwordController;
+  final TextEditingController emailController;
+  final TextEditingController addressController;
+  final TextEditingController positionController;
+
+  const ProfileFormSection({
+    Key? key,
+    required this.nameController,
+    required this.passwordController,
+    required this.emailController,
+    required this.addressController,
+    required this.positionController,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        CustomTextInput(
+          title: "name",
+          icon: Icons.person,
+          controllerInput: nameController,
+        ),
+        CustomTextInput(
+          title: "password",
+          icon: Icons.password,
+          controllerInput: passwordController,
+        ),
+        CustomTextInput(
+          title: "email",
+          icon: Icons.email,
+          controllerInput: emailController,
+        ),
+        CustomTextInput(
+          title: "address",
+          icon: Icons.local_activity,
+          controllerInput: addressController,
+        ),
+        CustomTextInput(
+          title: "position",
+          icon: Icons.person_2_outlined,
+          controllerInput: positionController,
+        ),
+      ],
     );
   }
 }

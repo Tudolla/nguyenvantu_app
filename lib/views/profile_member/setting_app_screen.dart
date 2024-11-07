@@ -4,7 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:monstar/components/core/app_textstyle.dart';
 import 'package:monstar/components/theme/theme.dart';
 import 'package:monstar/components/theme/theme_provider.dart';
-import 'package:monstar/providers/audio_provider.dart';
+import 'package:monstar/providers/sound_provider.dart';
 import 'package:monstar/views/profile_member/widget/toggle_switch.dart';
 
 import '../../components/button/arrow_back_button.dart';

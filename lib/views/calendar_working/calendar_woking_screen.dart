@@ -4,7 +4,6 @@ import 'package:monstar/gen/assets.gen.dart';
 import 'dart:ui';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../components/core/app_textstyle.dart';
 import '../../providers/time_tracking_provider.dart';
 import '../base/base_view.dart';
 

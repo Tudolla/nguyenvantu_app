@@ -2,8 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/services/storage_service/flutter_secure_storage_service.dart';
 
-class AudioProvider extends StateNotifier<bool> {
-  AudioProvider() : super(true) {
+class SoundProvider extends StateNotifier<bool> {
+  SoundProvider() : super(false) {
     // Khi AudioProvider được khởi tạo, nạp trạng thái từ SecureStorage
     _loadSoundState();
   }
@@ -26,6 +26,6 @@ class AudioProvider extends StateNotifier<bool> {
   }
 }
 
-final audioProvider = StateNotifierProvider<AudioProvider, bool>((ref) {
-  return AudioProvider();
+final audioProvider = StateNotifierProvider<SoundProvider, bool>((ref) {
+  return SoundProvider();
 });

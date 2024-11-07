@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 import 'package:monstar/components/core/app_textstyle.dart';
 
 import 'package:monstar/views/book_store/book_detail_screen.dart';

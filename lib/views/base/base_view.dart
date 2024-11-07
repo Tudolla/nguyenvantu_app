@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:monstar/components/core/app_textstyle.dart';
 
 abstract class BaseView<T extends ConsumerStatefulWidget>
     extends ConsumerState<T> {
+  final logger = Logger();
   Widget buildBody(BuildContext context);
 
   // Optional methods that can be overridden
   String? getScreenTitle() => null;
+  Widget? getAppBarAction() => null;
+  Widget? getAppBarLeading() => null;
   PreferredSizeWidget? buildAppBar(BuildContext context) {
     return AppBar(
+      leading: getAppBarLeading(),
       automaticallyImplyLeading: false,
       title: Text(
         getScreenTitle() ?? "",
@@ -19,6 +24,12 @@ abstract class BaseView<T extends ConsumerStatefulWidget>
         ),
       ),
       centerTitle: true,
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(right: 10),
+          child: getAppBarAction(),
+        ),
+      ],
     );
   }
 
@@ -29,10 +40,22 @@ abstract class BaseView<T extends ConsumerStatefulWidget>
   bool get useSafeArea => true;
 
   // Lifecycle methods
-  void onInit() {}
-  void onDispose() {}
-  void onResume() {}
-  void onPause() {}
+  @mustCallSuper
+  void onInit() {
+    logger.d("Init: $runtimeType");
+  }
+
+  void onDispose() {
+    logger.d("Dispose: $runtimeType");
+  }
+
+  void onResume() {
+    logger.d("Resume: $runtimeType");
+  }
+
+  void onPause() {
+    logger.d("Pause: $runtimeType");
+  }
 
   // Error handling
   Widget buildErrorWidget(Object error, StackTrace? stackTrace) {
@@ -119,6 +142,7 @@ abstract class BaseView<T extends ConsumerStatefulWidget>
 
   /// ALL METHOD FOR NAVIGATION and get the result from the next screen
   Future<dynamic> pushScreen(Widget screen, {Function(dynamic)? onSuccess}) {
+    logger.d("Navigating to screen: ${screen.runtimeType}");
     return Navigator.push(
       context,
       MaterialPageRoute(
@@ -190,7 +214,22 @@ abstract class BaseViewKeepAliveMixin<T extends ConsumerStatefulWidget>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return super.build(context);
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+        backgroundColor: backgroundColor,
+        appBar: buildAppBar(context),
+        body: useSafeArea
+            ? SafeArea(
+                child: RefreshIndicator(
+                  child: buildBody(context),
+                  onRefresh: onRefresh,
+                ),
+              )
+            : buildBody(context),
+      ),
+    );
   }
 }
 
