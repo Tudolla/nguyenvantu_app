@@ -9,12 +9,13 @@ class PollPostNotifier extends BaseViewModel<bool> {
   Future<void> submitPollPost(String title, List<String> list) async {
     setLoading();
     try {
-      await _pollpostRepository.createPollPostRepository(title, list);
+      final success =
+          await _pollpostRepository.createPollPostRepository(title, list);
 
-      setData(true);
+      setData(success);
     } catch (e, stackTrace) {
       setError(e, stackTrace);
-      rethrow; // Ném lại lỗi để có thể xử lý ở UI
+      // rethrow;  Ném lại lỗi để có thể xử lý ở UI
     }
   }
 }

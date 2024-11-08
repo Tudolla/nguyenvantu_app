@@ -37,7 +37,10 @@ class _SettingAppScreenState extends ConsumerState<SettingAppScreen> {
       appBar: AppBar(
         title: Text(
           "Setting",
-          style: AppTextStyle.appBarStyle,
+          style: TextStyle(
+            fontFamily: AppTextStyle.drawerFontStyle,
+            color: const Color.fromARGB(255, 109, 105, 105),
+          ),
         ),
         centerTitle: true,
         leading: ArrowBackButton(
@@ -59,6 +62,9 @@ class _SettingAppScreenState extends ConsumerState<SettingAppScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            const SizedBox(
+              height: 10,
+            ),
             ToggleSwitch(
               title: "Theme Color:",
               currentValue: isLightMode,
@@ -72,11 +78,11 @@ class _SettingAppScreenState extends ConsumerState<SettingAppScreen> {
                   firstSwitchValue = value;
                 });
               },
-              trueLabel: 'light',
-              falseLabel: 'dark',
+              trueLabel: 'Light',
+              falseLabel: 'Dark',
             ),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
             ToggleSwitch(
               title: "Sound Click:",
@@ -89,11 +95,28 @@ class _SettingAppScreenState extends ConsumerState<SettingAppScreen> {
                   firstSwitchValue = value;
                 });
               },
-              trueLabel: 'on',
-              falseLabel: 'off',
+              trueLabel: 'On',
+              falseLabel: 'Off',
             ),
             const SizedBox(
-              height: 20,
+              height: 10,
+            ),
+            ToggleSwitch(
+              title: "Language:",
+              currentValue: isSoundOn,
+              values: const [false, true],
+              onChanged: (value) {
+                ref.read(audioProvider.notifier).toggleSound();
+
+                setState(() {
+                  firstSwitchValue = value;
+                });
+              },
+              trueLabel: 'Eng',
+              falseLabel: 'Vn',
+            ),
+            const SizedBox(
+              height: 15,
             ),
             Text(
               "Security",

@@ -76,6 +76,7 @@ class _ProfileEditScreenState extends BaseView<ProfileEditScreen> {
   Widget? getAppBarAction() => Icon(Icons.security_outlined);
   Widget? getAppBarLeading() => ArrowBackButton(
         showSnackbar: false,
+        popScreen: true,
       );
 
   @override

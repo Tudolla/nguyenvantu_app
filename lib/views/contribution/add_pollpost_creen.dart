@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:monstar/components/button/arrow_back_button.dart';
-import 'package:monstar/components/core/app_textstyle.dart';
-import 'package:monstar/views/base/base_view.dart';
+import 'package:monstar/components/bottom_snackbar/bottom_snackbar.dart';
 
+import 'package:monstar/views/base/base_view.dart';
+import 'package:monstar/views/contribution/widgets/option_input_field.dart';
+
+import '../../components/button/arrow_back_button.dart';
 import '../../providers/add_pollpost_provider.dart';
 import '../home/home_screen.dart';
+import 'widgets/text_input_field.dart';
 
 class AddPollpostScreen extends ConsumerStatefulWidget {
   const AddPollpostScreen({super.key});
@@ -43,20 +46,10 @@ class _AddPollpostScreenState extends BaseView<AddPollpostScreen> {
   }
 
   @override
-  PreferredSizeWidget? buildAppBar(BuildContext context) {
-    return AppBar(
-      leading: ArrowBackButton(),
-      title: Text(
-        "Crate a pollpost",
-        style: TextStyle(
-          fontFamily: AppTextStyle.drawerFontStyle,
-          fontSize: 25,
-          color: Colors.grey,
-        ),
-      ),
-      centerTitle: true,
-    );
-  }
+  String? getScreenTitle() => "create a pollpost";
+
+  @override
+  Widget? getAppBarLeading() => ArrowBackButton();
 
   Future<void> _submit() async {
     if (_titleController.text.isEmpty ||
@@ -76,22 +69,15 @@ class _AddPollpostScreenState extends BaseView<AddPollpostScreen> {
       await pollpostViewmodel.submitPollPost(title, choices);
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Bài viết đã được gửi thành công')),
-      );
+      bottomSnackbar(context, "Send your pollpost successfully", "");
 
       await Future.delayed(Duration(seconds: 2));
       if (!mounted) return;
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
+      pushReplacementScreen(HomeScreen());
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error was happened: $e')),
-      );
+      bottomSnackbar(context, "Some error have occurred", "");
     }
   }
 
@@ -111,49 +97,10 @@ class _AddPollpostScreenState extends BaseView<AddPollpostScreen> {
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextFormField(
+            TextInputField(
+              maxLines: 1,
               controller: _titleController,
-              decoration: InputDecoration(
-                hintText: "Make a question?",
-                hintStyle: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 16,
-                ),
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: 15,
-                  horizontal: 20,
-                ),
-                filled: true,
-                fillColor: Colors.grey.shade200,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(
-                    color: Colors.grey.shade400,
-                    width: 1,
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(
-                    color: Colors.blue,
-                    width: 2,
-                  ),
-                ),
-                errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(
-                    color: Colors.red,
-                    width: 2,
-                  ),
-                ),
-                focusedErrorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(
-                    color: Colors.red,
-                    width: 2,
-                  ),
-                ),
-              ),
+              hintText: "Make your question",
             ),
             const SizedBox(height: 20),
             ..._choiceController.map((controller) {
@@ -167,24 +114,9 @@ class _AddPollpostScreenState extends BaseView<AddPollpostScreen> {
                         top: 5,
                         right: 10,
                       ),
-                      child: TextFormField(
-                        controller: controller,
-                        decoration: InputDecoration(
-                          labelText: "Option : ${index + 1}",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(
-                              color: Colors.blue,
-                              width: 1.0,
-                            ),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.red,
-                              width: 2.0,
-                            ),
-                          ),
-                        ),
+                      child: OptionInputField(
+                        controller: _choiceController[index],
+                        index: index + 1,
                       ),
                     ),
                   ),
@@ -225,10 +157,10 @@ class _AddPollpostScreenState extends BaseView<AddPollpostScreen> {
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                     ),
-                    onPressed: isLoading ? null : _submit,
+                    onPressed: _submit,
                     child: isLoading
-                        ? const CircularProgressIndicator()
-                        : const Text("Submit"),
+                        ? const Text("Submit")
+                        : const CircularProgressIndicator(),
                   ),
                 );
               },

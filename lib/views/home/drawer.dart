@@ -55,7 +55,7 @@ class _MyDrawerState extends ConsumerState<MyDrawer> {
       btnOkText: "vote",
       btnCancelOnPress: () {
         Get.off(
-          () => ContributionScreen(),
+          () => AddTextPostScreen(),
           transition: Transition.circularReveal,
           duration: const Duration(seconds: 2),
         );

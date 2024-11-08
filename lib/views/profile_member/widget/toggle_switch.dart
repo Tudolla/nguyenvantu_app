@@ -54,7 +54,7 @@ class ToggleSwitch extends StatelessWidget {
               customIconBuilder: (context, local, global) => Text(
                 local.value ? trueLabel : falseLabel,
                 style: TextStyle(
-                  color: local.value ? Colors.white : Colors.black,
+                  color: local.value ? Colors.grey : Colors.black,
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
                 ),

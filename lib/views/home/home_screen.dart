@@ -48,8 +48,7 @@ class _HomeScreenDefaultState extends ConsumerState<HomeScreen> {
                 "Monstarlab",
                 style: TextStyle(
                   fontFamily: AppTextStyle.drawerFontStyle,
-                  fontSize: 25,
-                  color: Colors.grey,
+                  color: const Color.fromARGB(255, 109, 105, 105),
                 ),
               ),
               actions: [

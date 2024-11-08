@@ -39,7 +39,10 @@ class _BookDetailScreenState extends BaseView<BookDetailScreen> {
       backgroundColor: AppColors.paperYellow,
       title: Text(
         "Story Content",
-        style: AppTextStyle.appBarStyle,
+        style: TextStyle(
+          fontFamily: AppTextStyle.drawerFontStyle,
+          color: const Color.fromARGB(255, 109, 105, 105),
+        ),
       ),
       centerTitle: true,
       leading: ArrowBackButton(
@@ -77,11 +80,16 @@ class _BookDetailScreenState extends BaseView<BookDetailScreen> {
     final size = MediaQuery.of(context).size;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 20,
+      ),
       child: stateDetailBook.when(
         data: (bookDetail) {
           if (bookDetail == null) {
-            return Center(child: Text("Nothing to show"));
+            return Center(
+              child: Text("Nothing to show"),
+            );
           }
           return SingleChildScrollView(
             child: Column(
