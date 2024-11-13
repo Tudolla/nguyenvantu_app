@@ -1,4 +1,4 @@
-# Ứng dụng hỗ trợ công việc trong công ty : Monstarlab
+# Ứng dụng hỗ trợ công việc trong công ty
 1. Các công nghệ sử dụng :
 - Flutter
   - Thiết kế giao diện,
@@ -20,10 +20,10 @@
 | Date       | Features                                 | Status     |      Detail           |
 |------------|------------------------------------------|------------|-----------------------|
 | 29-8-2024  | Đăng nhập, xem thông tin cá nhân         | Completed  |                       | 
-| 30-8-2024  | Chỉnh sửa thông tin cá nhân              | Error      | 404 bad request       |
-|            | Tính số ngày công đã làm                 | Processing |                       |
-|            | Gửi ý kiến đóng góp                      | Processing |                       |
-|            | Xem giới thiệu về công ty                | Processing |                       |
-|            | Nhận thông báo từ Admin                  | Processing |                       |
-|            | Xem những thành tích nổi bật             | Processing |
-|            | Tìm kiếm thành viên trong nhóm           | Processing |
+| 30-8-2024  | Chỉnh sửa thông tin cá nhân              | Completed  |                       |
+|            | Tính số ngày công đã làm                 | Completed  |                       |
+|            | Gửi ý kiến đóng góp                      | Completed  |                       |
+|            | Xem giới thiệu về công ty                | Completed  |                       |
+|            | Nhận thông báo từ Admin                  | Completed  |                       |
+|            | Xem những thành tích nổi bật             |            |
+|            | Tìm kiếm thành viên trong nhóm           |            |
